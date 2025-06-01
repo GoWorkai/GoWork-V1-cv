@@ -85,7 +85,7 @@ export default function GoWorkAdvanced() {
                 <div className="max-w-7xl mx-auto text-center">
                   {/* Main Title */}
                   <div className="mb-12">
-                    <h1 className="text-5xl lg:text-7xl font-bold text-white mb-8 leading-tight">
+                    <h1 className="text-5xl lg:text-7xl font-bold text-white mb-12 leading-tight">
                       🌟 GoWork: La{" "}
                       <span className="bg-gradient-to-r from-[#FFA500] to-[#FF8C00] bg-clip-text text-transparent">
                         Libertad
@@ -93,13 +93,18 @@ export default function GoWorkAdvanced() {
                       de Tu Talento
                     </h1>
 
+                    {/* Gow IA Section - Inmediatamente después del título */}
+                    <div className="mb-12">
+                      <AdvancedAISearch />
+                    </div>
+
                     <p className="text-xl lg:text-2xl text-gray-200 mb-12 leading-relaxed max-w-4xl mx-auto">
                       Descubre GoWork, la plataforma que transforma tus habilidades en ingresos reales. Conecta con
                       personas que necesitan lo que sabes hacer y encuentra oportunidades cerca de ti, todo en un solo
                       lugar.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
+                    <div className="flex flex-col sm:flex-row gap-6 justify-center">
                       <Button
                         size="lg"
                         onClick={() => setShowRegisterForm(true)}
@@ -118,9 +123,6 @@ export default function GoWorkAdvanced() {
                       </Button>
                     </div>
                   </div>
-
-                  {/* Gow IA Section - Justo después del título principal */}
-                  <AdvancedAISearch />
                 </div>
               </section>
 
