@@ -10,7 +10,7 @@ import { DashboardHome } from "@/components/dashboard/dashboard-home"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { GeminiChat } from "@/components/gemini-chat"
+import { AdvancedAISearch } from "@/components/advanced-ai-search"
 import {
   MapPin,
   User,
@@ -254,7 +254,7 @@ export default function GoWorkApp() {
             </div>
           </div>
 
-          {/* Hero Section */}
+          {/* Hero Section con Gow IA como núcleo central */}
           <div className="text-center mb-12">
             <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               ¿Qué{" "}
@@ -267,18 +267,9 @@ export default function GoWorkApp() {
               Con GoWork puedes encontrar, contratar y trabajar con los mejores talentos cerca de ti.
             </p>
 
-            {/* Search Bar */}
-            <div className="max-w-2xl mx-auto mb-12">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Describe tu proyecto, y yo encontraré el talento perfecto"
-                  className="w-full px-6 py-4 text-lg border-2 border-purple-200 rounded-2xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
-                />
-                <Button className="absolute right-2 top-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl px-6">
-                  <ArrowRight className="h-5 w-5" />
-                </Button>
-              </div>
+            {/* Gow IA Search - Núcleo del sistema */}
+            <div className="mb-12">
+              <AdvancedAISearch />
             </div>
 
             {/* Quick Action Tabs */}
@@ -363,9 +354,6 @@ export default function GoWorkApp() {
           </div>
         </div>
       </div>
-
-      {/* Gemini Chat Widget */}
-      <GeminiChat />
     </div>
   )
 }

@@ -77,28 +77,49 @@ class GeminiService {
   async chatWithGow(messages: ChatMessage[]): Promise<string> {
     try {
       const systemPrompt = `
-Eres Gow, asistente IA de GoWork. Sé conciso, preciso y gentil.
+Eres Gow, el asistente IA de GoWork - la red social del talento en Chile.
 
-Personalidad:
-- Respuestas breves pero útiles (máximo 80 palabras)
-- Tono amable y colaborativo
-- Preguntas directas para ayudar mejor
-- Soluciones prácticas y específicas
+## PERSONALIDAD CORE:
+- **Visionario y minimalista** (estilo Steve Jobs): claro, directo, apasionado por la excelencia
+- **Empático y cercano** (estilo Zuckerberg): coloquial, optimista, accesible
+- **Tono:** Motivador, seguro, con toques de humor sutil chileno
 
-Contexto GoWork:
-- Plataforma que conecta talentos con oportunidades
-- Servicios desde reparaciones hasta consultoría
-- Sistema de reputación y pagos seguros
+## MISIÓN:
+Empoderar al usuario para que encuentre o ofrezca servicios de forma ágil, segura y confiable.
 
-Instrucciones:
-1. Responde de forma conversacional pero concisa
-2. Si es cliente: recomienda servicios específicos, precios justos
-3. Si es proveedor: optimiza perfil, mejora servicios, consigue clientes
-4. Haz 1 pregunta relevante por respuesta
-5. Usa emojis ocasionalmente (máximo 2 por mensaje)
-6. Precios en pesos chilenos cuando corresponda
+## ESTILO DE COMUNICACIÓN:
+- **Brevedad:** máximo 2-3 líneas por respuesta
+- **Estructura:** saludo, propuesta de acción, cierre con pregunta
+- **Lenguaje:** "Tú" cercano, evita tecnicismos
 
-Responde en español chileno, máximo 80 palabras.
+## CHILENISMOS CONTEXTUALES:
+Usa expresiones chilenas cuando detectes informalidad o cercanía:
+
+**Saludos:** "¡Buena hermano!", "¿Cachai cómo funciona?", "¿Cómo vai?"
+**Ayuda:** "Te echo una mano al tiro", "Dime no más", "¿En qué te puedo ayudar po?"
+**Servicios:** "pega" (trabajo), "choro" (bueno), "pulento" (excelente)
+**Feedback:** "¡Bacán!", "la media pega", "estay dejando la escoba"
+**Errores:** "te mandaste un condoro", "no te achunchís"
+
+## FUNCIONALIDADES:
+1. Onboarding guiado
+2. Clasificación automática de servicios
+3. Cotización instantánea
+4. Matching geoespacial
+5. Coordinación de agendas
+6. Seguimiento post-servicio
+
+## REGLAS:
+- Evita chilenismos en procesos críticos (pagos, verificación)
+- Si el usuario responde informal, usa más modismos
+- Siempre mantén respeto y empatía
+- Precios en pesos chilenos cuando corresponda
+- Máximo 80 palabras por respuesta
+
+Ejemplo de respuesta:
+"¡Hola hermano! He encontrado 3 gasfiteros bacanes a menos de 2 km. ¿Querís ver sus perfiles o ajustar el radio de búsqueda?"
+
+Responde como Gow, usando chilenismos apropiados según el contexto.
 `
 
       // Crear el prompt completo con el historial
@@ -118,16 +139,18 @@ Responde en español chileno, máximo 80 palabras.
       return response.text()
     } catch (error) {
       console.error("Error en chat Gemini:", error)
-      return "Lo siento, tengo problemas técnicos en este momento. Por favor intenta nuevamente en unos segundos. 😔"
+      return "Ups, parece que me mandé un condoro técnico. Intentémoslo de nuevo al tiro, ¿ya? 😅"
     }
   }
 
   async generateServiceSuggestions(category: string): Promise<string[]> {
     try {
       const prompt = `
-      Genera exactamente 5 sugerencias de búsqueda populares para la categoría "${category}" en Chile.
+      Como Gow, genera exactamente 5 sugerencias de búsqueda populares para la categoría "${category}" en Chile.
+      Usa lenguaje chileno casual cuando sea apropiado.
       Responde SOLO con un array JSON de strings.
-      Ejemplo: ["Reparación de grifería", "Instalación de lavamanos", "Destape de cañerías", "Plomero 24 horas", "Cambio de llaves"]
+      
+      Ejemplo: ["Reparación de grifería al tiro", "Gasfiter choro cerca mío", "Destape de cañerías urgente", "Plomero 24 horas bacán", "Cambio de llaves pulento"]
     `
 
       const result = await this.model.generateContent(prompt)
@@ -135,7 +158,7 @@ Responde en español chileno, máximo 80 palabras.
       const text = response.text().trim()
 
       // Intentar parsear como JSON
-      const jsonMatch = text.match(/\[[\s\S]*\}/)
+      const jsonMatch = text.match(/\[[\s\S]*\]/)
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0])
       }
@@ -146,8 +169,8 @@ Responde en español chileno, máximo 80 palabras.
       return [
         `Servicios de ${category} a domicilio`,
         `Profesional de ${category} cerca de mí`,
-        `Presupuesto para ${category}`,
-        `${category} urgente`,
+        `Presupuesto para ${category} al tiro`,
+        `${category} urgente y bacán`,
         `Mejor ${category} en mi zona`,
       ]
     }
@@ -156,7 +179,7 @@ Responde en español chileno, máximo 80 palabras.
   async optimizeProfile(profileData: any): Promise<string[]> {
     try {
       const prompt = `
-        Analiza este perfil de GoWork y sugiere 5 mejoras específicas:
+        Como Gow, analiza este perfil de GoWork y sugiere 5 mejoras específicas usando lenguaje chileno casual:
         
         Datos del perfil:
         - Servicios: ${profileData.services || "No especificado"}
@@ -165,6 +188,7 @@ Responde en español chileno, máximo 80 palabras.
         - Descripción: ${profileData.description || "No especificado"}
         
         Proporciona sugerencias prácticas para mejorar el perfil y atraer más clientes.
+        Usa expresiones como "bacán", "pulento", "al tiro", etc.
         Responde con un array JSON de strings.
       `
 
@@ -176,16 +200,16 @@ Responde en español chileno, máximo 80 palabras.
         return JSON.parse(text)
       } catch {
         return [
-          "Añade más detalles sobre tu experiencia",
-          "Incluye ejemplos de trabajos anteriores",
-          "Mejora la descripción de tus servicios",
-          "Agrega certificaciones o estudios",
-          "Actualiza tu foto de perfil",
+          "Añade más detalles bacanes sobre tu experiencia",
+          "Sube fotos pulentes de trabajos anteriores",
+          "Mejora la descripción de tus servicios al tiro",
+          "Agrega certificaciones o estudios que tengas",
+          "Actualiza tu foto de perfil con una más chora",
         ]
       }
     } catch (error) {
       console.error("Error optimizando perfil:", error)
-      return ["Error al generar sugerencias de perfil"]
+      return ["Ups, me mandé un condoro generando sugerencias. Inténtalo de nuevo po."]
     }
   }
 }
