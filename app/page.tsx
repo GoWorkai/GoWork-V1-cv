@@ -1,7 +1,16 @@
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
+import { useAuth } from "@/contexts/auth-context"
+import { LoginForm } from "@/components/auth/login-form"
+import { RegisterForm } from "@/components/auth/register-form"
+import { DashboardLayout } from "@/components/dashboard/dashboard-layout"
+import { DashboardHome } from "@/components/dashboard/dashboard-home"
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { GeminiChat } from "@/components/gemini-chat"
 import {
   MessageCircle,
   MapPin,
@@ -20,7 +29,30 @@ import {
   Smartphone,
 } from "lucide-react"
 
-export default function Page() {
+export default function GoWorkApp() {
+  const { isAuthenticated } = useAuth()
+  const [authMode, setAuthMode] = useState<"landing" | "login" | "register">("landing")
+
+  // Si el usuario está autenticado, mostrar el dashboard
+  if (isAuthenticated) {
+    return (
+      <DashboardLayout>
+        <DashboardHome />
+      </DashboardLayout>
+    )
+  }
+
+  // Si está en modo login, mostrar formulario de login
+  if (authMode === "login") {
+    return <LoginForm onBack={() => setAuthMode("landing")} onSwitchToRegister={() => setAuthMode("register")} />
+  }
+
+  // Si está en modo register, mostrar formulario de registro
+  if (authMode === "register") {
+    return <RegisterForm onBack={() => setAuthMode("landing")} onSwitchToLogin={() => setAuthMode("login")} />
+  }
+
+  // Landing page con el nuevo diseño
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header/Navigation */}
@@ -45,12 +77,10 @@ export default function Page() {
               </Link>
             </nav>
             <div className="flex items-center space-x-4">
-              <Link href="/auth/login">
-                <Button variant="ghost">Iniciar Sesión</Button>
-              </Link>
-              <Link href="/onboarding">
-                <Button>Registrarse</Button>
-              </Link>
+              <Button variant="ghost" onClick={() => setAuthMode("login")}>
+                Iniciar Sesión
+              </Button>
+              <Button onClick={() => setAuthMode("register")}>Registrarse</Button>
             </div>
           </div>
         </div>
@@ -95,12 +125,14 @@ export default function Page() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/servicios">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8">
-                  🚀 Comenzar ahora
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                onClick={() => setAuthMode("register")}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8"
+              >
+                🚀 Comenzar ahora
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
               <Link href="/servicios">
                 <Button size="lg" variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8">
                   Explorar servicios
@@ -373,12 +405,14 @@ export default function Page() {
             reales.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/onboarding">
-              <Button size="lg" className="bg-white hover:bg-gray-100 text-blue-600 font-semibold px-8">
-                Crear cuenta gratis
-                <Smartphone className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              onClick={() => setAuthMode("register")}
+              className="bg-white hover:bg-gray-100 text-blue-600 font-semibold px-8"
+            >
+              Crear cuenta gratis
+              <Smartphone className="ml-2 h-5 w-5" />
+            </Button>
             <Link href="/servicios">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-blue-700 px-8">
                 Ver servicios disponibles
@@ -444,6 +478,9 @@ export default function Page() {
           </div>
         </div>
       </footer>
+
+      {/* Gemini Chat Widget - Mantenemos el widget de chat */}
+      <GeminiChat />
     </div>
   )
 }
