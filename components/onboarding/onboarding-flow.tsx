@@ -28,6 +28,8 @@ import {
   Car,
   Zap,
 } from "lucide-react"
+import { useAuth } from "@/hooks/use-auth"
+import type { OTPRequest, OTPVerification } from "@/lib/auth-service"
 
 type OnboardingStep =
   | "modal"
@@ -112,6 +114,8 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
 
+  const { user, isLoading: authLoading, sendOTP, verifyOTP, loginWithGoogle, loginWithFacebook } = useAuth()
+
   // Timer para OTP
   useEffect(() => {
     if ((step === "otp-register" || step === "otp-login") && otpTimer > 0) {
@@ -124,12 +128,25 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
     setIsLoading(true)
     setError("")
 
-    // Simular envío de OTP
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    try {
+      const otpRequest: OTPRequest = {
+        phone: formData.phone,
+        countryCode: "+56",
+      }
 
-    setIsLoading(false)
-    setOtpTimer(30)
-    setStep(isLogin ? "otp-login" : "otp-register")
+      const result = await sendOTP(otpRequest)
+
+      if (result.success) {
+        setOtpTimer(30)
+        setStep(isLogin ? "otp-login" : "otp-register")
+      } else {
+        setError(result.message)
+      }
+    } catch (error) {
+      setError("Error al enviar código. Intenta nuevamente.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleOtpSubmit = async () => {
@@ -141,17 +158,31 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
     setIsLoading(true)
     setError("")
 
-    // Simular verificación
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    try {
+      const verification: OTPVerification = {
+        phone: formData.phone,
+        code: formData.otp,
+        countryCode: "+56",
+      }
 
-    setIsLoading(false)
+      const result = await verifyOTP(verification)
 
-    if (isLogin) {
-      // Login exitoso - ir al dashboard
-      onComplete(formData)
-    } else {
-      // Continuar con registro
-      setStep("basic-data")
+      if (result.success) {
+        if (isLogin || result.isNewUser) {
+          // Login exitoso o usuario nuevo - ir al dashboard o continuar registro
+          if (isLogin) {
+            onComplete(result.user)
+          } else {
+            setStep("basic-data")
+          }
+        }
+      } else {
+        setError(result.message)
+      }
+    } catch (error) {
+      setError("Error al verificar código. Intenta nuevamente.")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -199,6 +230,14 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
       default:
         return true
     }
+  }
+
+  const handleGoogleLogin = () => {
+    loginWithGoogle()
+  }
+
+  const handleFacebookLogin = () => {
+    loginWithFacebook()
   }
 
   const renderStep = () => {
