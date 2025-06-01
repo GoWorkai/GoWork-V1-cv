@@ -22,7 +22,6 @@ import {
   Music,
   PaintBucket,
   Plus,
-  Search,
   Phone,
   Video,
 } from "lucide-react"
@@ -30,6 +29,7 @@ import { useState } from "react"
 import { OnboardingFlow } from "@/components/onboarding/onboarding-flow"
 import { useAuth } from "@/contexts/auth-context"
 import { useRouter } from "next/navigation"
+import { GowChatWidget } from "@/components/gow-chat-widget"
 
 export function BentoGrid() {
   const [showOnboarding, setShowOnboarding] = useState(false)
@@ -118,36 +118,10 @@ export function BentoGrid() {
           </CardContent>
         </Card>
 
-        {/* Búsqueda Rápida - ACTUALIZADA según la imagen de referencia */}
-        <Card className="md:col-span-2 bg-white border border-gray-200 hover:border-[#007bff] hover:scale-[1.02] transition-all duration-500 overflow-hidden">
+        {/* Gow IA Chat Widget - ACTUALIZADO según la imagen */}
+        <Card className="md:col-span-2 bg-transparent border-none hover:scale-[1.02] transition-all duration-500">
           <CardContent className="p-0 h-full">
-            <div className="bg-[#007bff] text-white p-4">
-              <h3 className="font-bold text-lg flex items-center">
-                <Search className="h-5 w-5 mr-2" />
-                Buscar Servicios
-              </h3>
-            </div>
-            <div className="p-4">
-              <div className="relative mb-4">
-                <input
-                  type="text"
-                  placeholder="¿Qué servicio necesitas?"
-                  className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 pl-10 outline-none focus:border-[#007bff] transition-all"
-                />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {["Desarrollo", "Diseño", "Hogar", "Educación"].map((tag) => (
-                  <span
-                    key={tag}
-                    className="bg-[#007bff]/10 text-[#007bff] px-3 py-1 rounded-full text-sm flex items-center"
-                  >
-                    <span className="mr-1">#</span>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
+            <GowChatWidget />
           </CardContent>
         </Card>
 
