@@ -423,15 +423,17 @@ export function AdvancedGeminiChat({ onClose, isMinimized, onToggleMinimize }: A
                           </div>
                         )}
                         <div className="flex-1">
-                          <p className="text-sm whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                          <p className="text-sm whitespace-pre-wrap leading-relaxed text-white font-medium">
+                            {msg.content}
+                          </p>
                           <div className="flex items-center justify-between mt-3">
-                            <p className="text-xs opacity-60">
+                            <p className="text-xs text-gray-300">
                               {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                             </p>
                             {msg.sender === "user" && (
                               <div className="flex items-center space-x-2">
                                 <MessageCircle className="h-3 w-3 opacity-60" />
-                                <span className="text-xs opacity-60">Analizado</span>
+                                <span className="text-xs text-gray-300">Analizado</span>
                               </div>
                             )}
                           </div>
@@ -447,7 +449,7 @@ export function AdvancedGeminiChat({ onClose, isMinimized, onToggleMinimize }: A
                   <div className="bg-gray-800/80 backdrop-blur-sm text-white border border-gray-600 p-4 rounded-2xl">
                     <div className="flex items-center space-x-3">
                       <Loader2 className="h-4 w-4 animate-spin text-[#6610f2]" />
-                      <span className="text-sm">Gow está analizando y extrayendo datos...</span>
+                      <span className="text-sm text-white font-medium">Gow está analizando y extrayendo datos...</span>
                     </div>
                   </div>
                 </div>
@@ -467,7 +469,7 @@ export function AdvancedGeminiChat({ onClose, isMinimized, onToggleMinimize }: A
                       onKeyPress={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
                       placeholder="Escribe tu mensaje... Gow extraerá automáticamente información relevante"
                       disabled={isTyping}
-                      className="pr-20 border-gray-600 bg-gray-700/50 backdrop-blur-sm focus:border-[#007bff] focus:ring-[#007bff] text-white placeholder:text-gray-400 min-h-[50px]"
+                      className="pr-20 border-gray-600 bg-gray-700/50 backdrop-blur-sm focus:border-[#007bff] focus:ring-[#007bff] text-white font-medium placeholder:text-gray-300 min-h-[50px]"
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center space-x-2">
                       <button
@@ -523,7 +525,7 @@ export function AdvancedGeminiChat({ onClose, isMinimized, onToggleMinimize }: A
                 <Card className="bg-gray-700/50 border-gray-600">
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-white text-sm flex items-center space-x-2">
+                      <CardTitle className="text-white text-sm font-semibold flex items-center space-x-2">
                         <User className="h-4 w-4" />
                         <span>Perfil del Usuario</span>
                       </CardTitle>
@@ -584,7 +586,7 @@ export function AdvancedGeminiChat({ onClose, isMinimized, onToggleMinimize }: A
                 {/* Personal Information */}
                 <Card className="bg-gray-700/50 border-gray-600">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-white text-sm flex items-center space-x-2">
+                    <CardTitle className="text-white text-sm font-semibold flex items-center space-x-2">
                       <User className="h-4 w-4" />
                       <span>Información Personal</span>
                     </CardTitle>
@@ -593,25 +595,25 @@ export function AdvancedGeminiChat({ onClose, isMinimized, onToggleMinimize }: A
                     {extractedData.personalInfo.name && (
                       <div className="flex items-center space-x-2">
                         <User className="h-3 w-3 text-gray-400" />
-                        <span className="text-xs text-white">{extractedData.personalInfo.name}</span>
+                        <span className="text-xs text-white font-medium">{extractedData.personalInfo.name}</span>
                       </div>
                     )}
                     {extractedData.personalInfo.phone && (
                       <div className="flex items-center space-x-2">
                         <Phone className="h-3 w-3 text-gray-400" />
-                        <span className="text-xs text-white">{extractedData.personalInfo.phone}</span>
+                        <span className="text-xs text-white font-medium">{extractedData.personalInfo.phone}</span>
                       </div>
                     )}
                     {extractedData.personalInfo.email && (
                       <div className="flex items-center space-x-2">
                         <Mail className="h-3 w-3 text-gray-400" />
-                        <span className="text-xs text-white">{extractedData.personalInfo.email}</span>
+                        <span className="text-xs text-white font-medium">{extractedData.personalInfo.email}</span>
                       </div>
                     )}
                     {extractedData.personalInfo.location && (
                       <div className="flex items-center space-x-2">
                         <MapPin className="h-3 w-3 text-gray-400" />
-                        <span className="text-xs text-white">{extractedData.personalInfo.location}</span>
+                        <span className="text-xs text-white font-medium">{extractedData.personalInfo.location}</span>
                       </div>
                     )}
                     {Object.keys(extractedData.personalInfo).length === 0 && (
@@ -623,7 +625,7 @@ export function AdvancedGeminiChat({ onClose, isMinimized, onToggleMinimize }: A
                 {/* Professional Information */}
                 <Card className="bg-gray-700/50 border-gray-600">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-white text-sm flex items-center space-x-2">
+                    <CardTitle className="text-white text-sm font-semibold flex items-center space-x-2">
                       <Briefcase className="h-4 w-4" />
                       <span>Información Profesional</span>
                     </CardTitle>
@@ -658,7 +660,7 @@ export function AdvancedGeminiChat({ onClose, isMinimized, onToggleMinimize }: A
                         <p className="text-xs text-gray-400 mb-1">Experiencia:</p>
                         <div className="space-y-1">
                           {extractedData.professionalInfo.experience.map((exp, index) => (
-                            <p key={index} className="text-xs text-white">
+                            <p key={index} className="text-xs text-white font-medium">
                               • {exp}
                             </p>
                           ))}
@@ -671,7 +673,7 @@ export function AdvancedGeminiChat({ onClose, isMinimized, onToggleMinimize }: A
                 {/* Preferences & Interests */}
                 <Card className="bg-gray-700/50 border-gray-600">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-white text-sm flex items-center space-x-2">
+                    <CardTitle className="text-white text-sm font-semibold flex items-center space-x-2">
                       <Heart className="h-4 w-4" />
                       <span>Preferencias e Intereses</span>
                     </CardTitle>
@@ -713,7 +715,7 @@ export function AdvancedGeminiChat({ onClose, isMinimized, onToggleMinimize }: A
                 {/* Keywords & Analytics */}
                 <Card className="bg-gray-700/50 border-gray-600">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-white text-sm flex items-center space-x-2">
+                    <CardTitle className="text-white text-sm font-semibold flex items-center space-x-2">
                       <TrendingUp className="h-4 w-4" />
                       <span>Palabras Clave</span>
                     </CardTitle>
@@ -739,7 +741,7 @@ export function AdvancedGeminiChat({ onClose, isMinimized, onToggleMinimize }: A
                 {/* Action Recommendations */}
                 <Card className="bg-gradient-to-r from-[#6610f2]/20 to-[#007bff]/20 border-[#6610f2]/30">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-white text-sm flex items-center space-x-2">
+                    <CardTitle className="text-white text-sm font-semibold flex items-center space-x-2">
                       <Target className="h-4 w-4" />
                       <span>Recomendaciones</span>
                     </CardTitle>
