@@ -1,9 +1,13 @@
 "use client"
 
 import { useState } from "react"
+import { useAuth } from "@/contexts/auth-context"
+import { LoginForm } from "@/components/auth/login-form"
+import { RegisterForm } from "@/components/auth/register-form"
+import { DashboardLayout } from "@/components/dashboard/dashboard-layout"
+import { DashboardHome } from "@/components/dashboard/dashboard-home"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { SidebarNavigation } from "@/components/sidebar-navigation"
 import { AdvancedAISearch } from "@/components/advanced-ai-search"
 import { BentoGrid } from "@/components/bento-grid"
@@ -12,11 +16,32 @@ import { FloatingBackground } from "@/components/floating-background"
 import { GeminiChat } from "@/components/gemini-chat"
 import { ArrowRight, X, Crown, Sparkles, Users, Star, CheckCircle, MessageCircle, Globe } from "lucide-react"
 
-export default function GoWorkAdvanced() {
+export default function GoWorkApp() {
+  const { isAuthenticated } = useAuth()
+  const [authMode, setAuthMode] = useState<"landing" | "login" | "register">("landing")
   const [activeTab, setActiveTab] = useState("inicio")
   const [showBanner, setShowBanner] = useState(true)
-  const [showRegisterForm, setShowRegisterForm] = useState(false)
 
+  // Si el usuario está autenticado, mostrar el dashboard
+  if (isAuthenticated) {
+    return (
+      <DashboardLayout>
+        <DashboardHome />
+      </DashboardLayout>
+    )
+  }
+
+  // Si está en modo login, mostrar formulario de login
+  if (authMode === "login") {
+    return <LoginForm onBack={() => setAuthMode("landing")} onSwitchToRegister={() => setAuthMode("register")} />
+  }
+
+  // Si está en modo register, mostrar formulario de registro
+  if (authMode === "register") {
+    return <RegisterForm onBack={() => setAuthMode("landing")} onSwitchToLogin={() => setAuthMode("login")} />
+  }
+
+  // Landing page (código existente)
   const communityStats = [
     { number: "15K+", label: "Talentos conectados", icon: Users },
     { number: "8K+", label: "Proyectos completados", icon: CheckCircle },
@@ -108,7 +133,7 @@ export default function GoWorkAdvanced() {
                     <div className="flex flex-col sm:flex-row gap-6 justify-center">
                       <Button
                         size="lg"
-                        onClick={() => setShowRegisterForm(true)}
+                        onClick={() => setAuthMode("register")}
                         className="bg-gradient-to-r from-[#FFA500] to-[#FF8C00] hover:from-[#FF8C00] hover:to-[#FFA500] text-white text-xl px-10 py-6 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
                       >
                         Crear Cuenta Gratis
@@ -117,9 +142,10 @@ export default function GoWorkAdvanced() {
                       <Button
                         size="lg"
                         variant="outline"
+                        onClick={() => setAuthMode("login")}
                         className="border-2 border-gray-600 text-white hover:bg-gray-800 text-xl px-10 py-6 rounded-2xl backdrop-blur-sm"
                       >
-                        Explorar Servicios
+                        Iniciar Sesión
                         <Globe className="ml-3 h-6 w-6" />
                       </Button>
                     </div>
@@ -222,7 +248,7 @@ export default function GoWorkAdvanced() {
                         <div className="flex flex-col sm:flex-row gap-6 justify-center">
                           <Button
                             size="lg"
-                            onClick={() => setShowRegisterForm(true)}
+                            onClick={() => setAuthMode("register")}
                             className="bg-gradient-to-r from-[#FFA500] to-[#FF8C00] hover:from-[#FF8C00] hover:to-[#FFA500] text-white text-xl px-10 py-6 rounded-2xl hover:shadow-2xl transition-all duration-300"
                           >
                             Regístrate Ahora
@@ -231,9 +257,10 @@ export default function GoWorkAdvanced() {
                           <Button
                             size="lg"
                             variant="outline"
+                            onClick={() => setAuthMode("login")}
                             className="border-2 border-gray-600 text-white hover:bg-gray-800 text-xl px-10 py-6 rounded-2xl"
                           >
-                            Descubre Cómo Funciona
+                            Iniciar Sesión
                             <Sparkles className="ml-3 h-6 w-6" />
                           </Button>
                         </div>
@@ -275,12 +302,21 @@ export default function GoWorkAdvanced() {
                         La sección de <strong>{activeTab}</strong> estará disponible próximamente con todas las
                         funcionalidades.
                       </p>
-                      <Button
-                        onClick={() => setActiveTab("inicio")}
-                        className="bg-gradient-to-r from-[#FFA500] to-[#FF8C00] hover:from-[#FF8C00] hover:to-[#FFA500] text-white"
-                      >
-                        Volver al Inicio
-                      </Button>
+                      <div className="flex gap-4">
+                        <Button
+                          onClick={() => setActiveTab("inicio")}
+                          className="bg-gradient-to-r from-[#FFA500] to-[#FF8C00] hover:from-[#FF8C00] hover:to-[#FFA500] text-white"
+                        >
+                          Volver al Inicio
+                        </Button>
+                        <Button
+                          onClick={() => setAuthMode("register")}
+                          variant="outline"
+                          className="border-gray-600 text-white hover:bg-gray-700"
+                        >
+                          Crear Cuenta
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 )}
@@ -292,72 +328,6 @@ export default function GoWorkAdvanced() {
 
       {/* Gemini Chat Widget */}
       <GeminiChat />
-
-      {/* Register Modal */}
-      {showRegisterForm && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <Card className="w-full max-w-md bg-gray-800/90 backdrop-blur-xl border border-gray-700">
-            <CardContent className="p-8">
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-white">Libera Tu Talento</h2>
-                <button onClick={() => setShowRegisterForm(false)} className="text-gray-400 hover:text-white">
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-
-              <form className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-white mb-2">Nombre completo</label>
-                  <Input
-                    type="text"
-                    placeholder="Tu nombre completo"
-                    className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-[#007bff] focus:ring-[#007bff]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-white mb-2">Número de teléfono</label>
-                  <Input
-                    type="tel"
-                    placeholder="+56 9 1234 5678"
-                    className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-[#007bff] focus:ring-[#007bff]"
-                  />
-                  <p className="text-xs text-gray-400 mt-1">Recibirás un código OTP para verificar tu cuenta</p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-white mb-2">¿Qué te interesa más?</label>
-                  <select className="w-full p-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white focus:border-[#007bff] focus:ring-[#007bff]">
-                    <option value="" className="bg-gray-800">
-                      Selecciona una opción
-                    </option>
-                    <option value="offer" className="bg-gray-800">
-                      Ofrecer mis servicios
-                    </option>
-                    <option value="hire" className="bg-gray-800">
-                      Contratar servicios
-                    </option>
-                    <option value="both" className="bg-gray-800">
-                      Ambos (Perfil Dual)
-                    </option>
-                  </select>
-                </div>
-
-                <Button className="w-full bg-gradient-to-r from-[#FFA500] to-[#FF8C00] hover:from-[#FF8C00] hover:to-[#FFA500] text-white py-3 text-lg">
-                  Crear Cuenta Gratis
-                </Button>
-
-                <div className="text-center pt-4 border-t border-gray-700">
-                  <p className="text-sm text-gray-300">
-                    ¿Ya tienes cuenta?{" "}
-                    <button className="text-[#FFA500] hover:text-[#FF8C00] font-medium">Iniciar sesión</button>
-                  </p>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      )}
     </div>
   )
 }
