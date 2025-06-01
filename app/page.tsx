@@ -241,15 +241,44 @@ export default function GoWorkAdvanced() {
 
           {/* Other tabs content */}
           {activeTab !== "inicio" && (
-            <div className="p-8 text-center min-h-screen flex items-center justify-center">
-              <Card className="bg-gray-800/80 backdrop-blur-xl border border-gray-700 max-w-md">
-                <CardContent className="p-8">
-                  <h2 className="text-2xl font-bold text-white mb-4">
-                    {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-                  </h2>
-                  <p className="text-gray-300">Esta sección está en desarrollo. ¡Pronto estará disponible!</p>
-                </CardContent>
-              </Card>
+            <div className="p-8 min-h-screen">
+              <div className="max-w-7xl mx-auto">
+                <h2 className="text-3xl font-bold text-white mb-6">
+                  {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+                </h2>
+
+                {activeTab === "ia" && (
+                  <div className="mb-8">
+                    <AdvancedAISearch />
+                  </div>
+                )}
+
+                {activeTab !== "ia" && (
+                  <Card className="bg-gray-800/80 backdrop-blur-xl border border-gray-700">
+                    <CardContent className="p-8">
+                      <div className="flex items-center space-x-4 mb-6">
+                        <div className="w-12 h-12 bg-gradient-to-br from-[#6610f2] to-[#007bff] rounded-xl flex items-center justify-center">
+                          <Sparkles className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-white">Contenido en Preparación</h3>
+                          <p className="text-gray-300">Estamos trabajando para ofrecerte la mejor experiencia</p>
+                        </div>
+                      </div>
+                      <p className="text-gray-200 mb-4">
+                        La sección de <strong>{activeTab}</strong> estará disponible próximamente con todas las
+                        funcionalidades.
+                      </p>
+                      <Button
+                        onClick={() => setActiveTab("inicio")}
+                        className="bg-gradient-to-r from-[#FFA500] to-[#FF8C00] hover:from-[#FF8C00] hover:to-[#FFA500] text-white"
+                      >
+                        Volver al Inicio
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
             </div>
           )}
         </div>

@@ -22,22 +22,22 @@ class GeminiService {
   async searchServices(query: string, location = "Santiago, Chile"): Promise<SearchResult> {
     try {
       const prompt = `
-      Actúa como Gow, el asistente de IA de GoWork, una plataforma de servicios freelance en Chile.
-      
-      Consulta del usuario: "${query}"
-      Ubicación: ${location}
-      
-      Analiza esta consulta y responde SOLO con un objeto JSON válido con esta estructura exacta:
-      {
-        "professionals": [número entre 5-50],
-        "priceRange": {"min": [número], "max": [número]},
-        "availability": "[texto descriptivo]",
-        "recommendations": ["recomendación 1", "recomendación 2", "recomendación 3"],
-        "location": "${location}"
-      }
-      
-      No incluyas texto adicional, solo el JSON.
-    `
+    Actúa como Gow, el asistente de IA de GoWork, una plataforma de servicios freelance en Chile.
+    
+    Consulta del usuario: "${query}"
+    Ubicación: ${location}
+    
+    Analiza esta consulta y responde SOLO con un objeto JSON válido con esta estructura exacta:
+    {
+      "professionals": [número entre 5-50],
+      "priceRange": {"min": [número], "max": [número]},
+      "availability": "[texto descriptivo]",
+      "recommendations": ["recomendación 1", "recomendación 2", "recomendación 3"],
+      "location": "${location}"
+    }
+    
+    No incluyas texto adicional, solo el JSON.
+  `
 
       const result = await this.model.generateContent(prompt)
       const response = await result.response
@@ -49,21 +49,28 @@ class GeminiService {
         return JSON.parse(jsonMatch[0])
       }
 
-      throw new Error("No se pudo parsear la respuesta")
+      // Si no se pudo extraer JSON, usar datos simulados
+      console.log("No se pudo extraer JSON de la respuesta, usando datos simulados")
+      return this.getFallbackSearchResult(location)
     } catch (error) {
       console.error("Error en búsqueda Gemini:", error)
       // Fallback con datos simulados
-      return {
-        professionals: Math.floor(Math.random() * 45) + 5,
-        priceRange: { min: 15000, max: 80000 },
-        availability: "Disponible en 24-48 horas",
-        recommendations: [
-          "Verifica las calificaciones antes de contratar",
-          "Compara al menos 3 presupuestos",
-          "Define claramente el alcance del trabajo",
-        ],
-        location,
-      }
+      return this.getFallbackSearchResult(location)
+    }
+  }
+
+  // Método para generar datos simulados consistentes
+  private getFallbackSearchResult(location: string): SearchResult {
+    return {
+      professionals: Math.floor(Math.random() * 45) + 5,
+      priceRange: { min: 15000, max: 80000 },
+      availability: "Disponible en 24-48 horas",
+      recommendations: [
+        "Verifica las calificaciones antes de contratar",
+        "Compara al menos 3 presupuestos",
+        "Define claramente el alcance del trabajo",
+      ],
+      location,
     }
   }
 

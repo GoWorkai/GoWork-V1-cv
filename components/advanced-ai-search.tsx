@@ -49,6 +49,18 @@ export function AdvancedAISearch() {
         "Necesito clases de guitarra",
         "Quiero ofrecer mis servicios de programación",
       ],
+      // Añadir un resultado de búsqueda simulado para mostrar la interfaz completa
+      searchResult: {
+        professionals: 24,
+        priceRange: { min: 25000, max: 75000 },
+        availability: "Disponible inmediatamente",
+        recommendations: [
+          "Busca profesionales con buenas reseñas",
+          "Compara diferentes opciones",
+          "Verifica la disponibilidad",
+        ],
+        location: "Santiago, Chile",
+      },
     },
   ])
   const [isTyping, setIsTyping] = useState(false)
@@ -145,11 +157,19 @@ export function AdvancedAISearch() {
       setMessages((prev) => [...prev, aiMessage])
     } catch (error) {
       console.error("Error en chat:", error)
+      // Mensaje de error más detallado y con sugerencias
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: "Lo siento, hubo un error al procesar tu consulta. Por favor intenta nuevamente. 😔",
+        content:
+          "Lo siento, hubo un problema al procesar tu consulta. Estamos trabajando para mejorar nuestro servicio. 😔",
         sender: "ai",
         timestamp: new Date(),
+        suggestions: [
+          "Intentar nuevamente",
+          "Usar una consulta más simple",
+          "Probar otra categoría",
+          "Contactar soporte",
+        ],
       }
       setMessages((prev) => [...prev, errorMessage])
     } finally {
