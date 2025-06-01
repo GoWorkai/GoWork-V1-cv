@@ -21,14 +21,19 @@ import {
   CheckCircle,
   MessageCircle,
   Search,
-  Image,
-  Video,
-  FileSpreadsheet,
-  FileIcon as Document,
-  Globe,
-  Upload,
   MoreHorizontal,
   Crown,
+  Wrench,
+  Car,
+  Camera,
+  Utensils,
+  Laptop,
+  Briefcase,
+  GraduationCap,
+  Music,
+  Scissors,
+  Hammer,
+  PaintBucket,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -52,80 +57,86 @@ export default function GoWorkDashboard() {
     { icon: Grid3X3, label: "Apps", id: "apps" },
   ]
 
-  const quickAccessItems = [
-    { icon: FileSpreadsheet, label: "Hoja de cálculo", id: "spreadsheet", isNew: true },
-    { icon: Document, label: "Doc", id: "doc" },
-    { icon: Grid3X3, label: "Pizarra online", id: "whiteboard" },
-    { icon: Layout, label: "Presentación", id: "presentation" },
-    { icon: Users, label: "Redes", id: "social" },
-    { icon: Image, label: "Fotos", id: "photos", isNew: true },
-    { icon: Video, label: "Video", id: "video" },
-    { icon: FileText, label: "Imprimir", id: "print" },
-    { icon: Globe, label: "Sitio web", id: "website" },
-    { icon: Palette, label: "Personalizar", id: "customize" },
-    { icon: Upload, label: "Subir", id: "upload" },
+  const serviceCategories = [
+    { icon: Wrench, label: "Reparaciones", id: "repairs", isNew: false },
+    { icon: Car, label: "Transporte", id: "transport" },
+    { icon: Camera, label: "Fotografía", id: "photography", isNew: true },
+    { icon: Utensils, label: "Gastronomía", id: "food" },
+    { icon: Laptop, label: "Tecnología", id: "tech" },
+    { icon: Briefcase, label: "Consultoría", id: "consulting", isNew: false },
+    { icon: GraduationCap, label: "Educación", id: "education" },
+    { icon: Music, label: "Entretenimiento", id: "entertainment" },
+    { icon: Scissors, label: "Belleza", id: "beauty" },
+    { icon: Hammer, label: "Construcción", id: "construction" },
+    { icon: PaintBucket, label: "Arte & Diseño", id: "design" },
     { icon: MoreHorizontal, label: "Más", id: "more" },
   ]
 
-  const features = [
+  const keyFeatures = [
     {
       icon: Users,
       title: "Registro Simple y Seguro",
-      description: "Únete con tu número de teléfono y verifica tu identidad fácilmente.",
+      description: "Únete en segundos con tu número de teléfono y verificación OTP. Nada más.",
     },
     {
       icon: MapPin,
       title: "Geolocalización Inteligente",
-      description: "Encuentra y ofrece servicios en tu área, conectando con personas cercanas.",
+      description:
+        "Encuentra y ofrece servicios en tu área. Te mostramos quién está disponible cerca y qué sabe hacer.",
     },
     {
       icon: Sparkles,
       title: 'Asistente IA "Gow"',
-      description: "Recibe ayuda personalizada para publicar, cotizar y gestionar tus servicios.",
+      description:
+        "Tu aliado inteligente. Gow te ayuda a publicar tareas, cotizar, mejorar tu perfil, coordinar entregas y mucho más.",
     },
     {
       icon: Users,
-      title: "Perfil Dual",
-      description: "Actúa como cliente y proveedor simultáneamente, adaptándote a tus necesidades.",
+      title: "Perfil Dual Único",
+      description:
+        "Sé cliente y proveedor al mismo tiempo con un solo perfil. Flexibilidad total para tus necesidades.",
     },
     {
       icon: Star,
       title: "Sistema de Reputación",
-      description: "Construye tu reputación con calificaciones y comentarios de la comunidad.",
+      description:
+        "Construye tu marca personal. Tu reputación crece con cada servicio completado y valoración recibida.",
     },
     {
       icon: Shield,
       title: "Pagos Seguros",
-      description: "Transacciones protegidas para tu tranquilidad.",
+      description: "Transacciones protegidas y transparentes dentro de la plataforma para tu tranquilidad.",
     },
   ]
 
-  const benefits = [
+  const whyChooseGoWork = [
     {
       icon: Zap,
-      title: "Flexibilidad Total",
-      description: "Tú decides cuándo y cómo trabajar.",
+      title: "Libertad y Autonomía",
+      description: "Tú decides cuándo, cuánto y cómo trabajar. Sin jefes, sin horarios, sin barreras.",
     },
     {
       icon: Users,
-      title: "Comunidad Activa",
-      description: "Únete a miles de usuarios que ya confían en GoWork.",
+      title: "Conecta con tu Comunidad",
+      description:
+        "Forma parte de una red activa y creciente. Miles de personas ya confían en GoWork para encontrar y ofrecer servicios.",
     },
     {
       icon: TrendingUp,
-      title: "Crecimiento Profesional",
-      description: "Mejora tus habilidades y amplía tu red de contactos.",
+      title: "Desarrolla tu Potencial",
+      description: "Mejora tus habilidades, amplía tu red de contactos y transforma tu talento en ingresos.",
     },
     {
       icon: Heart,
-      title: "Impacto Real",
-      description: "Contribuye al desarrollo de una economía más inclusiva y colaborativa.",
+      title: "Impacto Real y Cercano",
+      description:
+        "Contribuye a una economía local más inclusiva y colaborativa, activando el talento de tu propio barrio.",
     },
   ]
 
-  const stats = [
-    { number: "15K+", label: "Talentos activos", icon: Users },
-    { number: "8K+", label: "Servicios completados", icon: CheckCircle },
+  const communityStats = [
+    { number: "15K+", label: "Talentos conectados", icon: Users },
+    { number: "8K+", label: "Proyectos completados", icon: CheckCircle },
     { number: "95%", label: "Satisfacción cliente", icon: Star },
     { number: "24/7", label: "Soporte disponible", icon: MessageCircle },
   ]
@@ -134,14 +145,16 @@ export default function GoWorkDashboard() {
     {
       name: "María González",
       role: "Diseñadora Gráfica",
-      content: "GoWork me ha permitido conectar con clientes increíbles y hacer crecer mi negocio freelance.",
+      content:
+        "GoWork me ha permitido conectar con clientes increíbles en mi barrio y hacer crecer mi negocio freelance de manera local.",
       rating: 5,
       avatar: "/placeholder.svg?height=40&width=40&text=MG",
     },
     {
       name: "Carlos Ruiz",
-      role: "Desarrollador Web",
-      content: "La plataforma es intuitiva y el sistema de pagos es muy seguro. Totalmente recomendado.",
+      role: "Técnico en Reparaciones",
+      content:
+        "La plataforma es intuitiva y el sistema de pagos es muy seguro. Ahora tengo trabajo constante cerca de casa.",
       rating: 5,
       avatar: "/placeholder.svg?height=40&width=40&text=CR",
     },
@@ -154,40 +167,40 @@ export default function GoWorkDashboard() {
     },
   ]
 
-  const aiCapabilities = [
+  const gowCapabilities = [
     {
       title: "Crear perfil profesional",
-      description: "Un perfil optimizado que destaque tus habilidades y experiencia",
+      description: "Un perfil optimizado que destaque tus habilidades y experiencia única",
       image: "/placeholder.svg?height=120&width=200&text=Perfil+Pro",
       color: "bg-gradient-to-br from-[#007bff] to-[#0056b3]",
     },
     {
-      title: "Generar propuestas",
-      description: "Propuestas personalizadas que aumenten tus posibilidades de éxito",
-      image: "/placeholder.svg?height=120&width=200&text=Propuestas",
+      title: "Publicar tareas inteligentes",
+      description: "Gow te ayuda a describir y cotizar tus servicios de manera profesional",
+      image: "/placeholder.svg?height=120&width=200&text=Tareas",
       color: "bg-gradient-to-br from-[#FFA500] to-[#FF8C00]",
     },
     {
       title: "Optimizar precios",
-      description: "Calculadora inteligente para establecer precios competitivos",
+      description: "Calculadora inteligente para establecer precios competitivos en tu área",
       image: "/placeholder.svg?height=120&width=200&text=Precios",
       color: "bg-gradient-to-br from-[#007bff] to-[#0056b3]",
     },
     {
-      title: "Escribir descripciones",
-      description: "Descripciones atractivas para tus servicios y proyectos",
-      image: "/placeholder.svg?height=120&width=200&text=Descripciones",
+      title: "Coordinar entregas",
+      description: "Gestión automática de tiempos, ubicaciones y seguimiento de proyectos",
+      image: "/placeholder.svg?height=120&width=200&text=Entregas",
       color: "bg-gradient-to-br from-[#FFA500] to-[#FF8C00]",
     },
     {
-      title: "Gestionar comunicación",
-      description: "Respuestas automáticas y seguimiento de clientes",
-      image: "/placeholder.svg?height=120&width=200&text=Chat",
+      title: "Mejorar reputación",
+      description: "Consejos personalizados para construir tu marca personal en la plataforma",
+      image: "/placeholder.svg?height=120&width=200&text=Reputación",
       color: "bg-gradient-to-br from-[#007bff] to-[#0056b3]",
     },
     {
-      title: "Analizar mercado",
-      description: "Insights sobre demanda y tendencias en tu área",
+      title: "Analizar oportunidades",
+      description: "Insights sobre demanda y tendencias de servicios en tu comunidad",
       image: "/placeholder.svg?height=120&width=200&text=Analytics",
       color: "bg-gradient-to-br from-[#FFA500] to-[#FF8C00]",
     },
@@ -200,11 +213,11 @@ export default function GoWorkDashboard() {
         <h1>GoWork - La Red Social del Talento y las Oportunidades Humanas</h1>
         <meta
           name="description"
-          content="Transforma tus habilidades en ingresos reales. Conecta con personas que necesitan lo que sabes hacer y encuentra oportunidades cerca de ti en GoWork."
+          content="Descubre GoWork, la plataforma que transforma tus habilidades en ingresos reales. Conecta con personas que necesitan lo que sabes hacer y encuentra oportunidades cerca de ti."
         />
         <meta
           name="keywords"
-          content="trabajo freelance, servicios locales, red social profesional, habilidades, ingresos, oportunidades, talento, comunidad, GoWork"
+          content="trabajo freelance, servicios locales, red social profesional, habilidades, ingresos, oportunidades, talento, comunidad, GoWork, libertad laboral"
         />
       </div>
 
@@ -287,16 +300,40 @@ export default function GoWorkDashboard() {
         <div className="flex-1 relative z-10">
           {activeTab === "inicio" && (
             <div className="p-4 lg:p-8">
-              {/* Hero Section - Canva Style */}
+              {/* Hero Section - GoWork Style */}
               <div className="text-center mb-16 max-w-5xl mx-auto">
                 <h1 className="text-4xl lg:text-6xl font-bold text-[#333333] mb-6 leading-tight">
-                  ¿Qué <span className="text-[#007bff]">diseñaremos</span> hoy?
+                  🌟 GoWork: La <span className="text-[#007bff]">Libertad</span> de Tu Talento
                 </h1>
+
+                <p className="text-lg lg:text-xl text-[#333333]/80 mb-8 leading-relaxed max-w-4xl mx-auto">
+                  Descubre GoWork, la plataforma que transforma tus habilidades en ingresos reales. Conecta con personas
+                  que necesitan lo que sabes hacer y encuentra oportunidades cerca de ti, todo en un solo lugar.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                  <Button
+                    size="lg"
+                    onClick={() => setShowRegisterForm(true)}
+                    className="bg-[#FFA500] hover:bg-[#FF8C00] text-white text-lg px-8 py-4 rounded-xl hover:shadow-lg transition-all"
+                  >
+                    Crear Cuenta Gratis
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={() => setActiveTab("explorar")}
+                    className="border-2 border-[#007bff] text-[#007bff] hover:bg-[#007bff]/10 text-lg px-8 py-4 rounded-xl"
+                  >
+                    Explorar Servicios
+                  </Button>
+                </div>
 
                 <div className="max-w-3xl mx-auto mb-8">
                   <div className="relative">
                     <Input
-                      placeholder="Describe tu idea, y yo la haré realidad"
+                      placeholder="¿Qué servicio necesitas? Describe tu proyecto y Gow te ayudará..."
                       className="text-lg py-6 pl-6 pr-16 border-2 border-[#D3D3D3] rounded-full bg-white focus:border-[#007bff] focus:ring-[#007bff] placeholder:text-[#333333]/50 text-[#333333]"
                     />
                     <button className="absolute right-4 top-1/2 -translate-y-1/2 bg-[#007bff] text-white p-2 rounded-full hover:bg-[#0056b3] transition-colors">
@@ -308,7 +345,7 @@ export default function GoWorkDashboard() {
                 <div className="flex flex-wrap justify-center gap-2 mb-8">
                   <button className="flex items-center space-x-2 px-4 py-2 bg-white border border-[#D3D3D3] hover:border-[#007bff] rounded-full transition-colors">
                     <FileText className="h-4 w-4 text-[#333333]" />
-                    <span className="text-sm font-medium text-[#333333]">Mis diseños</span>
+                    <span className="text-sm font-medium text-[#333333]">Mis servicios</span>
                   </button>
                   <button className="flex items-center space-x-2 px-4 py-2 bg-white border border-[#D3D3D3] hover:border-[#007bff] rounded-full transition-colors">
                     <Layout className="h-4 w-4 text-[#333333]" />
@@ -316,24 +353,24 @@ export default function GoWorkDashboard() {
                   </button>
                   <button className="flex items-center space-x-2 px-4 py-2 bg-[#6610f2]/10 border border-[#6610f2]/20 hover:border-[#6610f2] rounded-full transition-colors relative">
                     <Sparkles className="h-4 w-4 text-[#6610f2]" />
-                    <span className="text-sm font-medium text-[#6610f2]">GoWork IA</span>
-                    <span className="absolute -top-2 -right-2 bg-[#6610f2] text-white text-xs px-2 py-0.5 rounded-full">
+                    <span className="text-sm font-medium text-[#6610f2]">Gow IA</span>
+                    <span className="absolute -top-2 -right-2 bg-[#6610f2] text-white text-xs px-2 py-0.5 rounded-md">
                       Nuevo
                     </span>
                   </button>
                 </div>
 
-                {/* Quick Access Icons - Canva Style */}
+                {/* Service Categories - GoWork Network */}
                 <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-4 max-w-6xl mx-auto mb-16">
-                  {quickAccessItems.map((item, index) => {
-                    const IconComponent = item.icon
+                  {serviceCategories.map((service, index) => {
+                    const IconComponent = service.icon
                     return (
                       <div key={index} className="flex flex-col items-center relative">
                         <button className="w-16 h-16 flex items-center justify-center bg-white border border-[#D3D3D3] rounded-xl hover:border-[#007bff] hover:shadow-md transition-all group">
                           <IconComponent className="h-6 w-6 text-[#333333] group-hover:text-[#007bff]" />
                         </button>
-                        <span className="mt-2 text-xs text-[#333333]">{item.label}</span>
-                        {item.isNew && (
+                        <span className="mt-2 text-xs text-[#333333] text-center">{service.label}</span>
+                        {service.isNew && (
                           <span className="absolute -top-1 -right-1 bg-[#6610f2] text-white text-xs px-1.5 py-0.5 rounded-md">
                             Nuevo
                           </span>
@@ -343,27 +380,45 @@ export default function GoWorkDashboard() {
                   })}
                 </div>
 
-                {/* Illustration - Canva Style */}
+                {/* Illustration */}
                 <div className="flex justify-center mb-8">
                   <div className="relative w-64 h-64">
-                    <Image
+                    <img
                       src="/placeholder.svg?height=256&width=256&text=Mundo+de+Posibilidades"
-                      alt="Ilustración"
+                      alt="Ilustración GoWork"
                       className="w-full h-full object-contain"
                     />
                   </div>
                 </div>
 
-                <h2 className="text-2xl font-bold text-[#333333] mb-8">Hay un mundo de posibilidades</h2>
+                <h2 className="text-2xl font-bold text-[#333333] mb-8">
+                  Hay un mundo de posibilidades en tu comunidad
+                </h2>
               </div>
 
-              {/* Stats Section */}
+              {/* What is GoWork Section */}
+              <div className="mb-16 bg-[#D3D3D3]/20 py-12 -mx-8 px-8">
+                <div className="max-w-4xl mx-auto text-center">
+                  <h2 className="text-3xl lg:text-4xl font-bold text-[#333333] mb-6">🚀 ¿Qué es GoWork?</h2>
+                  <p className="text-lg text-[#333333] leading-relaxed mb-4">
+                    GoWork es más que una aplicación; es una comunidad digital que combina lo mejor de una red social y
+                    un marketplace inteligente de servicios. Diseñada para empoderar a quienes ofrecen y buscan
+                    servicios, desde "peguitas" puntuales hasta proyectos profesionales completos.
+                  </p>
+                  <p className="text-lg text-[#333333] leading-relaxed">
+                    <strong>Somos la nueva infraestructura digital del trabajo independiente.</strong> La evolución
+                    digital de las antiguas "páginas amarillas", pero viva, móvil, inteligente y social.
+                  </p>
+                </div>
+              </div>
+
+              {/* Community Stats */}
               <div className="mb-16">
                 <h2 className="text-2xl lg:text-3xl font-bold text-center text-[#333333] mb-8">
-                  Estadísticas de Nuestra Comunidad
+                  📈 Nuestra Comunidad en Crecimiento
                 </h2>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
-                  {stats.map((stat, index) => {
+                  {communityStats.map((stat, index) => {
                     const IconComponent = stat.icon
                     return (
                       <Card key={index} className="bg-white border-[#D3D3D3] text-center">
@@ -378,25 +433,13 @@ export default function GoWorkDashboard() {
                 </div>
               </div>
 
-              {/* What is GoWork Section */}
-              <div className="mb-16 bg-[#D3D3D3]/20 py-12 -mx-8 px-8">
-                <div className="max-w-4xl mx-auto text-center">
-                  <h2 className="text-3xl lg:text-4xl font-bold text-[#333333] mb-6">¿Qué es GoWork?</h2>
-                  <p className="text-lg text-[#333333] leading-relaxed mb-8">
-                    GoWork es una red social del talento que conecta personas con habilidades con quienes necesitan sus
-                    servicios. Nuestra plataforma combina tecnología avanzada con un enfoque humano para crear
-                    oportunidades reales de crecimiento profesional y económico en tu comunidad local.
-                  </p>
-                </div>
-              </div>
-
-              {/* Features Section */}
+              {/* Key Features Section */}
               <div className="mb-16">
                 <h2 className="text-3xl lg:text-4xl font-bold text-center text-[#333333] mb-12">
-                  Funcionalidades Clave
+                  🔍 Descubre el Poder de GoWork
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                  {features.map((feature, index) => {
+                  {keyFeatures.map((feature, index) => {
                     const IconComponent = feature.icon
                     return (
                       <Card
@@ -416,13 +459,13 @@ export default function GoWorkDashboard() {
                 </div>
               </div>
 
-              {/* Benefits Section */}
+              {/* Why Choose GoWork Section */}
               <div className="mb-16 bg-[#D3D3D3]/20 py-12 -mx-8 px-8">
                 <h2 className="text-3xl lg:text-4xl font-bold text-center text-[#333333] mb-12">
-                  ¿Por Qué Elegir GoWork?
+                  🌐 ¿Por Qué Elegir GoWork?
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-                  {benefits.map((benefit, index) => {
+                  {whyChooseGoWork.map((benefit, index) => {
                     const IconComponent = benefit.icon
                     return (
                       <Card
@@ -474,13 +517,13 @@ export default function GoWorkDashboard() {
                 </div>
               </div>
 
-              {/* AI Capabilities Section */}
+              {/* Gow IA Capabilities Section */}
               <div className="mb-16 bg-[#D3D3D3]/20 py-12 -mx-8 px-8">
                 <h2 className="text-3xl lg:text-4xl font-bold text-center text-[#333333] mb-12">
                   Descubre lo que puedes hacer con Gow IA
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                  {aiCapabilities.map((capability, index) => (
+                  {gowCapabilities.map((capability, index) => (
                     <Card
                       key={index}
                       className="group cursor-pointer hover:shadow-lg transition-all duration-300 bg-white border-[#D3D3D3] overflow-hidden"
@@ -493,7 +536,7 @@ export default function GoWorkDashboard() {
                           <p className="text-sm text-[#333333]/80 mb-4 line-clamp-2">{capability.description}</p>
                         </div>
                         <div className={`h-24 ${capability.color} relative overflow-hidden`}>
-                          <Image
+                          <img
                             src={capability.image || "/placeholder.svg"}
                             alt={capability.title}
                             className="w-full h-full object-cover opacity-80"
@@ -505,15 +548,14 @@ export default function GoWorkDashboard() {
                 </div>
               </div>
 
-              {/* CTA Section */}
+              {/* Final CTA Section */}
               <div className="text-center">
                 <Card className="bg-gradient-to-r from-[#007bff] to-[#0056b3] text-white max-w-4xl mx-auto">
                   <CardContent className="p-8 lg:p-12">
-                    <h2 className="text-3xl lg:text-4xl font-bold mb-6">
-                      ¿Listo para transformar tus habilidades en ingresos?
-                    </h2>
+                    <h2 className="text-3xl lg:text-4xl font-bold mb-6">🎯 Únete a GoWork Hoy y Libera Tu Talento</h2>
                     <p className="text-lg mb-8 opacity-90">
-                      Únete a miles de profesionales que ya están creciendo con GoWork
+                      No esperes más. Empieza a transformar tu talento en oportunidades reales. Regístrate gratis y
+                      forma parte de una comunidad que valora y necesita lo que sabes hacer.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <Button
@@ -521,7 +563,7 @@ export default function GoWorkDashboard() {
                         onClick={() => setShowRegisterForm(true)}
                         className="bg-[#FFA500] hover:bg-[#FF8C00] text-white text-lg px-8 py-4 rounded-xl"
                       >
-                        Crear Cuenta Gratis
+                        Regístrate Ahora
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Button>
                       <Button
@@ -529,7 +571,7 @@ export default function GoWorkDashboard() {
                         variant="outline"
                         className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-4 rounded-xl"
                       >
-                        Conoce más
+                        Descubre Cómo Funciona
                       </Button>
                     </div>
                   </CardContent>
@@ -556,7 +598,7 @@ export default function GoWorkDashboard() {
           <Card className="w-full max-w-md bg-white border-[#D3D3D3]">
             <CardContent className="p-8">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-[#333333]">Crear Cuenta Gratis</h2>
+                <h2 className="text-2xl font-bold text-[#333333]">Libera Tu Talento</h2>
                 <button onClick={() => setShowRegisterForm(false)} className="text-[#333333]/70 hover:text-[#333333]">
                   <X className="h-6 w-6" />
                 </button>
@@ -573,21 +615,13 @@ export default function GoWorkDashboard() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#333333] mb-2">Email</label>
-                  <Input
-                    type="email"
-                    placeholder="tu@email.com"
-                    className="border-[#D3D3D3] focus:border-[#007bff] focus:ring-[#007bff] text-[#333333]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#333333] mb-2">Teléfono</label>
+                  <label className="block text-sm font-medium text-[#333333] mb-2">Número de teléfono</label>
                   <Input
                     type="tel"
                     placeholder="+56 9 1234 5678"
                     className="border-[#D3D3D3] focus:border-[#007bff] focus:ring-[#007bff] text-[#333333]"
                   />
+                  <p className="text-xs text-[#333333]/60 mt-1">Recibirás un código OTP para verificar tu cuenta</p>
                 </div>
 
                 <div>
@@ -595,7 +629,7 @@ export default function GoWorkDashboard() {
                   <select className="w-full p-3 border border-[#D3D3D3] rounded-lg focus:border-[#007bff] focus:ring-[#007bff] text-[#333333]">
                     <option>Ofrecer mis servicios</option>
                     <option>Contratar servicios</option>
-                    <option>Ambos</option>
+                    <option>Ambos (Perfil Dual)</option>
                   </select>
                 </div>
 
