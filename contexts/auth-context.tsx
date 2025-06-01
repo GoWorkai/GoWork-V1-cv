@@ -1,170 +1,80 @@
 "use client"
 
 import type React from "react"
-import { createContext, useContext, useState, useEffect } from "react"
-import { apiService, type User, type LoginRequest, type RegisterRequest } from "@/lib/api"
+import { createContext, useState, useEffect, useContext } from "react"
+import { authService } from "../services/auth.service"
 
-interface AuthContextType {
-  user: User | null
+interface AuthContextProps {
   isAuthenticated: boolean
+  user: any
   isLoading: boolean
-  login: (credentials: LoginRequest) => Promise<boolean>
-  register: (userData: RegisterRequest) => Promise<boolean>
-  loginWithGoogle: () => void
-  loginWithFacebook: () => void
+  login: (token: string) => Promise<void>
   logout: () => void
-  updateUser: (userData: Partial<User>) => void
-  refreshProfile: () => Promise<void>
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+const AuthContext = createContext<AuthContextProps>({
+  isAuthenticated: false,
+  user: null,
+  isLoading: false,
+  login: async () => {},
+  logout: () => {},
+})
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  const login = async (token: string) => {
+    localStorage.setItem("gowork_token", token)
+    const userData = await authService.validateToken(token)
+    if (userData.success) {
+      setUser(userData.user)
+      setIsAuthenticated(true)
+    }
+  }
+
+  const logout = () => {
+    localStorage.removeItem("gowork_token")
+    setIsAuthenticated(false)
+    setUser(null)
+  }
+
   useEffect(() => {
-    initializeAuth()
-  }, [])
+    const initAuth = async () => {
+      try {
+        setIsLoading(true)
+        const token = localStorage.getItem("gowork_token")
 
-  const initializeAuth = async () => {
-    try {
-      // Verificar si hay un token guardado
-      const savedToken = localStorage.getItem("gowork_token")
-      const savedUser = localStorage.getItem("gowork_user")
-
-      if (savedToken && savedUser) {
-        // Verificar que el token siga siendo válido
-        const profileResponse = await apiService.getProfile()
-
-        if (profileResponse.success && profileResponse.data) {
-          setUser(profileResponse.data)
-          setIsAuthenticated(true)
-          // Si ya está autenticado, redirigir al dashboard
-          if (window.location.pathname === "/" || window.location.pathname === "/login") {
-            window.location.href = "/dashboard"
+        if (token) {
+          // Validar token existente
+          const userData = await authService.validateToken(token)
+          if (userData.success) {
+            setUser(userData.user)
+            setIsAuthenticated(true)
+          } else {
+            localStorage.removeItem("gowork_token")
           }
-        } else {
-          // Token inválido, limpiar datos
-          localStorage.removeItem("gowork_token")
-          localStorage.removeItem("gowork_user")
         }
+      } catch (error) {
+        console.error("Auth initialization error:", error)
+        localStorage.removeItem("gowork_token")
+      } finally {
+        setIsLoading(false)
       }
-    } catch (error) {
-      console.error("Error initializing auth:", error)
-      // En caso de error, limpiar datos
-      localStorage.removeItem("gowork_token")
-      localStorage.removeItem("gowork_user")
-    } finally {
-      setIsLoading(false)
     }
-  }
 
-  const login = async (credentials: LoginRequest): Promise<boolean> => {
-    try {
-      setIsLoading(true)
-      const response = await apiService.login(credentials)
-
-      if (response.success && response.data) {
-        setUser(response.data.user)
-        setIsAuthenticated(true)
-
-        // Redirigir al dashboard interno
-        // window.location.href = "/dashboard"
-        return true
-      } else {
-        console.error("Login failed:", response.error)
-        return false
-      }
-    } catch (error) {
-      console.error("Login error:", error)
-      return false
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const register = async (userData: RegisterRequest): Promise<boolean> => {
-    try {
-      setIsLoading(true)
-      const response = await apiService.register(userData)
-
-      if (response.success && response.data) {
-        setUser(response.data.user)
-        setIsAuthenticated(true)
-
-        // Redirigir al dashboard interno después del registro
-        // window.location.href = "/dashboard"
-        return true
-      } else {
-        console.error("Registration failed:", response.error)
-        return false
-      }
-    } catch (error) {
-      console.error("Registration error:", error)
-      return false
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const loginWithGoogle = () => {
-    // Redirigir a Google OAuth con callback al dashboard
-    apiService.initiateGoogleAuth()
-  }
-
-  const loginWithFacebook = () => {
-    // Redirigir a Facebook OAuth con callback al dashboard
-    apiService.initiateFacebookAuth()
-  }
-
-  const logout = async () => {
-    try {
-      await apiService.logout()
-    } catch (error) {
-      console.error("Logout error:", error)
-    } finally {
-      setUser(null)
-      setIsAuthenticated(false)
-      // Redirigir a la página principal después del logout
-      window.location.href = "/"
-    }
-  }
-
-  const updateUser = (userData: Partial<User>) => {
-    if (user) {
-      const updatedUser = { ...user, ...userData }
-      setUser(updatedUser)
-      localStorage.setItem("gowork_user", JSON.stringify(updatedUser))
-    }
-  }
-
-  const refreshProfile = async () => {
-    try {
-      const response = await apiService.getProfile()
-      if (response.success && response.data) {
-        setUser(response.data)
-        localStorage.setItem("gowork_user", JSON.stringify(response.data))
-      }
-    } catch (error) {
-      console.error("Error refreshing profile:", error)
-    }
-  }
+    initAuth()
+  }, [])
 
   return (
     <AuthContext.Provider
       value={{
-        user,
         isAuthenticated,
+        user,
         isLoading,
         login,
-        register,
-        loginWithGoogle,
-        loginWithFacebook,
         logout,
-        updateUser,
-        refreshProfile,
       }}
     >
       {children}
@@ -172,10 +82,4 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider")
-  }
-  return context
-}
+export const useAuth = () => useContext(AuthContext)
