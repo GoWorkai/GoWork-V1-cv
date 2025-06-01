@@ -118,26 +118,35 @@ export function BentoGrid() {
           </CardContent>
         </Card>
 
-        {/* Búsqueda Rápida */}
-        <Card className="md:col-span-2 bg-white border-2 border-gray-200 hover:border-[#007bff] hover:scale-[1.02] transition-all duration-500">
-          <CardContent className="p-6 h-full flex flex-col justify-center">
-            <div className="flex items-center space-x-3 mb-4">
-              <Search className="h-6 w-6 text-[#007bff]" />
-              <h3 className="font-bold text-lg text-gray-800">Encuentra Servicios</h3>
+        {/* Búsqueda Rápida - ACTUALIZADA según la imagen de referencia */}
+        <Card className="md:col-span-2 bg-white border border-gray-200 hover:border-[#007bff] hover:scale-[1.02] transition-all duration-500 overflow-hidden">
+          <CardContent className="p-0 h-full">
+            <div className="bg-[#007bff] text-white p-4">
+              <h3 className="font-bold text-lg flex items-center">
+                <Search className="h-5 w-5 mr-2" />
+                Buscar Servicios
+              </h3>
             </div>
-            <div className="bg-gray-50 rounded-lg p-4 mb-4">
-              <input
-                type="text"
-                placeholder="¿Qué servicio necesitas?"
-                className="w-full bg-transparent border-none outline-none text-gray-700"
-              />
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {["Desarrollo", "Diseño", "Hogar", "Educación"].map((tag) => (
-                <span key={tag} className="bg-[#007bff]/10 text-[#007bff] px-3 py-1 rounded-full text-sm">
-                  {tag}
-                </span>
-              ))}
+            <div className="p-4">
+              <div className="relative mb-4">
+                <input
+                  type="text"
+                  placeholder="¿Qué servicio necesitas?"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 pl-10 outline-none focus:border-[#007bff] transition-all"
+                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {["Desarrollo", "Diseño", "Hogar", "Educación"].map((tag) => (
+                  <span
+                    key={tag}
+                    className="bg-[#007bff]/10 text-[#007bff] px-3 py-1 rounded-full text-sm flex items-center"
+                  >
+                    <span className="mr-1">#</span>
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           </CardContent>
         </Card>
