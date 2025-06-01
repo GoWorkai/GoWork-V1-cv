@@ -2,7 +2,6 @@
 
 // Configuración de la API base
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://v0-image-analysis-one-psi-82.vercel.app"
-const REDIRECT_URL = process.env.NEXT_PUBLIC_REDIRECT_URL || "https://v0-image-analysis-one-psi-82.vercel.app/chat"
 
 // Tipos para la API
 export interface ApiResponse<T> {
@@ -113,12 +112,10 @@ export interface Job {
 // Clase para manejar las llamadas a la API
 class ApiService {
   private baseUrl: string
-  private redirectUrl: string
   private token: string | null = null
 
   constructor() {
     this.baseUrl = API_BASE_URL
-    this.redirectUrl = REDIRECT_URL
     // Recuperar token del localStorage si existe
     if (typeof window !== "undefined") {
       this.token = localStorage.getItem("gowork_token")
@@ -143,19 +140,36 @@ class ApiService {
         headers,
       })
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        return {
-          success: false,
-          error: data.message || `HTTP error! status: ${response.status}`,
+      // Si es una respuesta exitosa, intentar parsear JSON
+      if (response.ok) {
+        try {
+          const data = await response.json()
+          return {
+            success: true,
+            data: data.data || data,
+            message: data.message,
+          }
+        } catch (jsonError) {
+          // Si no es JSON válido, devolver respuesta exitosa sin data
+          return {
+            success: true,
+            message: "Operation completed successfully",
+          }
         }
       }
 
-      return {
-        success: true,
-        data: data.data || data,
-        message: data.message,
+      // Si hay error, intentar obtener mensaje de error
+      try {
+        const errorData = await response.json()
+        return {
+          success: false,
+          error: errorData.message || `HTTP error! status: ${response.status}`,
+        }
+      } catch (jsonError) {
+        return {
+          success: false,
+          error: `HTTP error! status: ${response.status}`,
+        }
       }
     } catch (error) {
       console.error("API request failed:", error)
@@ -168,6 +182,40 @@ class ApiService {
 
   // Métodos de autenticación
   async login(credentials: LoginRequest): Promise<ApiResponse<{ user: User; token: string }>> {
+    // Simulación de login exitoso para demo
+    if (credentials.email === "demo@gowork.com") {
+      const mockUser: User = {
+        id: "demo-user-1",
+        name: "Usuario Demo",
+        email: credentials.email,
+        phone: "+56912345678",
+        userType: "both",
+        avatar: "/placeholder.svg?height=100&width=100&text=Demo",
+        location: "Santiago, Chile",
+        verified: true,
+        rating: 4.8,
+        completedJobs: 15,
+        skills: ["Desarrollo Web", "Diseño UI/UX", "Marketing Digital"],
+        services: ["Desarrollo de sitios web", "Consultoría digital"],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+
+      const mockToken = "demo-token-12345"
+
+      // Guardar en localStorage
+      this.token = mockToken
+      localStorage.setItem("gowork_token", mockToken)
+      localStorage.setItem("gowork_user", JSON.stringify(mockUser))
+
+      return {
+        success: true,
+        data: { user: mockUser, token: mockToken },
+        message: "Login exitoso",
+      }
+    }
+
+    // Para otros casos, intentar con el backend real
     const response = await this.request<{ user: User; token: string }>("/auth/login", {
       method: "POST",
       body: JSON.stringify(credentials),
@@ -217,12 +265,12 @@ class ApiService {
 
   // Métodos de autenticación social
   initiateGoogleAuth(): void {
-    const googleAuthUrl = `${this.baseUrl}/auth/google?redirect=${encodeURIComponent(this.redirectUrl)}`
+    const googleAuthUrl = `${this.baseUrl}/auth/google?redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`
     window.location.href = googleAuthUrl
   }
 
   initiateFacebookAuth(): void {
-    const facebookAuthUrl = `${this.baseUrl}/auth/facebook?redirect=${encodeURIComponent(this.redirectUrl)}`
+    const facebookAuthUrl = `${this.baseUrl}/auth/facebook?redirect=${encodeURIComponent(window.location.origin + "/dashboard")}`
     window.location.href = facebookAuthUrl
   }
 
@@ -243,6 +291,15 @@ class ApiService {
 
   // Métodos de usuario
   async getProfile(): Promise<ApiResponse<User>> {
+    // Si tenemos un usuario demo guardado, devolverlo
+    const savedUser = localStorage.getItem("gowork_user")
+    if (savedUser && this.token === "demo-token-12345") {
+      return {
+        success: true,
+        data: JSON.parse(savedUser),
+      }
+    }
+
     return this.request<User>("/user/profile")
   }
 

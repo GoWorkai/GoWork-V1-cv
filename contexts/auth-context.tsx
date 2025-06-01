@@ -41,6 +41,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (profileResponse.success && profileResponse.data) {
           setUser(profileResponse.data)
           setIsAuthenticated(true)
+          // Si ya está autenticado, redirigir al dashboard
+          window.location.href = "/dashboard"
         } else {
           // Token inválido, limpiar datos
           localStorage.removeItem("gowork_token")
@@ -66,9 +68,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(response.data.user)
         setIsAuthenticated(true)
 
-        // Redirigir a la aplicación antigua
-        window.location.href =
-          process.env.NEXT_PUBLIC_REDIRECT_URL || "https://v0-image-analysis-one-psi-82.vercel.app/chat"
+        // Redirigir al dashboard interno
+        window.location.href = "/dashboard"
         return true
       } else {
         console.error("Login failed:", response.error)
@@ -91,9 +92,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(response.data.user)
         setIsAuthenticated(true)
 
-        // Redirigir a la aplicación antigua
-        window.location.href =
-          process.env.NEXT_PUBLIC_REDIRECT_URL || "https://v0-image-analysis-one-psi-82.vercel.app/chat"
+        // Redirigir al dashboard interno después del registro
+        window.location.href = "/dashboard"
         return true
       } else {
         console.error("Registration failed:", response.error)
@@ -108,10 +108,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const loginWithGoogle = () => {
+    // Redirigir a Google OAuth con callback al dashboard
     apiService.initiateGoogleAuth()
   }
 
   const loginWithFacebook = () => {
+    // Redirigir a Facebook OAuth con callback al dashboard
     apiService.initiateFacebookAuth()
   }
 
@@ -123,6 +125,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setUser(null)
       setIsAuthenticated(false)
+      // Redirigir a la página principal después del logout
+      window.location.href = "/"
     }
   }
 
