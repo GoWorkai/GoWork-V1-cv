@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { SidebarNavigation } from "@/components/sidebar-navigation"
 import { AdvancedAISearch } from "@/components/advanced-ai-search"
 import { BentoGrid } from "@/components/bento-grid"
+import { ServicesClassification } from "@/components/services-classification"
 import { FloatingBackground } from "@/components/floating-background"
 import { GeminiChat } from "@/components/gemini-chat"
 import { ArrowRight, X, Crown, Sparkles, Users, Star, CheckCircle, MessageCircle, Globe } from "lucide-react"
@@ -80,7 +81,7 @@ export default function GoWorkAdvanced() {
         <div className="flex-1 relative z-30">
           {activeTab === "inicio" && (
             <main>
-              {/* Hero Section - Con sidebar */}
+              {/* Hero Section - Con sidebar más angosto */}
               <section id="inicio" className="pt-12 pb-16 px-6 lg:ml-0">
                 <div className="max-w-7xl mx-auto text-center">
                   {/* Main Title */}
@@ -128,6 +129,11 @@ export default function GoWorkAdvanced() {
 
               {/* Todas las secciones siguientes ocupan ancho completo */}
               <div className="lg:ml-0">
+                {/* Services Classification Section - Nueva sección */}
+                <section id="clasificacion" className="py-20 px-6">
+                  <ServicesClassification />
+                </section>
+
                 {/* BentoGrid Section - Ancho completo */}
                 <section id="servicios" className="py-20 px-6">
                   <div className="max-w-7xl mx-auto text-center mb-16">
