@@ -2,18 +2,26 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import QuickNav from "@/components/quick-nav"
-import GlobalChatWidget from "@/components/chat-widget/global-chat-widget"
-import IntelligentSearch from "@/components/ai-search/intelligent-search"
+import { ThemeProvider } from "@/components/theme-provider"
 import { AuthProvider } from "@/components/auth/auth-provider"
-import { Suspense } from "react"
+import { GlobalChatWidget } from "@/components/chat-widget/global-chat-widget"
+import { validateEnvironmentVariables } from "@/lib/database-config"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "GoWork - Conecta tu talento con oportunidades",
-  description: "Plataforma que conecta talentos con necesidades reales de manera rápida, humana y confiable.",
+  title: "GoWork - La Red Social del Talento",
+  description: "Conecta con personas que necesitan lo que sabes hacer y encuentra oportunidades cerca de ti",
     generator: 'v0.dev'
+}
+
+// Validar variables de entorno al iniciar la aplicación
+if (process.env.NODE_ENV !== "production") {
+  try {
+    validateEnvironmentVariables()
+  } catch (error) {
+    console.error("Error de configuración:", error)
+  }
 }
 
 export default function RootLayout({
@@ -22,28 +30,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <body className={inter.className}>
-        <AuthProvider>
-          {/* Global Search Bar */}
-          <Suspense fallback={<div>Loading...</div>}>
-            <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-40 w-full max-w-2xl px-4">
-              <IntelligentSearch />
-            </div>
-          </Suspense>
-
-          {children}
-
-          {/* Global Navigation */}
-          <Suspense fallback={<div>Loading...</div>}>
-            <QuickNav />
-          </Suspense>
-
-          {/* Global Chat Widget */}
-          <Suspense fallback={<div>Loading...</div>}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          <AuthProvider>
+            {children}
             <GlobalChatWidget />
-          </Suspense>
-        </AuthProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

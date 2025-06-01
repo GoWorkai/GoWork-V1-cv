@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
+import { supabase } from "./supabase"
 
 const genAI = new GoogleGenerativeAI("AIzaSyDBRyQ0TwOBhqjN5sFv0f3jSHp322jlNs4")
 
@@ -29,7 +30,8 @@ export interface GowResponse {
 }
 
 export interface UserContext {
-  userType: "client" | "freelancer" | "new"
+  userType: "client" | "freelancer" | "both" | "new"
+  userId?: string
   currentPage: string
   profileCompleteness?: number
   skills?: string[]
@@ -50,6 +52,11 @@ export class GowAgent {
 
   async processUserInteraction(userMessage: string, context: UserContext): Promise<GowResponse> {
     try {
+      // Enriquecer el contexto con datos reales si hay un userId
+      if (context.userId) {
+        await this.enrichContextWithUserData(context)
+      }
+
       const systemPrompt = this.buildSystemPrompt(context)
       const fullPrompt = `${systemPrompt}\n\nUsuario: ${userMessage}`
 
@@ -60,19 +67,97 @@ export class GowAgent {
       // Procesar respuesta según el tipo de interacción
       const interactionType = this.detectInteractionType(userMessage, context)
 
+      // Guardar la interacción en la base de datos si hay un userId
+      if (context.userId) {
+        await this.saveInteraction(context.userId, userMessage, text, interactionType)
+      }
+
       return {
         text: text.trim(),
         confidence: this.calculateConfidence(text, userMessage, context),
-        suggestions: this.generateContextualSuggestions(userMessage, context, interactionType),
-        actions: this.generateSmartActions(userMessage, context, interactionType),
-        profileOptimizations: interactionType === "profile" ? this.generateProfileOptimizations(context) : undefined,
+        suggestions: await this.generateContextualSuggestions(userMessage, context, interactionType),
+        actions: await this.generateSmartActions(userMessage, context, interactionType),
+        profileOptimizations:
+          interactionType === "profile" ? await this.generateProfileOptimizations(context) : undefined,
         proposalTemplate:
           interactionType === "proposal" ? await this.generateProposalTemplate(userMessage, context) : undefined,
-        recommendations: interactionType === "recommendations" ? this.generateRecommendations(context) : undefined,
+        recommendations:
+          interactionType === "recommendations" ? await this.generateRecommendations(context) : undefined,
       }
     } catch (error) {
       console.error("Error with Gow Agent:", error)
       return this.getFallbackResponse(userMessage, context)
+    }
+  }
+
+  private async enrichContextWithUserData(context: UserContext) {
+    try {
+      // Obtener datos del usuario
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", context.userId)
+        .single()
+
+      if (userError) throw userError
+
+      // Actualizar el contexto con datos reales
+      context.userType = userData.user_type || context.userType
+      context.location = userData.location || context.location
+      context.skills = userData.skills || []
+
+      // Calcular completitud del perfil
+      const requiredFields = ["full_name", "email", "phone", "location", "bio", "skills"]
+      const completedFields = requiredFields.filter((field) => userData[field] && userData[field].length > 0)
+      context.profileCompleteness = Math.round((completedFields.length / requiredFields.length) * 100)
+
+      // Obtener interacciones previas
+      const { data: interactions } = await supabase
+        .from("ai_interactions")
+        .select("user_message, ai_response")
+        .eq("user_id", context.userId)
+        .order("created_at", { ascending: false })
+        .limit(5)
+
+      if (interactions && interactions.length > 0) {
+        context.previousInteractions = interactions.map((i) => `Usuario: ${i.user_message}\nGow: ${i.ai_response}`)
+      }
+
+      // Si el usuario es cliente, obtener su proyecto actual
+      if (context.userType === "client") {
+        const { data: projectData } = await supabase
+          .from("projects")
+          .select("*")
+          .eq("client_id", context.userId)
+          .eq("status", "open")
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .single()
+
+        if (projectData) {
+          context.currentProject = {
+            title: projectData.title,
+            category: projectData.category,
+            budget: `${projectData.budget_min || 0} - ${projectData.budget_max || "sin límite"}`,
+            description: projectData.description,
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error enriching context:", error)
+    }
+  }
+
+  private async saveInteraction(userId: string, userMessage: string, aiResponse: string, interactionType: string) {
+    try {
+      await supabase.from("ai_interactions").insert({
+        user_id: userId,
+        user_message: userMessage,
+        ai_response: aiResponse,
+        interaction_type: interactionType,
+      })
+    } catch (error) {
+      console.error("Error saving interaction:", error)
     }
   }
 
@@ -93,6 +178,14 @@ CONTEXTO DEL USUARIO:
 - Habilidades: ${context.skills?.join(", ") || "No especificadas"}
 - Experiencia: ${context.experience || "No especificada"}
 - Ubicación: ${context.location || "No especificada"}
+${
+  context.currentProject
+    ? `- Proyecto actual: ${context.currentProject.title} (${context.currentProject.category})`
+    : ""
+}
+
+INTERACCIONES PREVIAS:
+${context.previousInteractions?.join("\n\n") || "No hay interacciones previas"}
 
 OBJETIVOS PRINCIPALES:
 1. Guiar en la creación y optimización de perfiles profesionales
@@ -167,9 +260,32 @@ Responde al siguiente mensaje considerando todo el contexto:
     return "general"
   }
 
-  private generateContextualSuggestions(userMessage: string, context: UserContext, interactionType: string): string[] {
+  private async generateContextualSuggestions(
+    userMessage: string,
+    context: UserContext,
+    interactionType: string,
+  ): Promise<string[]> {
     const suggestions = []
 
+    // Si tenemos un userId, intentar obtener sugerencias personalizadas de la base de datos
+    if (context.userId) {
+      try {
+        const { data } = await supabase
+          .rpc("get_personalized_suggestions", {
+            user_id: context.userId,
+            interaction_type: interactionType,
+          })
+          .limit(3)
+
+        if (data && data.length > 0) {
+          return data.map((item: any) => item.suggestion)
+        }
+      } catch (error) {
+        console.error("Error getting personalized suggestions:", error)
+      }
+    }
+
+    // Sugerencias predeterminadas si no hay personalizadas
     switch (interactionType) {
       case "profile":
         suggestions.push(
@@ -218,19 +334,46 @@ Responde al siguiente mensaje considerando todo el contexto:
     return suggestions.slice(0, 3)
   }
 
-  private generateSmartActions(
+  private async generateSmartActions(
     userMessage: string,
     context: UserContext,
     interactionType: string,
-  ): Array<{
-    id: string
-    label: string
-    type: "link" | "action" | "template"
-    url?: string
-    template?: string
-  }> {
+  ): Promise<
+    Array<{
+      id: string
+      label: string
+      type: "link" | "action" | "template"
+      url?: string
+      template?: string
+    }>
+  > {
     const actions = []
 
+    // Si tenemos un userId, intentar obtener acciones personalizadas
+    if (context.userId) {
+      try {
+        const { data } = await supabase
+          .rpc("get_personalized_actions", {
+            user_id: context.userId,
+            interaction_type: interactionType,
+          })
+          .limit(3)
+
+        if (data && data.length > 0) {
+          return data.map((item: any) => ({
+            id: item.action_id,
+            label: item.label,
+            type: item.action_type,
+            url: item.url,
+            template: item.template,
+          }))
+        }
+      } catch (error) {
+        console.error("Error getting personalized actions:", error)
+      }
+    }
+
+    // Acciones predeterminadas si no hay personalizadas
     switch (interactionType) {
       case "profile":
         actions.push(
@@ -271,11 +414,61 @@ Responde al siguiente mensaje considerando todo el contexto:
     return actions.slice(0, 3)
   }
 
-  private generateProfileOptimizations(context: UserContext): Array<{
-    field: string
-    suggestion: string
-    priority: "high" | "medium" | "low"
-  }> {
+  private async generateProfileOptimizations(context: UserContext): Promise<
+    Array<{
+      field: string
+      suggestion: string
+      priority: "high" | "medium" | "low"
+    }>
+  > {
+    // Si tenemos un userId, obtener optimizaciones reales basadas en el perfil
+    if (context.userId) {
+      try {
+        const { data: userData } = await supabase.from("users").select("*").eq("id", context.userId).single()
+
+        if (userData) {
+          const optimizations = []
+
+          if (!userData.skills || userData.skills.length < 3) {
+            optimizations.push({
+              field: "Habilidades",
+              suggestion: "Agrega al menos 5 habilidades específicas para aumentar tu visibilidad en búsquedas",
+              priority: "high" as const,
+            })
+          }
+
+          if (!userData.bio || userData.bio.length < 100) {
+            optimizations.push({
+              field: "Descripción profesional",
+              suggestion: "Expande tu descripción con ejemplos específicos de proyectos exitosos",
+              priority: "high" as const,
+            })
+          }
+
+          if (!userData.avatar_url) {
+            optimizations.push({
+              field: "Foto de perfil",
+              suggestion: "Añade una foto profesional para generar más confianza con los clientes",
+              priority: "high" as const,
+            })
+          }
+
+          if (!userData.hourly_rate && context.userType === "freelancer") {
+            optimizations.push({
+              field: "Tarifa por hora",
+              suggestion: "Establece tu tarifa por hora para atraer proyectos adecuados a tu nivel",
+              priority: "medium" as const,
+            })
+          }
+
+          return optimizations
+        }
+      } catch (error) {
+        console.error("Error generating profile optimizations:", error)
+      }
+    }
+
+    // Optimizaciones predeterminadas si no hay datos reales
     const optimizations = []
 
     if (!context.skills || context.skills.length < 3) {
@@ -312,6 +505,39 @@ Responde al siguiente mensaje considerando todo el contexto:
   }
 
   private async generateProposalTemplate(userMessage: string, context: UserContext): Promise<string> {
+    // Si tenemos datos reales del proyecto, personalizar la plantilla
+    if (context.userId && context.currentProject) {
+      const templatePrompt = `
+Genera una plantilla de propuesta profesional para GoWork basada en:
+- Tipo de usuario: ${context.userType}
+- Habilidades: ${context.skills?.join(", ") || "generales"}
+- Proyecto actual: ${context.currentProject.title} (${context.currentProject.category})
+- Descripción del proyecto: ${context.currentProject.description}
+- Presupuesto: ${context.currentProject.budget}
+- Mensaje del usuario: ${userMessage}
+
+La plantilla debe incluir:
+1. Saludo personalizado
+2. Comprensión del proyecto
+3. Propuesta de solución
+4. Experiencia relevante
+5. Timeline y entregables
+6. Presupuesto (placeholder)
+7. Llamada a la acción
+
+Formato: Texto directo, sin markdown, máximo 300 palabras.
+`
+
+      try {
+        const result = await this.model.generateContent(templatePrompt)
+        const response = await result.response
+        return response.text().trim()
+      } catch (error) {
+        console.error("Error generating proposal template:", error)
+      }
+    }
+
+    // Plantilla genérica si no hay datos reales
     const templatePrompt = `
 Genera una plantilla de propuesta profesional para GoWork basada en:
 - Tipo de usuario: ${context.userType}
@@ -357,13 +583,57 @@ Saludos,
     }
   }
 
-  private generateRecommendations(context: UserContext): Array<{
-    id: string
-    title: string
-    type: "project" | "freelancer"
-    match: number
-    reason: string
-  }> {
+  private async generateRecommendations(context: UserContext): Promise<
+    Array<{
+      id: string
+      title: string
+      type: "project" | "freelancer"
+      match: number
+      reason: string
+    }>
+  > {
+    // Si tenemos un userId, obtener recomendaciones reales de la base de datos
+    if (context.userId) {
+      try {
+        if (context.userType === "freelancer") {
+          // Proyectos recomendados para freelancers basados en habilidades
+          const { data: projects } = await supabase.rpc("get_matching_projects", {
+            freelancer_id: context.userId,
+            limit_count: 3,
+          })
+
+          if (projects && projects.length > 0) {
+            return projects.map((project: any) => ({
+              id: project.id,
+              title: project.title,
+              type: "project" as const,
+              match: project.match_score,
+              reason: project.match_reason || "Coincide con tus habilidades y preferencias",
+            }))
+          }
+        } else if (context.userType === "client" && context.currentProject) {
+          // Freelancers recomendados para clientes basados en el proyecto actual
+          const { data: freelancers } = await supabase.rpc("get_matching_freelancers", {
+            project_id: context.currentProject.id,
+            limit_count: 3,
+          })
+
+          if (freelancers && freelancers.length > 0) {
+            return freelancers.map((freelancer: any) => ({
+              id: freelancer.id,
+              title: `${freelancer.full_name} - ${freelancer.primary_skill || "Profesional"}`,
+              type: "freelancer" as const,
+              match: freelancer.match_score,
+              reason: freelancer.match_reason || "Especialista con experiencia en proyectos similares",
+            }))
+          }
+        }
+      } catch (error) {
+        console.error("Error generating recommendations:", error)
+      }
+    }
+
+    // Recomendaciones predeterminadas si no hay datos reales
     const recommendations = []
 
     if (context.userType === "freelancer") {
@@ -452,13 +722,7 @@ Saludos,
   }
 
   // Método para análisis de perfil completo
-  async analyzeProfile(profileData: {
-    name: string
-    skills: string[]
-    experience: string
-    portfolio: string[]
-    completeness: number
-  }): Promise<{
+  async analyzeProfile(userId: string): Promise<{
     score: number
     optimizations: Array<{
       field: string
@@ -469,14 +733,21 @@ Saludos,
     strengths: string[]
     recommendations: string[]
   }> {
-    const prompt = `
+    try {
+      // Obtener datos reales del perfil
+      const { data: profileData, error } = await supabase.from("users").select("*").eq("id", userId).single()
+
+      if (error) throw error
+
+      const prompt = `
 Como Gow, analiza este perfil de GoWork y proporciona optimizaciones específicas:
 
-Nombre: ${profileData.name}
-Habilidades: ${profileData.skills.join(", ")}
-Experiencia: ${profileData.experience}
-Portafolio: ${profileData.portfolio.length} proyectos
-Completitud: ${profileData.completeness}%
+Nombre: ${profileData.full_name}
+Habilidades: ${profileData.skills?.join(", ") || "No especificadas"}
+Experiencia: ${profileData.bio || "No especificada"}
+Ubicación: ${profileData.location || "No especificada"}
+Tipo de usuario: ${profileData.user_type}
+Calificación: ${profileData.rating || 0}/5 (${profileData.total_reviews || 0} reseñas)
 
 Responde en JSON con:
 {
@@ -487,7 +758,6 @@ Responde en JSON con:
 }
 `
 
-    try {
       const result = await this.model.generateContent(prompt)
       const response = await result.response
       const text = response
@@ -496,6 +766,7 @@ Responde en JSON con:
         .trim()
       return JSON.parse(text)
     } catch (error) {
+      console.error("Error analyzing profile:", error)
       return {
         score: 75,
         optimizations: [
