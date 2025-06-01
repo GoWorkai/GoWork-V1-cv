@@ -1,50 +1,16 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import { AuthProvider } from "@/contexts/auth-context"
 import "./globals.css"
+import { Navbar } from "@/components/navbar"
+import { ThemeProvider } from "@/components/theme-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "GoWork - La Red Social del Talento y las Oportunidades Humanas",
+  title: "GoWork - Conecta tu talento con quienes lo necesitan",
   description:
-    "Transforma tus habilidades en ingresos reales. Conecta con personas que necesitan lo que sabes hacer y encuentra oportunidades cerca de ti en GoWork.",
-  keywords:
-    "trabajo freelance, servicios locales, red social profesional, habilidades, ingresos, oportunidades, talento, comunidad, GoWork, freelancer, servicios bajo demanda",
-  authors: [{ name: "GoWork" }],
-  creator: "GoWork",
-  publisher: "GoWork",
-  robots: "index, follow",
-  openGraph: {
-    title: "GoWork - La Red Social del Talento y las Oportunidades Humanas",
-    description:
-      "Transforma tus habilidades en ingresos reales. Conecta con personas que necesitan lo que sabes hacer y encuentra oportunidades cerca de ti.",
-    type: "website",
-    locale: "es_ES",
-    siteName: "GoWork",
-    images: [
-      {
-        url: "/images/gowork-og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "GoWork - Red Social del Talento",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "GoWork - La Red Social del Talento y las Oportunidades Humanas",
-    description:
-      "Transforma tus habilidades en ingresos reales. Conecta con personas que necesitan lo que sabes hacer.",
-    images: ["/images/gowork-og-image.jpg"],
-  },
-  alternates: {
-    canonical: "https://gowork.com",
-  },
-  verification: {
-    google: "google-site-verification-code",
-  },
+    "GoWork es una plataforma que conecta talentos con necesidades reales de manera rápida, humana y confiable.",
     generator: 'v0.dev'
 }
 
@@ -55,21 +21,91 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#4A90E2" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-      </head>
       <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          <Navbar />
+          <main>{children}</main>
+          <footer className="bg-gray-100 py-8 mt-12">
+            <div className="container mx-auto px-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                  <h3 className="font-bold text-lg mb-4">GoWork</h3>
+                  <p className="text-gray-600">Conecta tu talento con quienes lo necesitan.</p>
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg mb-4">Servicios</h3>
+                  <ul className="space-y-2">
+                    <li>
+                      <a href="#" className="text-gray-600 hover:text-blue-600">
+                        Desarrollo
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-gray-600 hover:text-blue-600">
+                        Diseño
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-gray-600 hover:text-blue-600">
+                        Marketing
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-gray-600 hover:text-blue-600">
+                        Hogar
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg mb-4">Acerca de</h3>
+                  <ul className="space-y-2">
+                    <li>
+                      <a href="#" className="text-gray-600 hover:text-blue-600">
+                        Cómo funciona
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-gray-600 hover:text-blue-600">
+                        Términos
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-gray-600 hover:text-blue-600">
+                        Privacidad
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-gray-600 hover:text-blue-600">
+                        Contacto
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg mb-4">Síguenos</h3>
+                  <div className="flex space-x-4">
+                    <a href="#" className="text-gray-600 hover:text-blue-600">
+                      FB
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-blue-600">
+                      IG
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-blue-600">
+                      TW
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-blue-600">
+                      LI
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-8 pt-8 border-t border-gray-200 text-center text-gray-500">
+                <p>&copy; 2025 GoWork. Todos los derechos reservados.</p>
+              </div>
+            </div>
+          </footer>
+        </ThemeProvider>
       </body>
     </html>
   )
