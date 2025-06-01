@@ -1,333 +1,449 @@
-"use client"
-
-import { useState } from "react"
-import { useAuth } from "@/contexts/auth-context"
-import { LoginForm } from "@/components/auth/login-form"
-import { RegisterForm } from "@/components/auth/register-form"
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout"
-import { DashboardHome } from "@/components/dashboard/dashboard-home"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { SidebarNavigation } from "@/components/sidebar-navigation"
-import { AdvancedAISearch } from "@/components/advanced-ai-search"
-import { BentoGrid } from "@/components/bento-grid"
-import { ServicesClassification } from "@/components/services-classification"
-import { FloatingBackground } from "@/components/floating-background"
-import { GeminiChat } from "@/components/gemini-chat"
-import { ArrowRight, X, Crown, Sparkles, Users, Star, CheckCircle, MessageCircle, Globe } from "lucide-react"
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import {
+  MessageCircle,
+  MapPin,
+  Calendar,
+  User,
+  Star,
+  Brain,
+  ArrowRight,
+  TrendingUp,
+  Shield,
+  Zap,
+  Search,
+  CheckCircle,
+  Users,
+  Globe,
+  Smartphone,
+} from "lucide-react"
 
-export default function GoWorkApp() {
-  const { isAuthenticated } = useAuth()
-  const [authMode, setAuthMode] = useState<"landing" | "login" | "register">("landing")
-  const [activeTab, setActiveTab] = useState("inicio")
-  const [showBanner, setShowBanner] = useState(true)
-
-  // Si el usuario está autenticado, mostrar el dashboard
-  if (isAuthenticated) {
-    return (
-      <DashboardLayout>
-        <DashboardHome />
-      </DashboardLayout>
-    )
-  }
-
-  // Si está en modo login, mostrar formulario de login
-  if (authMode === "login") {
-    return <LoginForm onBack={() => setAuthMode("landing")} onSwitchToRegister={() => setAuthMode("register")} />
-  }
-
-  // Si está en modo register, mostrar formulario de registro
-  if (authMode === "register") {
-    return <RegisterForm onBack={() => setAuthMode("landing")} onSwitchToLogin={() => setAuthMode("login")} />
-  }
-
-  // Landing page (código existente)
-  const communityStats = [
-    { number: "15K+", label: "Talentos conectados", icon: Users },
-    { number: "8K+", label: "Proyectos completados", icon: CheckCircle },
-    { number: "95%", label: "Satisfacción cliente", icon: Star },
-    { number: "24/7", label: "Soporte disponible", icon: MessageCircle },
-  ]
-
-  const testimonials = [
-    {
-      name: "María González",
-      role: "Diseñadora Gráfica",
-      content:
-        "GoWork me ha permitido conectar con clientes increíbles en mi barrio y hacer crecer mi negocio freelance de manera local.",
-      rating: 5,
-      avatar: "/placeholder.svg?height=60&width=60&text=MG",
-    },
-    {
-      name: "Carlos Ruiz",
-      role: "Técnico en Reparaciones",
-      content:
-        "La plataforma es intuitiva y el sistema de pagos es muy seguro. Ahora tengo trabajo constante cerca de casa.",
-      rating: 5,
-      avatar: "/placeholder.svg?height=60&width=60&text=CR",
-    },
-    {
-      name: "Ana Martín",
-      role: "Consultora de Marketing",
-      content: "Encontré proyectos que realmente se alinean con mis habilidades. El matching de IA es excelente.",
-      rating: 5,
-      avatar: "/placeholder.svg?height=60&width=60&text=AM",
-    },
-  ]
-
+export default function Page() {
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gray-900">
-      {/* Floating Background */}
-      <FloatingBackground />
-
-      {/* Top Banner */}
-      {showBanner && (
-        <div className="relative z-50 bg-gradient-to-r from-[#007bff] via-[#6610f2] to-[#6f42c1] text-white px-6 py-3">
-          <div className="flex items-center justify-between max-w-7xl mx-auto">
-            <div className="flex items-center space-x-2">
-              <Crown className="h-5 w-5" />
-              <span className="text-sm font-medium">
-                🔥 Prueba GoWork Pro por 30 días y descubre todos los lanzamientos de GoWork Create.
-                <button className="underline ml-1 hover:no-underline">Empezar</button>
-              </span>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Header/Navigation */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center">
+              <div className="text-2xl font-bold text-gray-900">GoWork</div>
             </div>
-            <button onClick={() => setShowBanner(false)} className="hover:bg-white/20 p-1 rounded">
-              <X className="h-4 w-4" />
-            </button>
+            <nav className="hidden md:flex space-x-8">
+              <Link href="/servicios" className="text-gray-600 hover:text-gray-900">
+                Servicios
+              </Link>
+              <Link href="/chat" className="text-gray-600 hover:text-gray-900">
+                Chat
+              </Link>
+              <Link href="/map" className="text-gray-600 hover:text-gray-900">
+                Mapa
+              </Link>
+              <Link href="/dashboard" className="text-gray-600 hover:text-gray-900">
+                Dashboard
+              </Link>
+            </nav>
+            <div className="flex items-center space-x-4">
+              <Link href="/auth/login">
+                <Button variant="ghost">Iniciar Sesión</Button>
+              </Link>
+              <Link href="/onboarding">
+                <Button>Registrarse</Button>
+              </Link>
+            </div>
           </div>
         </div>
-      )}
+      </header>
 
-      <div className="flex">
-        {/* Sidebar Navigation */}
-        <SidebarNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+      {/* Hero Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="flex justify-center mb-6">
+              <Badge className="bg-blue-100 text-blue-800 px-4 py-2">
+                <Brain className="h-4 w-4 mr-2" />
+                La Red Social del Talento
+              </Badge>
+            </div>
 
-        {/* Main Content */}
-        <div className="flex-1 relative z-30">
-          {activeTab === "inicio" && (
-            <main>
-              {/* Hero Section - Con sidebar más angosto */}
-              <section id="inicio" className="pt-12 pb-16 px-6 lg:ml-0">
-                <div className="max-w-7xl mx-auto text-center">
-                  {/* Main Title */}
-                  <div className="mb-12">
-                    <h1 className="text-5xl lg:text-7xl font-bold text-white mb-12 leading-tight">
-                      🌟 GoWork: La{" "}
-                      <span className="bg-gradient-to-r from-[#FFA500] to-[#FF8C00] bg-clip-text text-transparent">
-                        Libertad
-                      </span>{" "}
-                      de Tu Talento
-                    </h1>
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+              🌟 GoWork: La Red Social del <span className="text-blue-600">Talento y las Oportunidades Humanas</span>
+            </h1>
 
-                    {/* Gow IA Section - Inmediatamente después del título */}
-                    <div className="mb-12">
-                      <AdvancedAISearch />
-                    </div>
+            <p className="text-xl text-gray-600 mb-8 max-w-4xl mx-auto">
+              <strong>Descubre GoWork</strong>, la plataforma que transforma tus habilidades en ingresos reales. Conecta
+              con personas que necesitan lo que sabes hacer y encuentra oportunidades cerca de ti, todo en un solo
+              lugar.
+            </p>
 
-                    <p className="text-xl lg:text-2xl text-gray-200 mb-12 leading-relaxed max-w-4xl mx-auto">
-                      Descubre GoWork, la plataforma que transforma tus habilidades en ingresos reales. Conecta con
-                      personas que necesitan lo que sabes hacer y encuentra oportunidades cerca de ti, todo en un solo
-                      lugar.
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                      <Button
-                        size="lg"
-                        onClick={() => setAuthMode("register")}
-                        className="bg-gradient-to-r from-[#FFA500] to-[#FF8C00] hover:from-[#FF8C00] hover:to-[#FFA500] text-white text-xl px-10 py-6 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-                      >
-                        Crear Cuenta Gratis
-                        <ArrowRight className="ml-3 h-6 w-6" />
-                      </Button>
-                      <Button
-                        size="lg"
-                        variant="outline"
-                        onClick={() => setAuthMode("login")}
-                        className="border-2 border-gray-600 text-white hover:bg-gray-800 text-xl px-10 py-6 rounded-2xl backdrop-blur-sm"
-                      >
-                        Iniciar Sesión
-                        <Globe className="ml-3 h-6 w-6" />
-                      </Button>
-                    </div>
-                  </div>
+            {/* Search Bar */}
+            <div className="mb-12">
+              <div className="max-w-2xl mx-auto">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="¿Qué servicio necesitas hoy?"
+                    className="w-full px-6 py-4 text-lg border border-gray-300 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <Button className="absolute right-2 top-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6">
+                    <Search className="h-4 w-4 mr-2" />
+                    Buscar
+                  </Button>
                 </div>
-              </section>
-
-              {/* Todas las secciones siguientes ocupan ancho completo */}
-              <div className="lg:ml-0">
-                {/* Services Classification Section - Nueva sección */}
-                <section id="clasificacion" className="py-20 px-6">
-                  <ServicesClassification />
-                </section>
-
-                {/* BentoGrid Section - Ancho completo */}
-                <section id="servicios" className="py-20 px-6">
-                  <div className="max-w-7xl mx-auto text-center mb-16">
-                    <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">Descubre el Ecosistema GoWork</h2>
-                    <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                      Una plataforma completa diseñada para empoderar tu talento y conectarte con oportunidades reales
-                    </p>
-                  </div>
-
-                  <BentoGrid />
-                </section>
-
-                {/* Community Stats - Ancho completo */}
-                <section id="comunidad" className="py-20 px-6">
-                  <div className="max-w-7xl mx-auto">
-                    <h2 className="text-4xl lg:text-5xl font-bold text-center text-white mb-16">
-                      📈 Nuestra Comunidad en Crecimiento
-                    </h2>
-
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
-                      {communityStats.map((stat, index) => {
-                        const IconComponent = stat.icon
-                        return (
-                          <Card
-                            key={index}
-                            className="bg-gray-800/80 backdrop-blur-xl border border-gray-700 text-center hover:scale-105 transition-all duration-300"
-                          >
-                            <CardContent className="p-8">
-                              <IconComponent className="h-12 w-12 text-[#FFA500] mx-auto mb-4" />
-                              <div className="text-4xl lg:text-5xl font-bold text-white mb-2">{stat.number}</div>
-                              <div className="text-gray-300">{stat.label}</div>
-                            </CardContent>
-                          </Card>
-                        )
-                      })}
-                    </div>
-
-                    {/* Testimonials */}
-                    <div className="text-center mb-12">
-                      <h3 className="text-3xl lg:text-4xl font-bold text-white mb-6">Lo que dicen nuestros usuarios</h3>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                      {testimonials.map((testimonial, index) => (
-                        <Card
-                          key={index}
-                          className="bg-gray-800/80 backdrop-blur-xl border border-gray-700 hover:scale-105 transition-all duration-300"
-                        >
-                          <CardContent className="p-8">
-                            <div className="flex items-center mb-6">
-                              <img
-                                src={testimonial.avatar || "/placeholder.svg"}
-                                alt={testimonial.name}
-                                className="w-16 h-16 rounded-full mr-4 border-2 border-gray-600"
-                              />
-                              <div>
-                                <h4 className="font-bold text-white text-lg">{testimonial.name}</h4>
-                                <p className="text-gray-300">{testimonial.role}</p>
-                              </div>
-                            </div>
-                            <div className="flex mb-4">
-                              {[...Array(testimonial.rating)].map((_, i) => (
-                                <Star key={i} className="h-5 w-5 text-[#FFA500] fill-current" />
-                              ))}
-                            </div>
-                            <p className="text-gray-200 italic leading-relaxed">"{testimonial.content}"</p>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-                </section>
-
-                {/* Final CTA - Ancho completo */}
-                <section className="py-20 px-6">
-                  <div className="max-w-4xl mx-auto text-center">
-                    <Card className="bg-gradient-to-r from-[#007bff]/20 to-[#6610f2]/20 backdrop-blur-xl border border-gray-700">
-                      <CardContent className="p-12">
-                        <h2 className="text-4xl lg:text-5xl font-bold text-white mb-8">
-                          🎯 Únete a GoWork Hoy y Libera Tu Talento
-                        </h2>
-                        <p className="text-xl text-gray-200 mb-10 leading-relaxed">
-                          No esperes más. Empieza a transformar tu talento en oportunidades reales. Regístrate gratis y
-                          forma parte de una comunidad que valora y necesita lo que sabes hacer.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                          <Button
-                            size="lg"
-                            onClick={() => setAuthMode("register")}
-                            className="bg-gradient-to-r from-[#FFA500] to-[#FF8C00] hover:from-[#FF8C00] hover:to-[#FFA500] text-white text-xl px-10 py-6 rounded-2xl hover:shadow-2xl transition-all duration-300"
-                          >
-                            Regístrate Ahora
-                            <ArrowRight className="ml-3 h-6 w-6" />
-                          </Button>
-                          <Button
-                            size="lg"
-                            variant="outline"
-                            onClick={() => setAuthMode("login")}
-                            className="border-2 border-gray-600 text-white hover:bg-gray-800 text-xl px-10 py-6 rounded-2xl"
-                          >
-                            Iniciar Sesión
-                            <Sparkles className="ml-3 h-6 w-6" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </section>
-              </div>
-            </main>
-          )}
-
-          {/* Other tabs content */}
-          {activeTab !== "inicio" && (
-            <div className="p-8 min-h-screen">
-              <div className="max-w-7xl mx-auto">
-                <h2 className="text-3xl font-bold text-white mb-6">
-                  {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-                </h2>
-
-                {activeTab === "ia" && (
-                  <div className="mb-8">
-                    <AdvancedAISearch />
-                  </div>
-                )}
-
-                {activeTab !== "ia" && (
-                  <Card className="bg-gray-800/80 backdrop-blur-xl border border-gray-700">
-                    <CardContent className="p-8">
-                      <div className="flex items-center space-x-4 mb-6">
-                        <div className="w-12 h-12 bg-gradient-to-br from-[#6610f2] to-[#007bff] rounded-xl flex items-center justify-center">
-                          <Sparkles className="h-6 w-6 text-white" />
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-white">Contenido en Preparación</h3>
-                          <p className="text-gray-300">Estamos trabajando para ofrecerte la mejor experiencia</p>
-                        </div>
-                      </div>
-                      <p className="text-gray-200 mb-4">
-                        La sección de <strong>{activeTab}</strong> estará disponible próximamente con todas las
-                        funcionalidades.
-                      </p>
-                      <div className="flex gap-4">
-                        <Button
-                          onClick={() => setActiveTab("inicio")}
-                          className="bg-gradient-to-r from-[#FFA500] to-[#FF8C00] hover:from-[#FF8C00] hover:to-[#FFA500] text-white"
-                        >
-                          Volver al Inicio
-                        </Button>
-                        <Button
-                          onClick={() => setAuthMode("register")}
-                          variant="outline"
-                          className="border-gray-600 text-white hover:bg-gray-700"
-                        >
-                          Crear Cuenta
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
               </div>
             </div>
-          )}
-        </div>
-      </div>
 
-      {/* Gemini Chat Widget */}
-      <GeminiChat />
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/servicios">
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8">
+                  🚀 Comenzar ahora
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="/servicios">
+                <Button size="lg" variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8">
+                  Explorar servicios
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ¿Qué es GoWork? Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">🚀 ¿Qué es GoWork?</h2>
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+              GoWork es más que una aplicación; es una <strong>comunidad digital</strong> que combina lo mejor de una
+              red social y un marketplace inteligente de servicios. Diseñada para empoderar a quienes ofrecen y buscan
+              servicios, desde tareas puntuales hasta proyectos profesionales.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600 mb-2">15K+</div>
+              <div className="text-gray-600">Freelancers activos</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600 mb-2">8K+</div>
+              <div className="text-gray-600">Proyectos completados</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600 mb-2">95%</div>
+              <div className="text-gray-600">Satisfacción cliente</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600 mb-2">24/7</div>
+              <div className="text-gray-600">Soporte IA</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Funcionalidades Clave Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">🔍 Funcionalidades Clave</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Descubre las herramientas que hacen de GoWork la plataforma perfecta para conectar talento con
+              oportunidades
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                  <CheckCircle className="h-6 w-6 text-green-600" />
+                </div>
+                <CardTitle className="text-gray-900">Registro Simple y Seguro</CardTitle>
+                <CardDescription className="text-gray-600">
+                  Únete con tu número de teléfono y verifica tu identidad fácilmente.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                  <MapPin className="h-6 w-6 text-orange-600" />
+                </div>
+                <CardTitle className="text-gray-900">Geolocalización Inteligente</CardTitle>
+                <CardDescription className="text-gray-600">
+                  Encuentra y ofrece servicios en tu área, conectando con personas cercanas.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                  <Brain className="h-6 w-6 text-blue-600" />
+                </div>
+                <CardTitle className="text-gray-900">Asistente IA "Gow"</CardTitle>
+                <CardDescription className="text-gray-600">
+                  Recibe ayuda personalizada para publicar, cotizar y gestionar tus servicios.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                  <Users className="h-6 w-6 text-purple-600" />
+                </div>
+                <CardTitle className="text-gray-900">Perfil Dual</CardTitle>
+                <CardDescription className="text-gray-600">
+                  Actúa como cliente y proveedor simultáneamente, adaptándote a tus necesidades.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+                  <Star className="h-6 w-6 text-yellow-600" />
+                </div>
+                <CardTitle className="text-gray-900">Sistema de Reputación</CardTitle>
+                <CardDescription className="text-gray-600">
+                  Construye tu reputación con calificaciones y comentarios de la comunidad.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                  <Shield className="h-6 w-6 text-red-600" />
+                </div>
+                <CardTitle className="text-gray-900">Pagos Seguros</CardTitle>
+                <CardDescription className="text-gray-600">
+                  Transacciones protegidas para tu tranquilidad.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* ¿Por Qué Elegir GoWork? Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">🌐 ¿Por Qué Elegir GoWork?</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Flexibilidad Total</h3>
+              <p className="text-gray-600">Tú decides cuándo y cómo trabajar.</p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="h-8 w-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Comunidad Activa</h3>
+              <p className="text-gray-600">Únete a miles de usuarios que ya confían en GoWork.</p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <TrendingUp className="h-8 w-8 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Crecimiento Profesional</h3>
+              <p className="text-gray-600">Mejora tus habilidades y amplía tu red de contactos.</p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Globe className="h-8 w-8 text-orange-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Impacto Real</h3>
+              <p className="text-gray-600">Contribuye al desarrollo de una economía más inclusiva y colaborativa.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Test Functions Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Prueba las funciones</h3>
+            <p className="text-gray-600">Explora todas las funcionalidades de GoWork</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Link href="/chat">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-6 h-auto border border-gray-200"
+              >
+                <MessageCircle className="h-5 w-5 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Chat con Gow IA</div>
+                  <div className="text-sm text-gray-500">Comunícate con nuestro asistente inteligente</div>
+                </div>
+              </Button>
+            </Link>
+
+            <Link href="/servicios">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-6 h-auto border border-gray-200"
+              >
+                <Search className="h-5 w-5 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Explorar servicios</div>
+                  <div className="text-sm text-gray-500">Encuentra el servicio perfecto para ti</div>
+                </div>
+              </Button>
+            </Link>
+
+            <Link href="/map">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-6 h-auto border border-gray-200"
+              >
+                <MapPin className="h-5 w-5 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Mapa interactivo</div>
+                  <div className="text-sm text-gray-500">Encuentra talento cerca de ti</div>
+                </div>
+              </Button>
+            </Link>
+
+            <Link href="/booking/1">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-6 h-auto border border-gray-200"
+              >
+                <Calendar className="h-5 w-5 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Flujo de reservas</div>
+                  <div className="text-sm text-gray-500">Reserva servicios fácilmente</div>
+                </div>
+              </Button>
+            </Link>
+
+            <Link href="/dashboard">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-6 h-auto border border-gray-200"
+              >
+                <User className="h-5 w-5 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Dashboard cliente</div>
+                  <div className="text-sm text-gray-500">Gestiona tus proyectos</div>
+                </div>
+              </Button>
+            </Link>
+
+            <Link href="/provider-dashboard">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-6 h-auto border border-gray-200"
+              >
+                <Star className="h-5 w-5 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Dashboard proveedor</div>
+                  <div className="text-sm text-gray-500">Administra tus servicios</div>
+                </div>
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-blue-600">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">¿Listo para revolucionar tu trabajo?</h2>
+          <p className="text-xl text-blue-100 mb-8">
+            Únete a miles de freelancers y empresas que ya confían en GoWork para conectar talento con oportunidades
+            reales.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/onboarding">
+              <Button size="lg" className="bg-white hover:bg-gray-100 text-blue-600 font-semibold px-8">
+                Crear cuenta gratis
+                <Smartphone className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href="/servicios">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-blue-700 px-8">
+                Ver servicios disponibles
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <div className="text-2xl font-bold mb-4">GoWork</div>
+              <p className="text-gray-400">La red social del talento y las oportunidades humanas.</p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Producto</h3>
+              <ul className="space-y-2 text-gray-400">
+                <li>
+                  <Link href="/servicios">Servicios</Link>
+                </li>
+                <li>
+                  <Link href="/chat">Chat IA</Link>
+                </li>
+                <li>
+                  <Link href="/map">Mapa</Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Empresa</h3>
+              <ul className="space-y-2 text-gray-400">
+                <li>
+                  <Link href="/about">Acerca de</Link>
+                </li>
+                <li>
+                  <Link href="/contact">Contacto</Link>
+                </li>
+                <li>
+                  <Link href="/careers">Carreras</Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Soporte</h3>
+              <ul className="space-y-2 text-gray-400">
+                <li>
+                  <Link href="/help">Ayuda</Link>
+                </li>
+                <li>
+                  <Link href="/privacy">Privacidad</Link>
+                </li>
+                <li>
+                  <Link href="/terms">Términos</Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 GoWork. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

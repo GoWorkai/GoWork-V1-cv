@@ -1,205 +1,369 @@
-import Link from "next/link"
-import { ArrowLeft, MapPin, Clock, Star, MessageCircle, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input"
+import {
+  Star,
+  MapPin,
+  Clock,
+  Shield,
+  Verified,
+  Heart,
+  ArrowLeft,
+  MessageCircle,
+  Phone,
+  Calendar,
+  CheckCircle,
+  User,
+  Camera,
+  Share2,
+} from "lucide-react"
+import Link from "next/link"
 
-// Simulación de datos de servicios
-const servicios = [
-  {
-    id: "1",
-    titulo: "Diseño de Logotipos Profesionales",
-    categoria: "diseño",
-    proveedor: {
-      nombre: "María González",
-      avatar: "/placeholder.svg?height=50&width=50",
-      calificacion: 4.8,
-      proyectos: 124,
-      ubicacion: "Santiago, Chile",
+export default function ServiceDetailPage() {
+  const service = {
+    id: 1,
+    title: "Instalación eléctrica completa",
+    provider: "Juan Martínez",
+    category: "Electricista Certificado",
+    rating: 4.9,
+    reviews: 127,
+    completedJobs: 234,
+    price: "Desde $80/hora",
+    location: "Las Condes, Santiago",
+    distance: "2.3 km",
+    verified: true,
+    available: "Disponible hoy",
+    responseTime: "Responde en menos de 15 minutos",
+    joinedDate: "Miembro desde 2019",
+    languages: ["Español", "Inglés"],
+  }
+
+  const reviews = [
+    {
+      id: 1,
+      user: "María Rodríguez",
+      rating: 5,
+      date: "Hace 2 días",
+      text: "Excelente trabajo, muy profesional y rápido. Solucionó todos los problemas eléctricos de mi casa.",
+      service: "Instalación de enchufes",
     },
-    descripcion:
-      "Diseño de logotipos profesionales y personalizados para tu marca o empresa. Incluye 3 propuestas iniciales, 2 rondas de revisiones y entrega de archivos en formatos editables y para web.",
-    precio: 45000,
-    duracion: "3-5 días",
-    imagen: "/placeholder.svg?height=400&width=600",
-    galeria: [
-      "/placeholder.svg?height=200&width=300",
-      "/placeholder.svg?height=200&width=300",
-      "/placeholder.svg?height=200&width=300",
-    ],
-    reseñas: [
-      {
-        usuario: "Carlos Mendoza",
-        avatar: "/placeholder.svg?height=40&width=40",
-        calificacion: 5,
-        fecha: "15/05/2023",
-        comentario: "Excelente trabajo, muy profesional y entregado antes del plazo acordado. Totalmente recomendado.",
-      },
-      {
-        usuario: "Laura Jiménez",
-        avatar: "/placeholder.svg?height=40&width=40",
-        calificacion: 4,
-        fecha: "03/04/2023",
-        comentario:
-          "Muy buen servicio, captó perfectamente la esencia de mi marca. Solo una ronda de revisiones fue necesaria.",
-      },
-    ],
-  },
-]
+    {
+      id: 2,
+      user: "Carlos López",
+      rating: 5,
+      date: "Hace 1 semana",
+      text: "Juan es muy confiable y conoce mucho del tema. Lo recomiendo 100%.",
+      service: "Reparación de tablero eléctrico",
+    },
+    {
+      id: 3,
+      user: "Ana García",
+      rating: 4,
+      date: "Hace 2 semanas",
+      text: "Buen servicio, llegó puntual y el trabajo quedó perfecto. Precios justos.",
+      service: "Instalación de luces",
+    },
+  ]
 
-export default function ServicioDetallePage({ params }: { params: { id: string } }) {
-  const servicio = servicios.find((s) => s.id === params.id) || servicios[0]
+  const gallery = [
+    { id: 1, type: "Instalación residencial", image: "🏠" },
+    { id: 2, type: "Tablero eléctrico", image: "⚡" },
+    { id: 3, type: "Instalación comercial", image: "🏢" },
+    { id: 4, type: "Iluminación LED", image: "💡" },
+  ]
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
-        <Link href="/servicios" className="inline-flex items-center text-blue-600 hover:text-blue-800">
-          <ArrowLeft size={16} className="mr-2" />
-          Volver a servicios
-        </Link>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
-          <h1 className="text-3xl font-bold mb-4">{servicio.titulo}</h1>
-
-          <div className="mb-6">
-            <div className="aspect-video w-full overflow-hidden rounded-lg mb-4">
-              <img
-                src={servicio.imagen || "/placeholder.svg"}
-                alt={servicio.titulo}
-                className="w-full h-full object-cover"
-              />
+    <div className="min-h-screen bg-black text-white">
+      {/* Header */}
+      <header className="bg-black/95 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-50">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Link href="/servicios">
+                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+              </Link>
+              <div className="text-2xl font-bold">
+                <span className="text-[#0066FF]">Go</span>
+                <span className="text-[#00E5B4]">Work</span>
+              </div>
             </div>
-
-            <div className="grid grid-cols-3 gap-2">
-              {servicio.galeria.map((img, i) => (
-                <div key={i} className="aspect-video overflow-hidden rounded-lg">
-                  <img
-                    src={img || "/placeholder.svg"}
-                    alt={`${servicio.titulo} - imagen ${i + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
+            <div className="flex items-center space-x-3">
+              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                <Share2 className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-red-400">
+                <Heart className="h-4 w-4" />
+              </Button>
+              <Button size="sm" className="bg-[#00E5B4] hover:bg-[#00CC9F] text-black font-medium">
+                Contactar
+              </Button>
             </div>
           </div>
-
-          <Tabs defaultValue="descripcion">
-            <TabsList className="mb-4">
-              <TabsTrigger value="descripcion">Descripción</TabsTrigger>
-              <TabsTrigger value="resenas">Reseñas ({servicio.reseñas.length})</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="descripcion" className="space-y-4">
-              <div>
-                <h2 className="text-xl font-semibold mb-2">Acerca del servicio</h2>
-                <p className="text-gray-700">{servicio.descripcion}</p>
-              </div>
-
-              <div>
-                <h2 className="text-xl font-semibold mb-2">Lo que incluye</h2>
-                <ul className="list-disc pl-5 text-gray-700">
-                  <li>3 propuestas iniciales de diseño</li>
-                  <li>2 rondas de revisiones</li>
-                  <li>Archivos en formato AI, PSD, PNG, JPG y SVG</li>
-                  <li>Derechos de uso comercial</li>
-                </ul>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="resenas">
-              <div className="space-y-6">
-                {servicio.reseñas.map((reseña, i) => (
-                  <Card key={i}>
-                    <CardContent className="p-4">
-                      <div className="flex items-start">
-                        <Avatar className="mr-4">
-                          <AvatarImage src={reseña.avatar || "/placeholder.svg"} alt={reseña.usuario} />
-                          <AvatarFallback>{reseña.usuario.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-center mb-1">
-                            <h3 className="font-semibold">{reseña.usuario}</h3>
-                            <span className="text-sm text-gray-500">{reseña.fecha}</span>
-                          </div>
-                          <div className="flex items-center mb-2">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                size={16}
-                                className={
-                                  i < reseña.calificacion ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-                                }
-                              />
-                            ))}
-                          </div>
-                          <p className="text-gray-700">{reseña.comentario}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
         </div>
+      </header>
 
-        <div>
-          <Card className="sticky top-8">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">${servicio.precio.toLocaleString("es-CL")}</h2>
-                <Badge>{servicio.categoria}</Badge>
-              </div>
-
-              <div className="space-y-4 mb-6">
-                <div className="flex items-center">
-                  <Clock size={18} className="mr-2 text-gray-500" />
-                  <span>Tiempo de entrega: {servicio.duracion}</span>
+      <div className="container mx-auto px-6 py-8">
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Service Header */}
+            <div className="space-y-6">
+              <div className="flex items-start space-x-6">
+                <div className="w-20 h-20 bg-gradient-to-br from-[#0066FF] to-[#00E5B4] rounded-full flex items-center justify-center text-3xl">
+                  ⚡
                 </div>
-              </div>
-
-              <div className="space-y-3">
-                <Button className="w-full">Contratar ahora</Button>
-                <Button variant="outline" className="w-full flex items-center justify-center">
-                  <MessageCircle size={18} className="mr-2" />
-                  Contactar al proveedor
-                </Button>
-                <Button variant="ghost" className="w-full flex items-center justify-center">
-                  <Share2 size={18} className="mr-2" />
-                  Compartir
-                </Button>
-              </div>
-
-              <div className="mt-6 pt-6 border-t">
-                <div className="flex items-center mb-3">
-                  <Avatar className="mr-3">
-                    <AvatarImage
-                      src={servicio.proveedor.avatar || "/placeholder.svg"}
-                      alt={servicio.proveedor.nombre}
-                    />
-                    <AvatarFallback>{servicio.proveedor.nombre.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="font-semibold">{servicio.proveedor.nombre}</h3>
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Star size={14} className="fill-yellow-400 text-yellow-400 mr-1" />
+                <div className="flex-1">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <h1 className="text-3xl font-bold">{service.title}</h1>
+                    {service.verified && (
+                      <Badge className="bg-[#00E5B4]/20 text-[#00E5B4] border-[#00E5B4]/30">
+                        <Verified className="h-4 w-4 mr-1" />
+                        Verificado
+                      </Badge>
+                    )}
+                  </div>
+                  <Link
+                    href={`/proveedor/${service.provider.toLowerCase().replace(" ", "-")}`}
+                    className="hover:text-[#00E5B4] transition-colors"
+                  >
+                    <p className="text-xl text-gray-300 mb-2">
+                      {service.provider} • {service.category}
+                    </p>
+                  </Link>
+                  <div className="flex items-center space-x-6 text-sm text-gray-400">
+                    <div className="flex items-center space-x-1">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span className="text-white font-medium">{service.rating}</span>
+                      <span>({service.reviews} reseñas)</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <CheckCircle className="h-4 w-4 text-[#00E5B4]" />
+                      <span>{service.completedJobs} trabajos completados</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <MapPin className="h-4 w-4" />
                       <span>
-                        {servicio.proveedor.calificacion} ({servicio.proveedor.proyectos} proyectos)
+                        {service.location} • {service.distance}
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center text-sm text-gray-500">
-                  <MapPin size={14} className="mr-1" />
-                  <span>{servicio.proveedor.ubicacion}</span>
-                </div>
               </div>
-            </CardContent>
-          </Card>
+
+              <div className="flex items-center space-x-4">
+                <Badge
+                  className="text-sm"
+                  style={{
+                    backgroundColor: "#00E5B420",
+                    color: "#00E5B4",
+                    border: "1px solid #00E5B430",
+                  }}
+                >
+                  <Clock className="h-4 w-4 mr-1" />
+                  {service.available}
+                </Badge>
+                <Badge variant="outline" className="border-gray-600 text-gray-400">
+                  {service.responseTime}
+                </Badge>
+                <Badge variant="outline" className="border-gray-600 text-gray-400">
+                  {service.joinedDate}
+                </Badge>
+              </div>
+            </div>
+
+            {/* Service Description */}
+            <Card className="bg-gray-900 border-gray-700">
+              <CardContent className="p-6">
+                <h2 className="text-xl font-bold mb-4">Descripción del servicio</h2>
+                <div className="space-y-4 text-gray-300">
+                  <p>
+                    Ofrezco servicios de instalación eléctrica completa para hogares y oficinas. Con más de 10 años de
+                    experiencia en el rubro, garantizo trabajos de calidad y total seguridad.
+                  </p>
+                  <p>Mis servicios incluyen:</p>
+                  <ul className="list-disc pl-6 space-y-2">
+                    <li>Instalación de enchufes y interruptores</li>
+                    <li>Instalación y reparación de tableros eléctricos</li>
+                    <li>Cableado estructural para casas y oficinas</li>
+                    <li>Instalación de iluminación LED</li>
+                    <li>Revisión y mantención de instalaciones</li>
+                    <li>Servicios de emergencia 24/7</li>
+                  </ul>
+                  <p>
+                    Trabajo con materiales de primera calidad y todos mis trabajos incluyen garantía de 1 año. Tengo
+                    seguro de responsabilidad civil y todas las certificaciones necesarias.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Portfolio/Gallery */}
+            <Card className="bg-gray-900 border-gray-700">
+              <CardContent className="p-6">
+                <h2 className="text-xl font-bold mb-4">Trabajos realizados</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {gallery.map((item) => (
+                    <div key={item.id} className="group cursor-pointer">
+                      <div className="aspect-square bg-gray-800 rounded-lg border border-gray-700 hover:border-[#00E5B4] transition-colors flex items-center justify-center text-4xl group-hover:scale-105 transition-transform">
+                        {item.image}
+                      </div>
+                      <p className="text-sm text-gray-400 mt-2 text-center">{item.type}</p>
+                    </div>
+                  ))}
+                </div>
+                <Button variant="ghost" className="w-full mt-4 text-gray-400 hover:text-white">
+                  <Camera className="h-4 w-4 mr-2" />
+                  Ver más trabajos
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Reviews */}
+            <Card className="bg-gray-900 border-gray-700">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold">Reseñas ({service.reviews})</h2>
+                  <div className="flex items-center space-x-2">
+                    <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    <span className="text-lg font-medium">{service.rating}</span>
+                    <span className="text-gray-400">de 5</span>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  {reviews.map((review) => (
+                    <div key={review.id} className="border-b border-gray-700 pb-6 last:border-b-0">
+                      <div className="flex items-start space-x-4">
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#0066FF] to-[#00E5B4] rounded-full flex items-center justify-center text-sm font-medium">
+                          {review.user
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <div>
+                              <h4 className="font-medium">{review.user}</h4>
+                              <p className="text-sm text-gray-400">
+                                {review.service} • {review.date}
+                              </p>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              {[...Array(review.rating)].map((_, i) => (
+                                <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                              ))}
+                            </div>
+                          </div>
+                          <p className="text-gray-300">{review.text}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <Button variant="outline" className="w-full mt-4 border-gray-600 text-gray-300 hover:bg-gray-800">
+                  Ver todas las reseñas
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Booking Card */}
+            <Card className="bg-gray-900 border-gray-700 sticky top-24">
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-[#00E5B4] mb-1">{service.price}</div>
+                    <p className="text-sm text-gray-400">Precio base por hora</p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Describe tu proyecto</label>
+                      <Textarea
+                        placeholder="Cuéntanos qué necesitas..."
+                        className="bg-gray-800 border-gray-600 text-white resize-none"
+                        rows={3}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Fecha preferida</label>
+                      <Input type="date" className="bg-gray-800 border-gray-600 text-white" />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Hora preferida</label>
+                      <Input type="time" className="bg-gray-800 border-gray-600 text-white" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Link href={`/booking/${service.id}`}>
+                      <Button className="w-full bg-[#00E5B4] hover:bg-[#00CC9F] text-black font-medium">
+                        <Calendar className="h-4 w-4 mr-2" />
+                        Solicitar servicio
+                      </Button>
+                    </Link>
+                    <Link href="/chat">
+                      <Button variant="outline" className="w-full border-gray-600 text-gray-300 hover:bg-gray-800">
+                        <MessageCircle className="h-4 w-4 mr-2" />
+                        Enviar mensaje
+                      </Button>
+                    </Link>
+                    <Button variant="outline" className="w-full border-gray-600 text-gray-300 hover:bg-gray-800">
+                      <Phone className="h-4 w-4 mr-2" />
+                      Llamar ahora
+                    </Button>
+                  </div>
+
+                  <div className="text-center">
+                    <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
+                      <Shield className="h-4 w-4" />
+                      <span>Pago seguro • Garantía incluida</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Provider Info */}
+            <Card className="bg-gray-900 border-gray-700">
+              <CardContent className="p-6">
+                <h3 className="font-bold mb-4">Información del proveedor</h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Respuesta promedio</span>
+                    <span>{service.responseTime.replace("Responde en ", "")}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Trabajos completados</span>
+                    <span>{service.completedJobs}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Idiomas</span>
+                    <span>{service.languages.join(", ")}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Miembro desde</span>
+                    <span>2019</span>
+                  </div>
+                </div>
+                <Link href={`/proveedor/${service.provider.toLowerCase().replace(" ", "-")}`}>
+                  <Button variant="outline" className="w-full mt-4 border-gray-600 text-gray-300 hover:bg-gray-800">
+                    <User className="h-4 w-4 mr-2" />
+                    Ver perfil completo
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
