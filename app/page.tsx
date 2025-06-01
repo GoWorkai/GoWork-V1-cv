@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import {
   MapPin,
   Star,
@@ -15,11 +14,9 @@ import {
   Camera,
   GraduationCap,
   Heart,
-  Truck,
   User,
   Settings,
   HelpCircle,
-  Bell,
   Plus,
   Zap,
   Music,
@@ -29,17 +26,6 @@ import { AdvancedAISearch } from "@/components/advanced-ai-search"
 import { OnboardingFlow } from "@/components/onboarding/onboarding-flow"
 import { useAuth } from "@/contexts/auth-context"
 import Link from "next/link"
-
-const categories = [
-  { icon: Home, name: "Hogar", color: "bg-blue-500", services: 1250 },
-  { icon: Code, name: "Tecnología", color: "bg-purple-500", services: 890 },
-  { icon: Palette, name: "Diseño", color: "bg-pink-500", services: 670 },
-  { icon: Briefcase, name: "Negocios", color: "bg-green-500", services: 540 },
-  { icon: GraduationCap, name: "Educación", color: "bg-orange-500", services: 430 },
-  { icon: Heart, name: "Salud", color: "bg-red-500", services: 320 },
-  { icon: Camera, name: "Eventos", color: "bg-indigo-500", services: 280 },
-  { icon: Truck, name: "Transporte", color: "bg-yellow-500", services: 190 },
-]
 
 const featuredServices = [
   {
@@ -90,7 +76,6 @@ const stats = [
 export default function HomePage() {
   const { user } = useAuth()
   const [showOnboarding, setShowOnboarding] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
 
   const handleOnboardingComplete = (userData: any) => {
     console.log("Onboarding completed:", userData)
@@ -145,41 +130,19 @@ export default function HomePage() {
         </button>
       </div>
 
-      {/* Banner superior */}
-      <div className="h-12 bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-500 flex items-center justify-center text-white text-sm font-medium relative z-30">
-        <span>🎉 Prueba GoWork Pro por 30 días y descubre todos los beneficios de GoWork. </span>
-        <button onClick={() => setShowOnboarding(true)} className="ml-2 underline hover:no-underline">
-          Empezar
-        </button>
-      </div>
-
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200 sticky top-12 z-30">
+      {/* Header simplificado - solo logo y botones de auth */}
+      <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200 sticky top-0 z-30">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between ml-16">
-          <div className="flex items-center space-x-6">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">G</span>
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                GoWork
-              </span>
-            </Link>
-
-            <nav className="hidden md:flex space-x-6">
-              <button className="text-gray-700 hover:text-purple-600 transition-colors text-sm">Mis diseños</button>
-              <button className="text-gray-700 hover:text-purple-600 transition-colors text-sm">Plantillas</button>
-              <button className="text-gray-700 hover:text-purple-600 transition-colors text-sm flex items-center space-x-1">
-                <span>GoWork IA</span>
-                <Badge className="bg-blue-100 text-blue-600 text-xs">Nuevo</Badge>
-              </button>
-            </nav>
-          </div>
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">G</span>
+            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              GoWork
+            </span>
+          </Link>
 
           <div className="flex items-center space-x-3">
-            <Button variant="ghost" size="sm" className="text-gray-700">
-              <Bell className="h-4 w-4" />
-            </Button>
             {user ? (
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-gray-700">Hola, {user.name}</span>
@@ -202,39 +165,9 @@ export default function HomePage() {
       </header>
 
       {/* Contenido principal */}
-      <main className="container mx-auto px-4 py-6 ml-16 relative z-10">
-        {/* Hero Section */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            ¿Qué{" "}
-            <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              servicio
-            </span>{" "}
-            necesitas hoy?
-          </h1>
-          <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
-            Con GoWork puedes encontrar, contratar y gestionar cualquier servicio que necesites.
-          </p>
-
-          {/* Tabs */}
-          <div className="flex justify-center mb-6">
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-1 border border-gray-200">
-              <button className="px-4 py-2 rounded-lg bg-purple-100 text-purple-600 text-sm font-medium">
-                Mis servicios
-              </button>
-              <button className="px-4 py-2 rounded-lg text-gray-600 hover:text-purple-600 text-sm font-medium">
-                Plantillas
-              </button>
-              <button className="px-4 py-2 rounded-lg text-gray-600 hover:text-purple-600 text-sm font-medium flex items-center space-x-1">
-                <span>GoWork IA</span>
-                <Badge className="bg-blue-100 text-blue-600 text-xs">Nuevo</Badge>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Chat de Gow IA - Componente principal */}
-        <div className="mb-8">
+      <main className="container mx-auto px-4 py-8 ml-16 relative z-10">
+        {/* Chat de Gow IA - Ahora es lo primero y más prominente */}
+        <div className="mb-12">
           <AdvancedAISearch />
         </div>
 
@@ -321,10 +254,10 @@ export default function HomePage() {
                       className="w-full h-32 object-cover rounded-t-lg"
                     />
                     {service.verified && (
-                      <Badge className="absolute top-2 right-2 bg-green-500 text-white text-xs">
+                      <div className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full flex items-center">
                         <CheckCircle className="h-3 w-3 mr-1" />
                         Verificado
-                      </Badge>
+                      </div>
                     )}
                   </div>
                   <div className="p-4">
