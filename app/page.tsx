@@ -26,6 +26,7 @@ import {
   CheckCircle,
 } from "lucide-react"
 import { AdvancedAISearch } from "@/components/advanced-ai-search"
+import { OnboardingFlow } from "@/components/onboarding/onboarding-flow"
 import { useAuth } from "@/contexts/auth-context"
 import Link from "next/link"
 
@@ -88,7 +89,14 @@ const stats = [
 
 export default function HomePage() {
   const { user } = useAuth()
+  const [showOnboarding, setShowOnboarding] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+
+  const handleOnboardingComplete = (userData: any) => {
+    console.log("Onboarding completed:", userData)
+    setShowOnboarding(false)
+    // Aquí puedes manejar la lógica de registro/login
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 relative overflow-hidden">
@@ -140,7 +148,9 @@ export default function HomePage() {
       {/* Banner superior */}
       <div className="h-12 bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-500 flex items-center justify-center text-white text-sm font-medium relative z-30">
         <span>🎉 Prueba GoWork Pro por 30 días y descubre todos los beneficios de GoWork. </span>
-        <button className="ml-2 underline hover:no-underline">Empezar</button>
+        <button onClick={() => setShowOnboarding(true)} className="ml-2 underline hover:no-underline">
+          Empezar
+        </button>
       </div>
 
       {/* Header */}
@@ -179,10 +189,10 @@ export default function HomePage() {
               </div>
             ) : (
               <div className="flex items-center space-x-2">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" onClick={() => setShowOnboarding(true)}>
                   Iniciar sesión
                 </Button>
-                <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
+                <Button size="sm" className="bg-purple-600 hover:bg-purple-700" onClick={() => setShowOnboarding(true)}>
                   Registrarse
                 </Button>
               </div>
@@ -273,7 +283,12 @@ export default function HomePage() {
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Hay un mundo de posibilidades</h2>
           <p className="text-gray-600 mb-6">Conecta con profesionales verificados en tu área</p>
-          <Button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2">Comenzar ahora</Button>
+          <Button
+            className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2"
+            onClick={() => setShowOnboarding(true)}
+          >
+            Comenzar ahora
+          </Button>
         </div>
 
         {/* Estadísticas */}
@@ -329,6 +344,11 @@ export default function HomePage() {
           </div>
         </div>
       </main>
+
+      {/* Onboarding Flow */}
+      {showOnboarding && (
+        <OnboardingFlow onComplete={handleOnboardingComplete} onClose={() => setShowOnboarding(false)} />
+      )}
     </div>
   )
 }
