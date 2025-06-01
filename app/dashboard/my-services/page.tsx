@@ -1,10 +1,14 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Dialog,
   DialogContent,
@@ -12,322 +16,415 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
-  Briefcase,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { servicesAPI } from "@/lib/services-api"
+import { useAuth } from "@/contexts/auth-context"
+import type { Service } from "@/types/service"
+import {
+  Plus,
+  Search,
+  MoreHorizontal,
   Edit,
   Eye,
-  MoreHorizontal,
-  Plus,
   Trash,
-  Users,
-  DollarSign,
-  Clock,
-  ImageIcon,
+  Copy,
+  BarChart3,
   MapPin,
+  Heart,
+  Loader2,
+  CheckCircle,
+  Pause,
+  Play,
 } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-
-const services = [
-  {
-    id: 1,
-    title: "Diseño de logotipos profesionales",
-    category: "Diseño",
-    subcategory: "Identidad visual",
-    status: "active",
-    price: { min: 25000, max: 75000, type: "fixed" },
-    views: 342,
-    inquiries: 24,
-    rating: 4.9,
-    reviews: 18,
-    image: "/placeholder.svg?height=200&width=300&text=Logo+Design",
-    description:
-      "Diseño de logotipos modernos y profesionales para tu empresa o proyecto. Incluye 3 propuestas y 2 rondas de revisiones.",
-    tags: ["Branding", "Identidad visual", "Diseño gráfico"],
-    location: "Santiago Centro",
-  },
-  {
-    id: 2,
-    title: "Desarrollo web full stack",
-    category: "Tecnología",
-    subcategory: "Desarrollo web",
-    status: "active",
-    price: { min: 150000, max: 500000, type: "project" },
-    views: 187,
-    inquiries: 12,
-    rating: 4.8,
-    reviews: 9,
-    image: "/placeholder.svg?height=200&width=300&text=Web+Development",
-    description:
-      "Desarrollo de sitios web y aplicaciones a medida. Especialista en React, Node.js y bases de datos SQL/NoSQL.",
-    tags: ["Desarrollo web", "React", "Node.js", "Bases de datos"],
-    location: "Providencia",
-  },
-  {
-    id: 3,
-    title: "Clases de guitarra para principiantes",
-    category: "Educación",
-    subcategory: "Música",
-    status: "paused",
-    price: { min: 15000, max: 25000, type: "hourly" },
-    views: 98,
-    inquiries: 5,
-    rating: 5.0,
-    reviews: 7,
-    image: "/placeholder.svg?height=200&width=300&text=Guitar+Lessons",
-    description:
-      "Clases personalizadas de guitarra para todos los niveles. Aprende a tocar tus canciones favoritas desde la primera clase.",
-    tags: ["Música", "Guitarra", "Clases particulares"],
-    location: "Ñuñoa",
-  },
-]
 
 export default function MyServicesPage() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState("active")
+  const router = useRouter()
+  const { user } = useAuth()
+  const [services, setServices] = useState<Service[]>([])
+  const [filteredServices, setFilteredServices] = useState<Service[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("all")
+  const [selectedStatus, setSelectedStatus] = useState("all")
+  const [selectedServices, setSelectedServices] = useState<string[]>([])
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [serviceToDelete, setServiceToDelete] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState("all")
+
+  useEffect(() => {
+    if (user) {
+      loadServices()
+    }
+  }, [user])
+
+  useEffect(() => {
+    filterServices()
+  }, [services, searchQuery, selectedCategory, selectedStatus, activeTab])
+
+  const loadServices = async () => {
+    if (!user) return
+
+    try {
+      setIsLoading(true)
+      const userServices = await servicesAPI.getUserServices(user.id)
+      setServices(userServices)
+    } catch (error) {
+      console.error("Error loading services:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const filterServices = () => {
+    let filtered = services
+
+    // Filtrar por tab activo
+    if (activeTab === "active") {
+      filtered = filtered.filter((service) => service.is_active)
+    } else if (activeTab === "inactive") {
+      filtered = filtered.filter((service) => !service.is_active)
+    }
+
+    // Filtrar por búsqueda
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (service) =>
+          service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          service.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase())),
+      )
+    }
+
+    // Filtrar por categoría
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter((service) => service.category === selectedCategory)
+    }
+
+    setFilteredServices(filtered)
+  }
+
+  const handleDeleteService = async (serviceId: string) => {
+    if (!user) return
+
+    try {
+      await servicesAPI.deleteService(serviceId, user.id)
+      setServices(services.filter((service) => service.id !== serviceId))
+      setShowDeleteDialog(false)
+      setServiceToDelete(null)
+    } catch (error) {
+      console.error("Error deleting service:", error)
+    }
+  }
+
+  const handleToggleStatus = async (serviceId: string, currentStatus: boolean) => {
+    if (!user) return
+
+    try {
+      await servicesAPI.updateService(serviceId, { is_active: !currentStatus } as any, user.id)
+      setServices(
+        services.map((service) => (service.id === serviceId ? { ...service, is_active: !currentStatus } : service)),
+      )
+    } catch (error) {
+      console.error("Error updating service status:", error)
+    }
+  }
+
+  const handleSelectService = (serviceId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedServices([...selectedServices, serviceId])
+    } else {
+      setSelectedServices(selectedServices.filter((id) => id !== serviceId))
+    }
+  }
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedServices(filteredServices.map((service) => service.id))
+    } else {
+      setSelectedServices([])
+    }
+  }
+
+  const formatPrice = (service: Service) => {
+    if (service.price_type === "negotiable") return "A convenir"
+    if (!service.price_min && !service.price_max) return "Consultar"
+
+    const formatAmount = (amount: number) =>
+      new Intl.NumberFormat("es-CL", {
+        style: "currency",
+        currency: "CLP",
+        minimumFractionDigits: 0,
+      }).format(amount)
+
+    if (service.price_min === service.price_max) {
+      return formatAmount(service.price_min!)
+    }
+
+    return `${formatAmount(service.price_min!)} - ${formatAmount(service.price_max!)}`
+  }
+
+  const getServiceStats = () => {
+    const active = services.filter((s) => s.is_active).length
+    const inactive = services.filter((s) => !s.is_active).length
+    const totalViews = services.reduce((sum, s) => sum + s.views_count, 0)
+    const totalFavorites = services.reduce((sum, s) => sum + s.favorites_count, 0)
+
+    return { active, inactive, totalViews, totalFavorites }
+  }
+
+  const stats = getServiceStats()
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-[#007bff]" />
+        <span className="ml-2 text-gray-600">Cargando servicios...</span>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Mis servicios</h1>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600">
-              <Plus className="mr-2 h-4 w-4" />
-              Nuevo servicio
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>Crear nuevo servicio</DialogTitle>
-              <DialogDescription>
-                Completa la información de tu servicio para publicarlo en la plataforma.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
-                  <Label htmlFor="title">Título del servicio</Label>
-                  <Input id="title" placeholder="Ej: Diseño de logotipos profesionales" />
-                </div>
-                <div>
-                  <Label htmlFor="category">Categoría</Label>
-                  <Select>
-                    <SelectTrigger id="category">
-                      <SelectValue placeholder="Selecciona" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="design">Diseño</SelectItem>
-                      <SelectItem value="tech">Tecnología</SelectItem>
-                      <SelectItem value="home">Hogar</SelectItem>
-                      <SelectItem value="education">Educación</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="subcategory">Subcategoría</Label>
-                  <Select>
-                    <SelectTrigger id="subcategory">
-                      <SelectValue placeholder="Selecciona" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="logo">Logotipos</SelectItem>
-                      <SelectItem value="web">Sitios web</SelectItem>
-                      <SelectItem value="app">Aplicaciones</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="price-min">Precio mínimo</Label>
-                  <div className="relative">
-                    <DollarSign
-                      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                      size={16}
-                    />
-                    <Input id="price-min" className="pl-9" placeholder="25000" />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="price-max">Precio máximo</Label>
-                  <div className="relative">
-                    <DollarSign
-                      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                      size={16}
-                    />
-                    <Input id="price-max" className="pl-9" placeholder="75000" />
-                  </div>
-                </div>
-                <div className="col-span-2">
-                  <Label htmlFor="price-type">Tipo de precio</Label>
-                  <Select>
-                    <SelectTrigger id="price-type">
-                      <SelectValue placeholder="Selecciona" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="fixed">Precio fijo</SelectItem>
-                      <SelectItem value="hourly">Por hora</SelectItem>
-                      <SelectItem value="project">Por proyecto</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="col-span-2">
-                  <Label htmlFor="description">Descripción</Label>
-                  <Textarea
-                    id="description"
-                    placeholder="Describe tu servicio en detalle..."
-                    className="resize-none"
-                    rows={4}
-                  />
-                </div>
-                <div className="col-span-2">
-                  <Label htmlFor="tags">Etiquetas (separadas por coma)</Label>
-                  <Input id="tags" placeholder="Ej: diseño, logo, branding" />
-                </div>
-                <div className="col-span-2">
-                  <Label htmlFor="location">Ubicación</Label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={16} />
-                    <Input id="location" className="pl-9" placeholder="Ej: Santiago Centro" />
-                  </div>
-                </div>
-                <div className="col-span-2">
-                  <Label htmlFor="image">Imágenes</Label>
-                  <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                    <div className="space-y-1 text-center">
-                      <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
-                      <div className="flex text-sm text-gray-600">
-                        <label
-                          htmlFor="file-upload"
-                          className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500"
-                        >
-                          <span>Subir imágenes</span>
-                          <input id="file-upload" name="file-upload" type="file" className="sr-only" multiple />
-                        </label>
-                        <p className="pl-1">o arrastra y suelta</p>
-                      </div>
-                      <p className="text-xs text-gray-500">PNG, JPG, GIF hasta 10MB</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                Cancelar
-              </Button>
-              <Button
-                onClick={() => setIsDialogOpen(false)}
-                className="bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600"
-              >
-                Publicar servicio
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Mis Servicios</h1>
+          <p className="text-gray-600">Gestiona y optimiza tus servicios en GoWork</p>
+        </div>
+        <Button
+          onClick={() => router.push("/dashboard/my-services/create")}
+          className="bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600"
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Nuevo Servicio
+        </Button>
       </div>
 
-      <Tabs defaultValue="active" onValueChange={setActiveTab}>
-        <TabsList className="bg-white border border-gray-200">
-          <TabsTrigger value="active">Activos</TabsTrigger>
-          <TabsTrigger value="paused">Pausados</TabsTrigger>
-          <TabsTrigger value="draft">Borradores</TabsTrigger>
-        </TabsList>
-        <TabsContent value="active" className="mt-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {services
-              .filter((service) => service.status === "active")
-              .map((service) => (
-                <ServiceCard key={service.id} service={service} />
-              ))}
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Servicios Activos</p>
+                <p className="text-2xl font-bold text-green-600">{stats.active}</p>
+              </div>
+              <CheckCircle className="h-8 w-8 text-green-500" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total Vistas</p>
+                <p className="text-2xl font-bold text-blue-600">{stats.totalViews}</p>
+              </div>
+              <Eye className="h-8 w-8 text-blue-500" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Favoritos</p>
+                <p className="text-2xl font-bold text-red-600">{stats.totalFavorites}</p>
+              </div>
+              <Heart className="h-8 w-8 text-red-500" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total Servicios</p>
+                <p className="text-2xl font-bold text-purple-600">{services.length}</p>
+              </div>
+              <BarChart3 className="h-8 w-8 text-purple-500" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Buscar servicios..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full md:w-48">
+                <SelectValue placeholder="Categoría" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas las categorías</SelectItem>
+                <SelectItem value="hogar">Hogar</SelectItem>
+                <SelectItem value="tecnologia">Tecnología</SelectItem>
+                <SelectItem value="educacion">Educación</SelectItem>
+                <SelectItem value="salud">Salud</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-        </TabsContent>
-        <TabsContent value="paused" className="mt-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {services
-              .filter((service) => service.status === "paused")
-              .map((service) => (
-                <ServiceCard key={service.id} service={service} />
-              ))}
-          </div>
-        </TabsContent>
-        <TabsContent value="draft" className="mt-4">
-          <div className="text-center p-8">
-            <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No tienes borradores</h3>
-            <p className="text-gray-600 mb-4">Comienza a crear un nuevo servicio para guardar como borrador</p>
-            <Button
-              onClick={() => setIsDialogOpen(true)}
-              className="bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Crear servicio
-            </Button>
-          </div>
+        </CardContent>
+      </Card>
+
+      {/* Services Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <div className="flex items-center justify-between">
+          <TabsList className="bg-white border border-gray-200">
+            <TabsTrigger value="all">Todos ({services.length})</TabsTrigger>
+            <TabsTrigger value="active">Activos ({stats.active})</TabsTrigger>
+            <TabsTrigger value="inactive">Inactivos ({stats.inactive})</TabsTrigger>
+          </TabsList>
+
+          {selectedServices.length > 0 && (
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-600">{selectedServices.length} seleccionados</span>
+              <Button variant="outline" size="sm">
+                Activar
+              </Button>
+              <Button variant="outline" size="sm">
+                Desactivar
+              </Button>
+              <Button variant="destructive" size="sm">
+                Eliminar
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <TabsContent value={activeTab} className="mt-4">
+          {filteredServices.length > 0 ? (
+            <div className="space-y-4">
+              {/* Select All */}
+              <div className="flex items-center space-x-2 p-4 bg-gray-50 rounded-lg">
+                <Checkbox
+                  checked={selectedServices.length === filteredServices.length && filteredServices.length > 0}
+                  onCheckedChange={handleSelectAll}
+                />
+                <span className="text-sm text-gray-600">Seleccionar todos</span>
+              </div>
+
+              {/* Services Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredServices.map((service) => (
+                  <ServiceCard
+                    key={service.id}
+                    service={service}
+                    isSelected={selectedServices.includes(service.id)}
+                    onSelect={(checked) => handleSelectService(service.id, checked)}
+                    onEdit={() => router.push(`/dashboard/my-services/edit/${service.id}`)}
+                    onView={() => router.push(`/servicio/${service.id}`)}
+                    onDelete={() => {
+                      setServiceToDelete(service.id)
+                      setShowDeleteDialog(true)
+                    }}
+                    onToggleStatus={() => handleToggleStatus(service.id, service.is_active)}
+                    formatPrice={formatPrice}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <EmptyState
+              activeTab={activeTab}
+              hasServices={services.length > 0}
+              onCreateService={() => router.push("/dashboard/my-services/create")}
+            />
+          )}
         </TabsContent>
       </Tabs>
 
-      {activeTab === "active" && services.filter((service) => service.status === "active").length === 0 && (
-        <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
-          <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No tienes servicios activos</h3>
-          <p className="text-gray-600 mb-4">Comienza a ofrecer tus servicios en la plataforma</p>
-          <Button
-            onClick={() => setIsDialogOpen(true)}
-            className="bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Crear servicio
-          </Button>
-        </div>
-      )}
-
-      {activeTab === "paused" && services.filter((service) => service.status === "paused").length === 0 && (
-        <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
-          <Clock className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No tienes servicios pausados</h3>
-          <p className="text-gray-600">Los servicios pausados no aparecen en las búsquedas</p>
-        </div>
-      )}
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Eliminar Servicio</DialogTitle>
+            <DialogDescription>
+              ¿Estás seguro de que quieres eliminar este servicio? Esta acción no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={() => serviceToDelete && handleDeleteService(serviceToDelete)}>
+              Eliminar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
 
 interface ServiceCardProps {
-  service: any
+  service: Service
+  isSelected: boolean
+  onSelect: (checked: boolean) => void
+  onEdit: () => void
+  onView: () => void
+  onDelete: () => void
+  onToggleStatus: () => void
+  formatPrice: (service: Service) => string
 }
 
-function ServiceCard({ service }: ServiceCardProps) {
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("es-CL", {
-      style: "currency",
-      currency: "CLP",
-      minimumFractionDigits: 0,
-    }).format(price)
-  }
-
+function ServiceCard({
+  service,
+  isSelected,
+  onSelect,
+  onEdit,
+  onView,
+  onDelete,
+  onToggleStatus,
+  formatPrice,
+}: ServiceCardProps) {
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow">
-      <div className="h-40 bg-cover bg-center" style={{ backgroundImage: `url(${service.image})` }}></div>
-      <CardHeader className="p-4 pb-0">
+    <Card className={`overflow-hidden hover:shadow-md transition-shadow ${isSelected ? "ring-2 ring-blue-500" : ""}`}>
+      <div className="relative">
+        <div
+          className="h-40 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${service.images[0] || "/placeholder.svg?height=160&width=300&text=Sin+imagen"})`,
+          }}
+        >
+          <div className="absolute top-2 left-2">
+            <Checkbox checked={isSelected} onCheckedChange={onSelect} className="bg-white" />
+          </div>
+          <div className="absolute top-2 right-2">
+            <Badge variant={service.is_active ? "default" : "secondary"}>
+              {service.is_active ? "Activo" : "Inactivo"}
+            </Badge>
+          </div>
+        </div>
+      </div>
+
+      <CardHeader className="p-4 pb-2">
         <div className="flex items-start justify-between">
-          <Badge
-            className={`${
-              service.category === "Diseño"
-                ? "bg-pink-100 text-pink-800"
-                : service.category === "Tecnología"
-                  ? "bg-purple-100 text-purple-800"
-                  : service.category === "Hogar"
-                    ? "bg-blue-100 text-blue-800"
-                    : "bg-indigo-100 text-indigo-800"
-            }`}
-          >
-            {service.category}
-          </Badge>
+          <div className="flex-1">
+            <CardTitle className="text-base font-medium line-clamp-2">{service.title}</CardTitle>
+            <Badge variant="outline" className="mt-1">
+              {service.category}
+            </Badge>
+          </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -335,59 +432,117 @@ function ServiceCard({ service }: ServiceCardProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <Edit className="mr-2 h-4 w-4" />
-                <span>Editar</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={onView}>
                 <Eye className="mr-2 h-4 w-4" />
-                <span>Ver publicación</span>
+                Ver publicación
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onEdit}>
+                <Edit className="mr-2 h-4 w-4" />
+                Editar
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onToggleStatus}>
+                {service.is_active ? (
+                  <>
+                    <Pause className="mr-2 h-4 w-4" />
+                    Pausar
+                  </>
+                ) : (
+                  <>
+                    <Play className="mr-2 h-4 w-4" />
+                    Activar
+                  </>
+                )}
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Clock className="mr-2 h-4 w-4" />
-                <span>{service.status === "active" ? "Pausar" : "Activar"}</span>
+                <Copy className="mr-2 h-4 w-4" />
+                Duplicar
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-red-600">
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={onDelete} className="text-red-600">
                 <Trash className="mr-2 h-4 w-4" />
-                <span>Eliminar</span>
+                Eliminar
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <CardTitle className="text-base font-medium mt-2 line-clamp-2">{service.title}</CardTitle>
-        <CardDescription className="line-clamp-2 mt-1">{service.description}</CardDescription>
       </CardHeader>
-      <CardContent className="p-4 pt-2">
-        <div className="flex items-center text-sm text-gray-500 mb-2">
-          <MapPin className="h-3 w-3 mr-1" />
-          <span>{service.location}</span>
-        </div>
-        <div className="flex flex-wrap gap-1 mb-3">
-          {service.tags.slice(0, 3).map((tag: string, index: number) => (
-            <Badge key={index} variant="outline" className="bg-gray-50">
-              {tag}
-            </Badge>
-          ))}
+
+      <CardContent className="p-4 pt-0">
+        <div className="space-y-2">
+          <div className="flex items-center text-sm text-gray-500">
+            <MapPin className="h-3 w-3 mr-1" />
+            <span className="truncate">{service.location}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="text-sm font-medium text-green-600">{formatPrice(service)}</div>
+            <div className="flex items-center space-x-3 text-xs text-gray-500">
+              <div className="flex items-center">
+                <Eye className="h-3 w-3 mr-1" />
+                {service.views_count}
+              </div>
+              <div className="flex items-center">
+                <Heart className="h-3 w-3 mr-1" />
+                {service.favorites_count}
+              </div>
+            </div>
+          </div>
         </div>
       </CardContent>
-      <CardFooter className="p-4 pt-0 border-t border-gray-100 flex items-center justify-between">
-        <div className="text-sm font-medium text-gray-900">
-          {formatPrice(service.price.min)} - {formatPrice(service.price.max)}
-          <span className="text-xs text-gray-500 ml-1">
-            {service.price.type === "hourly" ? "/hora" : service.price.type === "project" ? "/proyecto" : ""}
-          </span>
-        </div>
-        <div className="flex items-center space-x-4 text-xs text-gray-500">
-          <div className="flex items-center">
-            <Eye className="h-3 w-3 mr-1" />
-            {service.views}
-          </div>
-          <div className="flex items-center">
-            <Users className="h-3 w-3 mr-1" />
-            {service.inquiries}
-          </div>
-        </div>
-      </CardFooter>
     </Card>
+  )
+}
+
+interface EmptyStateProps {
+  activeTab: string
+  hasServices: boolean
+  onCreateService: () => void
+}
+
+function EmptyState({ activeTab, hasServices, onCreateService }: EmptyStateProps) {
+  const getEmptyMessage = () => {
+    if (!hasServices) {
+      return {
+        title: "No tienes servicios",
+        description: "Comienza a ofrecer tus servicios en GoWork",
+        action: "Crear primer servicio",
+      }
+    }
+
+    switch (activeTab) {
+      case "active":
+        return {
+          title: "No tienes servicios activos",
+          description: "Activa algunos servicios para que aparezcan en las búsquedas",
+          action: "Ver todos los servicios",
+        }
+      case "inactive":
+        return {
+          title: "No tienes servicios inactivos",
+          description: "Todos tus servicios están activos y visibles",
+          action: "Ver servicios activos",
+        }
+      default:
+        return {
+          title: "No se encontraron servicios",
+          description: "Intenta cambiar los filtros de búsqueda",
+          action: "Limpiar filtros",
+        }
+    }
+  }
+
+  const message = getEmptyMessage()
+
+  return (
+    <div className="text-center p-12 bg-white rounded-lg border border-gray-200">
+      <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+        <Plus className="h-12 w-12 text-gray-400" />
+      </div>
+      <h3 className="text-lg font-medium text-gray-900 mb-2">{message.title}</h3>
+      <p className="text-gray-600 mb-6">{message.description}</p>
+      <Button onClick={onCreateService} className="bg-gradient-to-r from-blue-600 to-green-500">
+        <Plus className="mr-2 h-4 w-4" />
+        {message.action}
+      </Button>
+    </div>
   )
 }
