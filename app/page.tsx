@@ -38,6 +38,8 @@ import {
   Send,
   Bot,
   Loader2,
+  DollarSign,
+  Clock,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -45,6 +47,7 @@ import { Input } from "@/components/ui/input"
 import { GoWorkLogo } from "@/components/gowork-logo"
 import { AISearchWidget } from "@/components/ai-search-widget"
 import { GeminiChat } from "@/components/gemini-chat"
+import { geminiService, type SearchResult } from "@/lib/gemini"
 import { useState } from "react"
 
 export default function GoWorkDashboard() {
@@ -53,8 +56,9 @@ export default function GoWorkDashboard() {
   const [showRegisterForm, setShowRegisterForm] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [isSearching, setIsSearching] = useState(false)
-  const [searchResults, setSearchResults] = useState<string[]>([])
+  const [searchResult, setSearchResult] = useState<SearchResult | null>(null)
   const [showAIWidget, setShowAIWidget] = useState(true)
+  const [searchError, setSearchError] = useState<string | null>(null)
 
   const sidebarItems = [
     { icon: Home, label: "Inicio", id: "inicio", active: true },
@@ -216,30 +220,31 @@ export default function GoWorkDashboard() {
     },
   ]
 
-  // Función para manejar búsqueda con IA
+  // Función para manejar búsqueda con IA real
   const handleAISearch = async (query: string) => {
     if (!query.trim()) return
 
     setIsSearching(true)
+    setSearchError(null)
     setSearchQuery(query)
 
     try {
-      // Simulación de respuesta de Gemini AI
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      const mockResults = [
-        `🔍 Encontré ${Math.floor(Math.random() * 50) + 10} profesionales cerca de ti para: "${query}"`,
-        `💡 Sugerencia: Los precios promedio para este servicio están entre $${Math.floor(Math.random() * 50000) + 10000} - $${Math.floor(Math.random() * 100000) + 50000}`,
-        `📍 Hay ${Math.floor(Math.random() * 15) + 5} proveedores disponibles en tu área`,
-        `⭐ Recomendación: Busca proveedores con más de 4.5 estrellas para mejores resultados`,
-      ]
-
-      setSearchResults(mockResults)
+      const result = await geminiService.searchServices(query)
+      setSearchResult(result)
     } catch (error) {
       console.error("Error en búsqueda IA:", error)
+      setSearchError("Error al procesar la búsqueda. Intenta nuevamente.")
     } finally {
       setIsSearching(false)
     }
+  }
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("es-CL", {
+      style: "currency",
+      currency: "CLP",
+      minimumFractionDigits: 0,
+    }).format(price)
   }
 
   return (
@@ -386,7 +391,7 @@ export default function GoWorkDashboard() {
                       </button>
                       <button
                         onClick={() => handleAISearch(searchQuery)}
-                        disabled={isSearching}
+                        disabled={isSearching || !searchQuery.trim()}
                         className="bg-[#007bff] text-white p-2 rounded-full hover:bg-[#0056b3] transition-colors disabled:opacity-50"
                       >
                         {isSearching ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
@@ -395,27 +400,87 @@ export default function GoWorkDashboard() {
                   </div>
 
                   {/* AI Search Results */}
-                  {searchResults.length > 0 && (
+                  {searchResult && (
                     <Card className="mt-4 bg-gradient-to-r from-[#6610f2]/5 to-[#007bff]/5 border-[#6610f2]/20">
                       <CardContent className="p-4">
                         <div className="flex items-center space-x-2 mb-3">
                           <Sparkles className="h-5 w-5 text-[#6610f2]" />
                           <span className="font-medium text-[#6610f2]">Resultados de Gow IA</span>
                         </div>
-                        <div className="space-y-2">
-                          {searchResults.map((result, index) => (
-                            <p key={index} className="text-sm text-[#333333] bg-white/50 p-2 rounded-lg">
-                              {result}
-                            </p>
-                          ))}
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                          <div className="space-y-2">
+                            <div className="flex items-center space-x-2 text-sm">
+                              <Bot className="h-4 w-4 text-[#007bff]" />
+                              <span className="text-[#333333]">
+                                <strong>{searchResult.professionals}</strong> profesionales encontrados
+                              </span>
+                            </div>
+
+                            <div className="flex items-center space-x-2 text-sm">
+                              <DollarSign className="h-4 w-4 text-[#FFA500]" />
+                              <span className="text-[#333333]">
+                                {formatPrice(searchResult.priceRange.min)} - {formatPrice(searchResult.priceRange.max)}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                            <div className="flex items-center space-x-2 text-sm">
+                              <Clock className="h-4 w-4 text-[#007bff]" />
+                              <span className="text-[#333333]">{searchResult.availability}</span>
+                            </div>
+
+                            <div className="flex items-center space-x-2 text-sm">
+                              <MapPin className="h-4 w-4 text-[#007bff]" />
+                              <span className="text-[#333333]">{searchResult.location}</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex gap-2 mt-3">
+
+                        {searchResult.recommendations.length > 0 && (
+                          <div className="mb-4 p-3 bg-white/50 rounded-lg">
+                            <div className="flex items-center space-x-2 mb-2">
+                              <Star className="h-4 w-4 text-[#FFA500]" />
+                              <span className="text-sm font-medium text-[#333333]">Recomendaciones de Gow:</span>
+                            </div>
+                            <div className="space-y-1">
+                              {searchResult.recommendations.map((rec, index) => (
+                                <p key={index} className="text-sm text-[#333333]/80">
+                                  • {rec}
+                                </p>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex gap-2">
                           <Button size="sm" className="bg-[#FFA500] hover:bg-[#FF8C00] text-white">
                             Ver Proveedores
                           </Button>
                           <Button size="sm" variant="outline" className="border-[#007bff] text-[#007bff]">
                             Refinar Búsqueda
                           </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setSearchResult(null)}
+                            className="text-[#333333]/60"
+                          >
+                            Cerrar
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Search Error */}
+                  {searchError && (
+                    <Card className="mt-4 bg-red-50 border-red-200">
+                      <CardContent className="p-4">
+                        <div className="flex items-center space-x-2 text-red-700">
+                          <X className="h-4 w-4" />
+                          <span className="text-sm">{searchError}</span>
                         </div>
                       </CardContent>
                     </Card>
