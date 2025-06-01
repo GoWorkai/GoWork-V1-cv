@@ -44,20 +44,16 @@ export default function AuthPage() {
     setLoading(true)
     setError(null)
 
-    try {
-      const { data, error } = await signIn(loginForm.email, loginForm.password)
+    const { error } = await signIn(loginForm.email, loginForm.password)
 
-      if (error) {
-        setError(error.message)
-      } else if (data?.session) {
-        setSuccess("¡Inicio de sesión exitoso!")
-        router.push("/dashboard")
-      }
-    } catch (err: any) {
-      setError(err.message || "Error al iniciar sesión")
-    } finally {
-      setLoading(false)
+    if (error) {
+      setError(error.message)
+    } else {
+      setSuccess("¡Inicio de sesión exitoso!")
+      router.push("/dashboard")
     }
+
+    setLoading(false)
   }
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -65,28 +61,23 @@ export default function AuthPage() {
     setLoading(true)
     setError(null)
 
-    try {
-      const { data, error } = await signUp(signupForm.email, signupForm.password, {
-        full_name: signupForm.full_name,
-        user_type: userType,
-        phone: signupForm.phone,
-        location: signupForm.location,
-        verified: false,
-        rating: 0,
-        total_reviews: 0,
-      })
+    const { error } = await signUp(signupForm.email, signupForm.password, {
+      full_name: signupForm.full_name,
+      user_type: userType,
+      phone: signupForm.phone,
+      location: signupForm.location,
+      verified: false,
+      rating: 0,
+      total_reviews: 0,
+    })
 
-      if (error) {
-        setError(error.message)
-      } else {
-        setSuccess("¡Cuenta creada exitosamente! Por favor revisa tu correo electrónico para confirmar tu cuenta.")
-        // No redirigimos automáticamente para que el usuario pueda ver el mensaje de éxito
-      }
-    } catch (err: any) {
-      setError(err.message || "Error al crear la cuenta")
-    } finally {
-      setLoading(false)
+    if (error) {
+      setError(error.message)
+    } else {
+      setSuccess("¡Cuenta creada exitosamente! Revisa tu email para confirmar.")
     }
+
+    setLoading(false)
   }
 
   return (
@@ -236,7 +227,7 @@ export default function AuthPage() {
                         variant={userType === "freelancer" ? "default" : "outline"}
                         className={`h-20 flex-col space-y-2 ${
                           userType === "freelancer"
-                            ? "bg-[#00E5B4] hover:bg-[#00CC9F] text-black"
+                            ? "bg-[#00E5B4] text-black"
                             : "border-gray-600 text-gray-300 hover:bg-gray-800"
                         }`}
                         onClick={() => setUserType("freelancer")}

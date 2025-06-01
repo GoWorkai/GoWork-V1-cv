@@ -98,9 +98,6 @@ importers:
       '@react-google-maps/api':
         specifier: latest
         version: 2.20.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@supabase/auth-helpers-nextjs':
-        specifier: latest
-        version: 0.10.0(@supabase/supabase-js@2.49.8)
       '@supabase/supabase-js':
         specifier: latest
         version: 2.49.8
@@ -1092,18 +1089,6 @@ packages:
   '@react-google-maps/marker-clusterer@2.20.0':
     resolution: {integrity: sha512-tieX9Va5w1yP88vMgfH1pHTacDQ9TgDTjox3tLlisKDXRQWdjw+QeVVghhf5XqqIxXHgPdcGwBvKY6UP+SIvLw==}
 
-  '@supabase/auth-helpers-nextjs@0.10.0':
-    resolution: {integrity: sha512-2dfOGsM4yZt0oS4TPiE7bD4vf7EVz7NRz/IJrV6vLg0GP7sMUx8wndv2euLGq4BjN9lUCpu6DG/uCC8j+ylwPg==}
-    deprecated: This package is now deprecated - please use the @supabase/ssr package instead.
-    peerDependencies:
-      '@supabase/supabase-js': ^2.39.8
-
-  '@supabase/auth-helpers-shared@0.7.0':
-    resolution: {integrity: sha512-FBFf2ei2R7QC+B/5wWkthMha8Ca2bWHAndN+syfuEUUfufv4mLcAgBCcgNg5nJR8L0gZfyuaxgubtOc9aW3Cpg==}
-    deprecated: This package is now deprecated - please use the @supabase/ssr package instead.
-    peerDependencies:
-      '@supabase/supabase-js': ^2.39.8
-
   '@supabase/auth-js@2.69.1':
     resolution: {integrity: sha512-FILtt5WjCNzmReeRLq5wRs3iShwmnWgBvxHfqapC/VoljJl+W8hDAyFmf1NVw3zH+ZjZ05AKxiKxVeb0HNWRMQ==}
 
@@ -1505,9 +1490,6 @@ packages:
     resolution: {integrity: sha512-/imKNG4EbWNrVjoNC/1H5/9GFy+tqjGBHCaSsN+P2RnPqjsLmv6UD3Ej+Kj8nBWaRAwyk7kK5ZUc+OEatnTR3A==}
     hasBin: true
 
-  jose@4.15.9:
-    resolution: {integrity: sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA==}
-
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -1726,8 +1708,8 @@ packages:
       '@types/react':
         optional: true
 
-  react-remove-scroll@2.7.0:
-    resolution: {integrity: sha512-sGsQtcjMqdQyijAHytfGEELB8FufGbfXIsvUTe+NLx1GDRJCXtCFLBLUI1eyZCKXXvbEU2C6gai0PZKoIE9Vbg==}
+  react-remove-scroll@2.7.1:
+    resolution: {integrity: sha512-HpMh8+oahmIdOuS5aFKKY6Pyog+FNaZV/XyJOq7b4YFwsFHe5yYfdbIalI4k3vU2nSDql7YskmUseHsRrJqIPA==}
     engines: {node: '>=10'}
     peerDependencies:
       '@types/react': '*'
@@ -1804,9 +1786,6 @@ packages:
     resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
     engines: {node: '>=10'}
     hasBin: true
-
-  set-cookie-parser@2.7.1:
-    resolution: {integrity: sha512-IOc8uWeOZgnb3ptbCURJWNjWUPcO3ZnTTdzsurqERrP6nPyv+paC55vJM0LpOlT2ne+Ix+9+CRG1MNLlyZ4GjQ==}
 
   sharp@0.33.5:
     resolution: {integrity: sha512-haPVm1EkS9pgvHrQ/F3Xy+hgcuMV0Wm9vfIBSiwZ05k+xgb0PkBQpGsAA/oWdDobNaZTH5ppvHtzCFbnSEwHVw==}
@@ -2353,7 +2332,7 @@ snapshots:
       aria-hidden: 1.2.6
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
-      react-remove-scroll: 2.7.0(@types/react@19.0.0)(react@19.0.0)
+      react-remove-scroll: 2.7.1(@types/react@19.0.0)(react@19.0.0)
     optionalDependencies:
       '@types/react': 19.0.0
       '@types/react-dom': 19.0.0
@@ -2470,7 +2449,7 @@ snapshots:
       aria-hidden: 1.2.6
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
-      react-remove-scroll: 2.7.0(@types/react@19.0.0)(react@19.0.0)
+      react-remove-scroll: 2.7.1(@types/react@19.0.0)(react@19.0.0)
     optionalDependencies:
       '@types/react': 19.0.0
       '@types/react-dom': 19.0.0
@@ -2533,7 +2512,7 @@ snapshots:
       aria-hidden: 1.2.6
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
-      react-remove-scroll: 2.7.0(@types/react@19.0.0)(react@19.0.0)
+      react-remove-scroll: 2.7.1(@types/react@19.0.0)(react@19.0.0)
     optionalDependencies:
       '@types/react': 19.0.0
       '@types/react-dom': 19.0.0
@@ -2680,7 +2659,7 @@ snapshots:
       aria-hidden: 1.2.6
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
-      react-remove-scroll: 2.7.0(@types/react@19.0.0)(react@19.0.0)
+      react-remove-scroll: 2.7.1(@types/react@19.0.0)(react@19.0.0)
     optionalDependencies:
       '@types/react': 19.0.0
       '@types/react-dom': 19.0.0
@@ -2901,17 +2880,6 @@ snapshots:
   '@react-google-maps/infobox@2.20.0': {}
 
   '@react-google-maps/marker-clusterer@2.20.0': {}
-
-  '@supabase/auth-helpers-nextjs@0.10.0(@supabase/supabase-js@2.49.8)':
-    dependencies:
-      '@supabase/auth-helpers-shared': 0.7.0(@supabase/supabase-js@2.49.8)
-      '@supabase/supabase-js': 2.49.8
-      set-cookie-parser: 2.7.1
-
-  '@supabase/auth-helpers-shared@0.7.0(@supabase/supabase-js@2.49.8)':
-    dependencies:
-      '@supabase/supabase-js': 2.49.8
-      jose: 4.15.9
 
   '@supabase/auth-js@2.69.1':
     dependencies:
@@ -3312,8 +3280,6 @@ snapshots:
 
   jiti@1.21.7: {}
 
-  jose@4.15.9: {}
-
   js-tokens@4.0.0: {}
 
   kdbush@4.0.2: {}
@@ -3503,7 +3469,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.0.0
 
-  react-remove-scroll@2.7.0(@types/react@19.0.0)(react@19.0.0):
+  react-remove-scroll@2.7.1(@types/react@19.0.0)(react@19.0.0):
     dependencies:
       react: 19.0.0
       react-remove-scroll-bar: 2.3.8(@types/react@19.0.0)(react@19.0.0)
@@ -3587,8 +3553,6 @@ snapshots:
 
   semver@7.7.2:
     optional: true
-
-  set-cookie-parser@2.7.1: {}
 
   sharp@0.33.5:
     dependencies:
