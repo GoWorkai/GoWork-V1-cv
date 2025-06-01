@@ -81,8 +81,9 @@ export default function GoWorkAdvanced() {
           {activeTab === "inicio" && (
             <main>
               {/* Hero Section */}
-              <section id="inicio" className="pt-20 pb-32 px-6">
+              <section id="inicio" className="pt-12 pb-16 px-6">
                 <div className="max-w-7xl mx-auto text-center">
+                  {/* Main Title */}
                   <div className="mb-12">
                     <h1 className="text-5xl lg:text-7xl font-bold text-white mb-8 leading-tight">
                       🌟 GoWork: La{" "}
@@ -118,7 +119,7 @@ export default function GoWorkAdvanced() {
                     </div>
                   </div>
 
-                  {/* Advanced AI Search */}
+                  {/* Gow IA Section - Justo después del título principal */}
                   <AdvancedAISearch />
                 </div>
               </section>
