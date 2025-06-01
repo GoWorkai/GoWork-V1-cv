@@ -44,18 +44,3 @@ export function GoWorkIcon({ size = 32, className = "" }: { size?: number; class
     </div>
   )
 }
-
-export function GoWorkHeroLogo({ size = 120, className = "" }: { size?: number; className?: string }) {
-  return (
-    <div className={`${className}`} style={{ width: size, height: size }}>
-      <Image
-        src="/images/gowork-logo.png"
-        alt="GoWork Hero Logo"
-        width={size}
-        height={size}
-        className="object-contain"
-        priority
-      />
-    </div>
-  )
-}

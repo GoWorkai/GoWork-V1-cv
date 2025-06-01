@@ -1,494 +1,289 @@
 "use client"
 
-import { Users, Menu, X, Search, Sparkles, Home, Wrench, Palette, Code, Camera, Music, Heart, Car } from "lucide-react"
+import {
+  Plus,
+  Home,
+  FolderOpen,
+  Layout,
+  Palette,
+  Sparkles,
+  Grid3X3,
+  Bell,
+  Mic,
+  ArrowRight,
+  ImageIcon,
+  FileText,
+  Code,
+  X,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { GoWorkLogo, GoWorkIcon } from "@/components/gowork-logo"
 import { useState } from "react"
 
-export default function GoWorkLanding() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [showLoginForm, setShowLoginForm] = useState(false)
+export default function GoWorkDashboard() {
+  const [activeTab, setActiveTab] = useState("ia")
+  const [showBanner, setShowBanner] = useState(true)
 
-  const categories = [
+  const sidebarItems = [
+    { icon: Plus, label: "Crear", active: true },
+    { icon: Home, label: "Inicio" },
+    { icon: FolderOpen, label: "Proyectos" },
+    { icon: Layout, label: "Plantillas" },
+    { icon: Palette, label: "Marca" },
+    { icon: Sparkles, label: "GoWork IA", highlight: true },
+    { icon: Grid3X3, label: "Apps" },
+  ]
+
+  const aiCapabilities = [
     {
-      title: "Servicios del Hogar",
-      icon: Home,
-      color: "bg-gradient-to-br from-blue-400 to-blue-600",
-      description: "Limpieza, jardinería, reparaciones",
-      image: "/placeholder.svg?height=120&width=200",
+      title: "Generar servicios",
+      description: "Un fontanero que repara tuberías sobre el fondo de un ambiente moderno",
+      image: "/placeholder.svg?height=120&width=200&text=Fontanero",
+      color: "bg-gradient-to-br from-orange-400 to-red-500",
     },
     {
-      title: "Oficios Técnicos",
-      icon: Wrench,
-      color: "bg-gradient-to-br from-orange-400 to-orange-600",
-      description: "Fontanería, electricidad, carpintería",
-      image: "/placeholder.svg?height=120&width=200",
+      title: "Programar",
+      description: "Una calculadora de precios interactiva que pueda compartir con...",
+      image: "/placeholder.svg?height=120&width=200&text=Calculadora",
+      color: "bg-gradient-to-br from-blue-400 to-purple-500",
     },
     {
-      title: "Diseño Creativo",
-      icon: Palette,
-      color: "bg-gradient-to-br from-yellow-400 to-yellow-600",
-      description: "Diseño gráfico, branding, ilustración",
-      image: "/placeholder.svg?height=120&width=200",
+      title: "Escribir",
+      description: "Un post para un blog sobre el cuidado de las plantas de interior",
+      image: "/placeholder.svg?height=120&width=200&text=Blog",
+      color: "bg-gradient-to-br from-cyan-400 to-blue-500",
     },
     {
-      title: "Desarrollo Web",
-      icon: Code,
-      color: "bg-gradient-to-br from-blue-500 to-blue-700",
-      description: "Sitios web, apps, programación",
-      image: "/placeholder.svg?height=120&width=200",
+      title: "Generar imágenes",
+      description: "Un envase simple para el cuidado de la piel sobre un fondo de...",
+      image: "/placeholder.svg?height=120&width=200&text=Producto",
+      color: "bg-gradient-to-br from-gray-300 to-gray-400",
     },
     {
-      title: "Fotografía",
-      icon: Camera,
-      color: "bg-gradient-to-br from-orange-500 to-red-500",
-      description: "Eventos, retratos, productos",
-      image: "/placeholder.svg?height=120&width=200",
+      title: "Escribir",
+      description: "Un blog sobre tendencias de moda sostenible",
+      image: "/placeholder.svg?height=120&width=200&text=Moda",
+      color: "bg-gradient-to-br from-cyan-400 to-purple-500",
     },
     {
-      title: "Música y Audio",
-      icon: Music,
-      color: "bg-gradient-to-br from-purple-400 to-purple-600",
-      description: "Producción, clases, eventos",
-      image: "/placeholder.svg?height=120&width=200",
-    },
-    {
-      title: "Bienestar",
-      icon: Heart,
-      color: "bg-gradient-to-br from-pink-400 to-pink-600",
-      description: "Fitness, nutrición, terapias",
-      image: "/placeholder.svg?height=120&width=200",
-    },
-    {
-      title: "Transporte",
-      icon: Car,
-      color: "bg-gradient-to-br from-green-400 to-green-600",
-      description: "Mudanzas, delivery, viajes",
-      image: "/placeholder.svg?height=120&width=200",
+      title: "Programar",
+      description: "Una línea de tiempo histórica interactiva.",
+      image: "/placeholder.svg?height=120&width=200&text=Timeline",
+      color: "bg-gradient-to-br from-blue-400 to-cyan-400",
     },
   ]
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header/Navigation */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <GoWorkLogo size={40} className="text-blue-600" showText={true} />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-cyan-200/30 to-blue-300/30 rounded-full blur-xl"></div>
+        <div className="absolute top-40 right-32 w-24 h-24 bg-gradient-to-br from-purple-200/30 to-pink-300/30 rounded-full blur-xl"></div>
+        <div className="absolute bottom-32 left-1/3 w-40 h-40 bg-gradient-to-br from-yellow-200/30 to-orange-300/30 rounded-full blur-xl"></div>
+        <div className="absolute top-1/3 right-20 w-20 h-20 bg-gradient-to-br from-green-200/30 to-emerald-300/30 rounded-full blur-xl"></div>
+      </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            <div className="relative group">
-              <button className="text-gray-700 hover:text-blue-600 transition-colors flex items-center">
-                Explorar servicios
-                <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+      {/* Top Banner */}
+      {showBanner && (
+        <div className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-white px-6 py-3 relative z-10">
+          <div className="flex items-center justify-between max-w-7xl mx-auto">
+            <div className="flex items-center space-x-2">
+              <Sparkles className="h-5 w-5" />
+              <span className="text-sm font-medium">
+                🔥 Prueba GoWork Pro por 30 días y descubre todos los lanzamientos de GoWork Create.
+                <button className="underline ml-1 hover:no-underline">Empezar</button>
+              </span>
             </div>
-            <div className="relative group">
-              <button className="text-gray-700 hover:text-blue-600 transition-colors flex items-center">
-                Para proveedores
-                <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-            </div>
-            <a href="#como-funciona" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Cómo funciona
-            </a>
-            <div className="relative group">
-              <button className="text-gray-700 hover:text-blue-600 transition-colors flex items-center">
-                Precios
-                <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-            </div>
-            <div className="relative group">
-              <button className="text-gray-700 hover:text-blue-600 transition-colors flex items-center">
-                Aprende
-                <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-            </div>
-          </nav>
-
-          {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              onClick={() => setShowLoginForm(true)}
-              className="text-gray-700 hover:text-blue-600 hover:bg-blue-50"
-            >
-              Iniciar sesión
-            </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-6">Registrarse</Button>
+            <button onClick={() => setShowBanner(false)} className="hover:bg-white/20 p-1 rounded">
+              <X className="h-4 w-4" />
+            </button>
           </div>
-
-          {/* Mobile Menu Button */}
-          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X className="h-6 w-6 text-gray-700" /> : <Menu className="h-6 w-6 text-gray-700" />}
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-200">
-            <nav className="px-6 py-4 space-y-4">
-              <a href="#servicios" className="block text-gray-700 hover:text-blue-600">
-                Explorar servicios
-              </a>
-              <a href="#proveedores" className="block text-gray-700 hover:text-blue-600">
-                Para proveedores
-              </a>
-              <a href="#como-funciona" className="block text-gray-700 hover:text-blue-600">
-                Cómo funciona
-              </a>
-              <a href="#precios" className="block text-gray-700 hover:text-blue-600">
-                Precios
-              </a>
-              <div className="pt-4 border-t border-gray-200 space-y-3">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowLoginForm(true)}
-                  className="w-full border-gray-300 text-gray-700"
-                >
-                  Iniciar sesión
-                </Button>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Registrarse</Button>
-              </div>
-            </nav>
-          </div>
-        )}
-      </header>
-
-      {/* Login Modal */}
-      {showLoginForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <Card className="w-full max-w-md bg-white">
-            <CardContent className="p-8">
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center space-x-3">
-                  <GoWorkIcon size={32} />
-                  <h2 className="text-2xl font-bold text-gray-900">Iniciar Sesión</h2>
-                </div>
-                <button onClick={() => setShowLoginForm(false)} className="text-gray-500 hover:text-gray-700">
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-
-              <form className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email o teléfono</label>
-                  <Input
-                    type="text"
-                    placeholder="Ingresa tu email o teléfono"
-                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
-                  <Input
-                    type="password"
-                    placeholder="Ingresa tu contraseña"
-                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </div>
-
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Iniciar Sesión</Button>
-
-                <div className="text-center">
-                  <a href="#" className="text-sm text-blue-600 hover:text-blue-800">
-                    ¿Olvidaste tu contraseña?
-                  </a>
-                </div>
-
-                <div className="text-center pt-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-600">
-                    ¿No tienes cuenta?{" "}
-                    <a href="#registro" className="text-blue-600 hover:text-blue-800 font-medium">
-                      Regístrate gratis
-                    </a>
-                  </p>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
         </div>
       )}
 
-      {/* Main Content */}
-      <div className="container mx-auto px-6">
-        {/* Hero Section */}
-        <div className="text-center max-w-4xl mx-auto py-20">
-          <h1 className="text-6xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight">
-            ¿Qué vas a{" "}
-            <span className="bg-gradient-to-r from-blue-600 via-blue-500 to-orange-500 bg-clip-text text-transparent">
-              crear
-            </span>{" "}
-            hoy?
-          </h1>
+      <div className="flex">
+        {/* Sidebar */}
+        <div className="w-20 bg-white/80 backdrop-blur-sm border-r border-gray-200/50 min-h-screen flex flex-col items-center py-6 relative z-10">
+          <div className="mb-8">
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
+                <path d="M3 12h18m-9 9V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </button>
+          </div>
 
-          <p className="text-xl text-gray-600 mb-12 leading-relaxed max-w-2xl mx-auto">
-            Con GoWork puedes ofrecer tus servicios, encontrar talento, conectar con tu comunidad y hacer crecer tu
-            negocio.
-          </p>
+          <nav className="flex-1 space-y-4">
+            {sidebarItems.map((item, index) => {
+              const IconComponent = item.icon
+              return (
+                <div key={index} className="relative">
+                  <button
+                    className={`p-3 rounded-xl transition-all duration-200 relative group ${
+                      item.active ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100 text-gray-600"
+                    }`}
+                  >
+                    <IconComponent className="h-6 w-6" />
+                    {item.highlight && (
+                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full"></div>
+                    )}
+                  </button>
+                  <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    {item.label}
+                  </div>
+                </div>
+              )
+            })}
+          </nav>
 
-          <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-4 rounded-lg">
-            Comenzar ahora
-          </Button>
+          <div className="space-y-4">
+            <button className="p-3 hover:bg-gray-100 rounded-xl transition-colors text-gray-600">
+              <Bell className="h-6 w-6" />
+            </button>
+            <button className="p-3 hover:bg-gray-100 rounded-xl transition-colors">
+              <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                G
+              </div>
+            </button>
+          </div>
         </div>
 
-        {/* Categories Section */}
-        <div className="pb-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categories.map((category, index) => {
-              const IconComponent = category.icon
-              return (
+        {/* Main Content */}
+        <div className="flex-1 p-8 relative z-10">
+          {/* Header Actions */}
+          <div className="flex justify-end mb-8">
+            <div className="flex items-center space-x-4">
+              <Button variant="outline" className="bg-white/80 backdrop-blur-sm border-gray-200">
+                <Sparkles className="h-4 w-4 mr-2" />
+                Iniciar mi prueba gratis
+              </Button>
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                <Grid3X3 className="h-4 w-4 mr-2" />
+              </Button>
+              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Main Title */}
+          <div className="text-center mb-12">
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
+              ¿Qué{" "}
+              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
+                crearemos
+              </span>{" "}
+              hoy?
+            </h1>
+          </div>
+
+          {/* Navigation Tabs */}
+          <div className="flex justify-center mb-8">
+            <div className="flex items-center space-x-6 bg-white/60 backdrop-blur-sm rounded-full p-2 border border-gray-200/50">
+              <button
+                onClick={() => setActiveTab("diseños")}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  activeTab === "diseños" ? "bg-white text-gray-900 shadow-sm" : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                📁 Mis servicios
+              </button>
+              <button
+                onClick={() => setActiveTab("plantillas")}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  activeTab === "plantillas" ? "bg-white text-gray-900 shadow-sm" : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                📋 Plantillas
+              </button>
+              <button
+                onClick={() => setActiveTab("ia")}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all relative ${
+                  activeTab === "ia" ? "bg-white text-gray-900 shadow-sm" : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                ✨ GoWork IA
+                <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                  Nuevo
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* AI Search Box */}
+          <div className="max-w-4xl mx-auto mb-12">
+            <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50 shadow-lg">
+              <CardContent className="p-8">
+                <div className="relative">
+                  <Input
+                    placeholder="Describe tu idea, y yo la haré realidad"
+                    className="text-lg py-6 pl-6 pr-20 border-0 bg-transparent focus:ring-0 placeholder:text-gray-400"
+                  />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center space-x-2">
+                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                      <Mic className="h-5 w-5 text-gray-400" />
+                    </button>
+                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                      <ArrowRight className="h-5 w-5 text-gray-400" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-center space-x-6 mt-6 pt-6 border-t border-gray-200/50">
+                  <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100/80 hover:bg-gray-200/80 rounded-lg transition-colors">
+                    <ImageIcon className="h-4 w-4" />
+                    <span className="text-sm font-medium">Crear un servicio</span>
+                  </button>
+                  <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100/80 hover:bg-gray-200/80 rounded-lg transition-colors">
+                    <FileText className="h-4 w-4" />
+                    <span className="text-sm font-medium">Escribir un perfil</span>
+                  </button>
+                  <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100/80 hover:bg-gray-200/80 rounded-lg transition-colors">
+                    <Code className="h-4 w-4" />
+                    <span className="text-sm font-medium">Programar por mí</span>
+                  </button>
+                </div>
+
+                <p className="text-center text-xs text-gray-500 mt-4">
+                  GoWork IA no es una herramienta perfecta. Corrobora la precisión de sus resultados.{" "}
+                  <button className="text-blue-600 hover:underline">Ver las condiciones</button> •{" "}
+                  <button className="text-blue-600 hover:underline">Agregar un comentario</button>
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* AI Capabilities Section */}
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">Descubre lo que puedes hacer con la IA</h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {aiCapabilities.map((capability, index) => (
                 <Card
                   key={index}
-                  className="group cursor-pointer hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-gray-300 overflow-hidden"
+                  className="group cursor-pointer hover:shadow-lg transition-all duration-300 bg-white/80 backdrop-blur-sm border-gray-200/50 overflow-hidden"
                 >
                   <CardContent className="p-0">
-                    <div className={`${category.color} p-6 text-white relative overflow-hidden`}>
-                      <div className="flex items-center justify-between mb-4">
-                        <IconComponent className="h-8 w-8" />
-                        <div className="text-xs bg-white/20 px-2 py-1 rounded-full">Nuevo</div>
+                    <div className="p-4">
+                      <div className="flex items-center space-x-2 mb-3">
+                        <span className="text-sm font-semibold text-gray-700">{capability.title}</span>
                       </div>
-                      <h3 className="text-lg font-bold mb-2">{category.title}</h3>
-                      <p className="text-sm opacity-90">{category.description}</p>
-
-                      {/* Preview Image */}
-                      <div className="mt-4 bg-white/10 rounded-lg p-3 backdrop-blur-sm">
-                        <img
-                          src={category.image || "/placeholder.svg"}
-                          alt={category.title}
-                          className="w-full h-20 object-cover rounded opacity-80"
-                        />
-                      </div>
+                      <p className="text-sm text-gray-600 mb-4 line-clamp-2">{capability.description}</p>
+                    </div>
+                    <div className={`h-24 ${capability.color} relative overflow-hidden`}>
+                      <img
+                        src={capability.image || "/placeholder.svg"}
+                        alt={capability.title}
+                        className="w-full h-full object-cover opacity-80"
+                      />
                     </div>
                   </CardContent>
                 </Card>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Stats Section */}
-        <div className="py-16 bg-gray-50 -mx-6 px-6 mb-20">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Únete a miles de personas que ya confían en GoWork
-            </h2>
-            <p className="text-xl text-gray-600">Una comunidad en crecimiento de talentos y oportunidades</p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-blue-600 mb-2">15K+</div>
-              <div className="text-gray-600">Proveedores activos</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-orange-500 mb-2">8K+</div>
-              <div className="text-gray-600">Servicios completados</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-yellow-600 mb-2">95%</div>
-              <div className="text-gray-600">Satisfacción cliente</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-blue-600 mb-2">24/7</div>
-              <div className="text-gray-600">Soporte disponible</div>
-            </div>
-          </div>
-        </div>
-
-        {/* How it Works Section */}
-        <div className="py-20" id="como-funciona">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Cómo funciona GoWork</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Conectar talento con oportunidades nunca fue tan fácil
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
-            <div className="text-center">
-              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Users className="h-10 w-10 text-blue-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">1. Crea tu perfil</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Regístrate gratis y crea tu perfil profesional. Destaca tus habilidades y experiencia.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Search className="h-10 w-10 text-orange-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">2. Conecta y encuentra</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Busca servicios cerca de ti o publica tus ofertas. Nuestro algoritmo te conecta automáticamente.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Sparkles className="h-10 w-10 text-yellow-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">3. Trabaja y crece</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Completa servicios, recibe pagos seguros y construye tu reputación en la comunidad.
-              </p>
+              ))}
             </div>
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-5 gap-8">
-            <div className="md:col-span-2">
-              <GoWorkLogo size={45} className="text-white mb-6" />
-              <p className="text-gray-300 mb-6 max-w-md">
-                La red social del talento y las oportunidades humanas. Conectando personas, creando valor, transformando
-                comunidades.
-              </p>
-              <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z" />
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4 text-white">Plataforma</h4>
-              <ul className="space-y-3 text-gray-300">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Explorar servicios
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Para proveedores
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Cómo funciona
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Precios
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Seguridad
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4 text-white">Soporte</h4>
-              <ul className="space-y-3 text-gray-300">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Centro de ayuda
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Contacto
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    FAQ
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Términos de uso
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Privacidad
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4 text-white">Comunidad</h4>
-              <ul className="space-y-3 text-gray-300">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Eventos
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Afiliados
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Desarrolladores
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    API
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">&copy; 2024 GoWork. Todos los derechos reservados.</p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Términos
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Privacidad
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Cookies
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }
