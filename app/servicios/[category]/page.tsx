@@ -122,7 +122,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
         <Suspense fallback={<ServiciosSkeleton />}>
           {servicios.length > 0 ? (
             servicios.map((servicio) => (
-              <Link href={`/servicios/${servicio.id}`} key={servicio.id}>
+              <Link href={`/servicio/${servicio.id}`} key={servicio.id}>
                 <Card className="h-full hover:shadow-lg transition-shadow">
                   <div className="aspect-video w-full overflow-hidden">
                     <img
