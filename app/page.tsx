@@ -34,17 +34,27 @@ import {
   Scissors,
   Hammer,
   PaintBucket,
+  Mic,
+  Send,
+  Bot,
+  Loader2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { GoWorkLogo } from "@/components/gowork-logo"
+import { AISearchWidget } from "@/components/ai-search-widget"
+import { GeminiChat } from "@/components/gemini-chat"
 import { useState } from "react"
 
 export default function GoWorkDashboard() {
   const [activeTab, setActiveTab] = useState("inicio")
   const [showBanner, setShowBanner] = useState(true)
   const [showRegisterForm, setShowRegisterForm] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [isSearching, setIsSearching] = useState(false)
+  const [searchResults, setSearchResults] = useState<string[]>([])
+  const [showAIWidget, setShowAIWidget] = useState(true)
 
   const sidebarItems = [
     { icon: Home, label: "Inicio", id: "inicio", active: true },
@@ -206,6 +216,32 @@ export default function GoWorkDashboard() {
     },
   ]
 
+  // Función para manejar búsqueda con IA
+  const handleAISearch = async (query: string) => {
+    if (!query.trim()) return
+
+    setIsSearching(true)
+    setSearchQuery(query)
+
+    try {
+      // Simulación de respuesta de Gemini AI
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      const mockResults = [
+        `🔍 Encontré ${Math.floor(Math.random() * 50) + 10} profesionales cerca de ti para: "${query}"`,
+        `💡 Sugerencia: Los precios promedio para este servicio están entre $${Math.floor(Math.random() * 50000) + 10000} - $${Math.floor(Math.random() * 100000) + 50000}`,
+        `📍 Hay ${Math.floor(Math.random() * 15) + 5} proveedores disponibles en tu área`,
+        `⭐ Recomendación: Busca proveedores con más de 4.5 estrellas para mejores resultados`,
+      ]
+
+      setSearchResults(mockResults)
+    } catch (error) {
+      console.error("Error en búsqueda IA:", error)
+    } finally {
+      setIsSearching(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
       {/* SEO Meta Tags - These would be in the head */}
@@ -330,16 +366,60 @@ export default function GoWorkDashboard() {
                   </Button>
                 </div>
 
+                {/* AI-Powered Search Box */}
                 <div className="max-w-3xl mx-auto mb-8">
                   <div className="relative">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center space-x-2">
+                      <Bot className="h-5 w-5 text-[#6610f2]" />
+                      <span className="text-sm font-medium text-[#6610f2] hidden sm:block">Gow IA</span>
+                    </div>
                     <Input
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyPress={(e) => e.key === "Enter" && handleAISearch(searchQuery)}
                       placeholder="¿Qué servicio necesitas? Describe tu proyecto y Gow te ayudará..."
-                      className="text-lg py-6 pl-6 pr-16 border-2 border-[#D3D3D3] rounded-full bg-white focus:border-[#007bff] focus:ring-[#007bff] placeholder:text-[#333333]/50 text-[#333333]"
+                      className="text-lg py-6 pl-20 pr-20 border-2 border-[#D3D3D3] rounded-full bg-white focus:border-[#007bff] focus:ring-[#007bff] placeholder:text-[#333333]/50 text-[#333333]"
                     />
-                    <button className="absolute right-4 top-1/2 -translate-y-1/2 bg-[#007bff] text-white p-2 rounded-full hover:bg-[#0056b3] transition-colors">
-                      <ArrowRight className="h-5 w-5" />
-                    </button>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center space-x-2">
+                      <button className="p-2 hover:bg-[#D3D3D3]/20 rounded-lg transition-colors">
+                        <Mic className="h-5 w-5 text-[#333333]/60" />
+                      </button>
+                      <button
+                        onClick={() => handleAISearch(searchQuery)}
+                        disabled={isSearching}
+                        className="bg-[#007bff] text-white p-2 rounded-full hover:bg-[#0056b3] transition-colors disabled:opacity-50"
+                      >
+                        {isSearching ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+                      </button>
+                    </div>
                   </div>
+
+                  {/* AI Search Results */}
+                  {searchResults.length > 0 && (
+                    <Card className="mt-4 bg-gradient-to-r from-[#6610f2]/5 to-[#007bff]/5 border-[#6610f2]/20">
+                      <CardContent className="p-4">
+                        <div className="flex items-center space-x-2 mb-3">
+                          <Sparkles className="h-5 w-5 text-[#6610f2]" />
+                          <span className="font-medium text-[#6610f2]">Resultados de Gow IA</span>
+                        </div>
+                        <div className="space-y-2">
+                          {searchResults.map((result, index) => (
+                            <p key={index} className="text-sm text-[#333333] bg-white/50 p-2 rounded-lg">
+                              {result}
+                            </p>
+                          ))}
+                        </div>
+                        <div className="flex gap-2 mt-3">
+                          <Button size="sm" className="bg-[#FFA500] hover:bg-[#FF8C00] text-white">
+                            Ver Proveedores
+                          </Button>
+                          <Button size="sm" variant="outline" className="border-[#007bff] text-[#007bff]">
+                            Refinar Búsqueda
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap justify-center gap-2 mb-8">
@@ -591,6 +671,12 @@ export default function GoWorkDashboard() {
           )}
         </div>
       </div>
+
+      {/* AI Search Widget - Floating */}
+      {showAIWidget && <AISearchWidget onClose={() => setShowAIWidget(false)} />}
+
+      {/* Gemini Chat Widget */}
+      <GeminiChat />
 
       {/* Register Modal */}
       {showRegisterForm && (
