@@ -268,16 +268,15 @@ export default function GoWorkDashboard() {
               {/* Hero Section */}
               <div className="text-center mb-16">
                 <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                  GoWork: La Red Social del{" "}
+                  GoWork: La red social que impulsa el{" "}
                   <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
-                    Talento
-                  </span>{" "}
-                  y las Oportunidades Humanas
+                    talento local
+                  </span>
                 </h1>
 
                 <p className="text-lg lg:text-xl text-gray-600 mb-8 leading-relaxed max-w-4xl mx-auto">
-                  Transforma tus habilidades en ingresos reales. Conecta con personas que necesitan lo que sabes hacer y
-                  encuentra oportunidades cerca de ti.
+                  Conecta con profesionales cerca de ti, impulsa tu carrera y encuentra oportunidades únicas en tu
+                  comunidad.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -369,9 +368,9 @@ export default function GoWorkDashboard() {
                 <div className="max-w-4xl mx-auto text-center">
                   <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">¿Qué es GoWork?</h2>
                   <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                    GoWork es más que una aplicación; es una comunidad digital que combina lo mejor de una red social y
-                    un marketplace inteligente de servicios. Diseñada para empoderar a quienes ofrecen y buscan
-                    servicios, desde tareas puntuales hasta proyectos profesionales.
+                    GoWork es una red social del talento que conecta personas con habilidades con quienes necesitan sus
+                    servicios. Nuestra plataforma combina tecnología avanzada con un enfoque humano para crear
+                    oportunidades reales de crecimiento profesional y económico en tu comunidad local.
                   </p>
                 </div>
               </div>
