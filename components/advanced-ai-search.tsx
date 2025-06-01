@@ -201,21 +201,22 @@ export function AdvancedAISearch() {
 
   if (!isExpanded) {
     return (
-      <div className="w-full max-w-4xl mx-auto transition-all duration-500 ease-out">
-        <Card className="bg-gray-800/90 backdrop-blur-xl border border-gray-700 shadow-2xl transition-all duration-700 ease-out">
+      <div className="w-full max-w-5xl mx-auto transition-all duration-500 ease-out">
+        <Card className="bg-gray-800/90 backdrop-blur-xl border border-gray-700 shadow-2xl transition-all duration-500 ease-out transform hover:scale-[1.01]">
           <CardContent className="p-8">
             <div className="text-center mb-6">
-              <div className="flex items-center justify-center space-x-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#6610f2] to-[#007bff] rounded-2xl flex items-center justify-center">
-                  <Brain className="h-6 w-6 text-white" />
+              <div className="flex items-center justify-center space-x-4 mb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#6610f2] to-[#007bff] rounded-2xl flex items-center justify-center">
+                  <Brain className="h-8 w-8 text-white" />
                 </div>
                 <div className="text-left">
-                  <h3 className="text-xl font-bold text-white">Gow IA</h3>
+                  <h3 className="text-2xl font-bold text-white">Gow IA</h3>
                   <p className="text-sm text-gray-300">Asistente Inteligente de GoWork</p>
                 </div>
               </div>
               <p className="text-gray-200 text-base mb-6 leading-relaxed">
-                Conversa conmigo para encontrar servicios, analizar precios y optimizar tu perfil
+                Conversa conmigo para encontrar servicios, analizar precios, optimizar tu perfil y descubrir
+                oportunidades
               </p>
             </div>
 
@@ -229,8 +230,8 @@ export function AdvancedAISearch() {
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && (setIsExpanded(true), handleSend())}
                 onFocus={() => setIsExpanded(true)}
-                placeholder="¿Qué servicio necesitas? Pregúntame sobre GoWork..."
-                className="text-lg py-8 pl-20 pr-24 border-2 border-gray-600 rounded-2xl bg-gray-700/50 backdrop-blur-sm focus:border-[#007bff] focus:ring-[#007bff] placeholder:text-gray-400 text-white h-[70px]"
+                placeholder="¿Qué servicio necesitas? Pregúntame cualquier cosa sobre GoWork..."
+                className="text-xl py-6 pl-20 pr-24 border-2 border-gray-600 rounded-2xl bg-gray-700/50 backdrop-blur-sm focus:border-[#007bff] focus:ring-[#007bff] placeholder:text-gray-400 text-white h-[70px]"
               />
               <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center space-x-2">
                 <button
@@ -289,8 +290,8 @@ export function AdvancedAISearch() {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto animate-in slide-in-from-top-4 duration-500 ease-out">
-      <Card className="bg-gray-800/90 backdrop-blur-xl border border-gray-700 shadow-2xl">
+    <div className="w-full max-w-6xl mx-auto animate-in slide-in-from-top-4 duration-700 ease-out">
+      <Card className="bg-gray-800/90 backdrop-blur-xl border border-gray-700 shadow-2xl transition-all duration-500 ease-out">
         <CardContent className="p-0">
           {/* Header del Chat Expandido */}
           <div className="flex items-center justify-between p-6 border-b border-gray-700 bg-gradient-to-r from-[#6610f2]/20 to-[#007bff]/20 animate-in fade-in duration-300 delay-100">
@@ -313,7 +314,7 @@ export function AdvancedAISearch() {
             </button>
           </div>
 
-          {/* Área de Mensajes */}
+          {/* Área de Mensajes - Altura reducida */}
           <div className="h-80 overflow-y-auto p-6 space-y-4 transition-all duration-500 ease-out">
             {messages.map((msg) => (
               <div
