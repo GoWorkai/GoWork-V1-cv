@@ -2,6 +2,7 @@
 
 // Configuración de la API base
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://v0-image-analysis-one-psi-82.vercel.app"
+const REDIRECT_URL = process.env.NEXT_PUBLIC_REDIRECT_URL || "https://v0-image-analysis-one-psi-82.vercel.app/chat"
 
 // Tipos para la API
 export interface ApiResponse<T> {
@@ -112,10 +113,12 @@ export interface Job {
 // Clase para manejar las llamadas a la API
 class ApiService {
   private baseUrl: string
+  private redirectUrl: string
   private token: string | null = null
 
   constructor() {
     this.baseUrl = API_BASE_URL
+    this.redirectUrl = REDIRECT_URL
     // Recuperar token del localStorage si existe
     if (typeof window !== "undefined") {
       this.token = localStorage.getItem("gowork_token")
@@ -210,6 +213,32 @@ class ApiService {
     return this.request<{ token: string }>("/auth/refresh", {
       method: "POST",
     })
+  }
+
+  // Métodos de autenticación social
+  initiateGoogleAuth(): void {
+    const googleAuthUrl = `${this.baseUrl}/auth/google?redirect=${encodeURIComponent(this.redirectUrl)}`
+    window.location.href = googleAuthUrl
+  }
+
+  initiateFacebookAuth(): void {
+    const facebookAuthUrl = `${this.baseUrl}/auth/facebook?redirect=${encodeURIComponent(this.redirectUrl)}`
+    window.location.href = facebookAuthUrl
+  }
+
+  async handleSocialAuthCallback(provider: string, code: string): Promise<ApiResponse<{ user: User; token: string }>> {
+    const response = await this.request<{ user: User; token: string }>(`/auth/${provider}/callback`, {
+      method: "POST",
+      body: JSON.stringify({ code }),
+    })
+
+    if (response.success && response.data) {
+      this.token = response.data.token
+      localStorage.setItem("gowork_token", response.data.token)
+      localStorage.setItem("gowork_user", JSON.stringify(response.data.user))
+    }
+
+    return response
   }
 
   // Métodos de usuario
@@ -373,6 +402,8 @@ export const useApi = () => {
     login: (credentials: LoginRequest) => apiService.login(credentials),
     register: (userData: RegisterRequest) => apiService.register(userData),
     logout: () => apiService.logout(),
+    initiateGoogleAuth: () => apiService.initiateGoogleAuth(),
+    initiateFacebookAuth: () => apiService.initiateFacebookAuth(),
 
     // User
     getProfile: () => apiService.getProfile(),

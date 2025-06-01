@@ -26,6 +26,7 @@ const nextConfig = {
   },
   env: {
     NEXT_PUBLIC_API_URL: 'https://v0-image-analysis-one-psi-82.vercel.app',
+    NEXT_PUBLIC_REDIRECT_URL: 'https://v0-image-analysis-one-psi-82.vercel.app/chat',
   },
 }
 

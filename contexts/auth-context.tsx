@@ -10,6 +10,8 @@ interface AuthContextType {
   isLoading: boolean
   login: (credentials: LoginRequest) => Promise<boolean>
   register: (userData: RegisterRequest) => Promise<boolean>
+  loginWithGoogle: () => void
+  loginWithFacebook: () => void
   logout: () => void
   updateUser: (userData: Partial<User>) => void
   refreshProfile: () => Promise<void>
@@ -63,6 +65,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.success && response.data) {
         setUser(response.data.user)
         setIsAuthenticated(true)
+
+        // Redirigir a la aplicación antigua
+        window.location.href =
+          process.env.NEXT_PUBLIC_REDIRECT_URL || "https://v0-image-analysis-one-psi-82.vercel.app/chat"
         return true
       } else {
         console.error("Login failed:", response.error)
@@ -84,6 +90,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.success && response.data) {
         setUser(response.data.user)
         setIsAuthenticated(true)
+
+        // Redirigir a la aplicación antigua
+        window.location.href =
+          process.env.NEXT_PUBLIC_REDIRECT_URL || "https://v0-image-analysis-one-psi-82.vercel.app/chat"
         return true
       } else {
         console.error("Registration failed:", response.error)
@@ -95,6 +105,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const loginWithGoogle = () => {
+    apiService.initiateGoogleAuth()
+  }
+
+  const loginWithFacebook = () => {
+    apiService.initiateFacebookAuth()
   }
 
   const logout = async () => {
@@ -136,6 +154,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         login,
         register,
+        loginWithGoogle,
+        loginWithFacebook,
         logout,
         updateUser,
         refreshProfile,
