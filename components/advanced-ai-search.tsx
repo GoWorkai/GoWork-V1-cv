@@ -202,7 +202,7 @@ export function AdvancedAISearch() {
   if (!isExpanded) {
     return (
       <div className="w-full max-w-4xl mx-auto">
-        <Card className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl hover:shadow-3xl transition-all duration-500">
+        <Card className="bg-gray-800/90 backdrop-blur-xl border border-gray-700 shadow-2xl hover:shadow-3xl transition-all duration-500">
           <CardContent className="p-8">
             <div className="text-center mb-6">
               <div className="flex items-center justify-center space-x-3 mb-4">
@@ -211,10 +211,10 @@ export function AdvancedAISearch() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white">Gow IA</h3>
-                  <p className="text-sm text-white/80">Asistente Inteligente de GoWork</p>
+                  <p className="text-sm text-gray-300">Asistente Inteligente de GoWork</p>
                 </div>
               </div>
-              <p className="text-white/90 text-lg mb-6">
+              <p className="text-gray-200 text-lg mb-6">
                 Conversa conmigo para encontrar servicios, analizar precios, optimizar tu perfil y descubrir
                 oportunidades
               </p>
@@ -231,15 +231,15 @@ export function AdvancedAISearch() {
                 onKeyPress={(e) => e.key === "Enter" && (setIsExpanded(true), handleSend())}
                 onFocus={() => setIsExpanded(true)}
                 placeholder="¿Qué servicio necesitas? Pregúntame cualquier cosa sobre GoWork..."
-                className="text-lg py-6 pl-20 pr-24 border-2 border-white/30 rounded-2xl bg-white/20 backdrop-blur-sm focus:border-[#007bff] focus:ring-[#007bff] placeholder:text-white/60 text-white"
+                className="text-lg py-6 pl-20 pr-24 border-2 border-gray-600 rounded-2xl bg-gray-700/50 backdrop-blur-sm focus:border-[#007bff] focus:ring-[#007bff] placeholder:text-gray-400 text-white"
               />
               <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center space-x-2">
                 <button
                   onClick={startVoiceRecognition}
                   disabled={isListening}
-                  className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                  className="p-2 hover:bg-gray-600 rounded-lg transition-colors"
                 >
-                  <Mic className={`h-5 w-5 ${isListening ? "text-red-400 animate-pulse" : "text-white/60"}`} />
+                  <Mic className={`h-5 w-5 ${isListening ? "text-red-400 animate-pulse" : "text-gray-400"}`} />
                 </button>
                 <button
                   onClick={() => {
@@ -267,21 +267,21 @@ export function AdvancedAISearch() {
                     setMessage(item.text)
                     setIsExpanded(true)
                   }}
-                  className="flex flex-col items-center p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300 group"
+                  className="flex flex-col items-center p-4 bg-gray-700/50 backdrop-blur-sm rounded-xl hover:bg-gray-600/50 transition-all duration-300 group"
                 >
                   <div
                     className={`w-10 h-10 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform`}
                   >
                     <item.icon className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-xs text-white/80 text-center">{item.text}</span>
+                  <span className="text-xs text-gray-300 text-center">{item.text}</span>
                 </button>
               ))}
             </div>
 
             <div className="flex items-center justify-center mt-6 space-x-2">
               <Sparkles className="h-4 w-4 text-[#6610f2]" />
-              <span className="text-sm text-white/70">Potenciado por Google Gemini + Base de Conocimiento GoWork</span>
+              <span className="text-sm text-gray-400">Potenciado por Google Gemini + Base de Conocimiento GoWork</span>
             </div>
           </CardContent>
         </Card>
@@ -291,24 +291,24 @@ export function AdvancedAISearch() {
 
   return (
     <div className="w-full max-w-6xl mx-auto">
-      <Card className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl">
+      <Card className="bg-gray-800/90 backdrop-blur-xl border border-gray-700 shadow-2xl">
         <CardContent className="p-0">
           {/* Header del Chat Expandido */}
-          <div className="flex items-center justify-between p-6 border-b border-white/20 bg-gradient-to-r from-[#6610f2]/20 to-[#007bff]/20">
+          <div className="flex items-center justify-between p-6 border-b border-gray-700 bg-gradient-to-r from-[#6610f2]/20 to-[#007bff]/20">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-[#6610f2] to-[#007bff] rounded-xl flex items-center justify-center">
                 <Brain className="h-5 w-5 text-white" />
               </div>
               <div>
                 <h3 className="font-bold text-white">Gow IA - Conversación Avanzada</h3>
-                <p className="text-sm text-white/80">
+                <p className="text-sm text-gray-300">
                   {isTyping ? "Analizando tu consulta..." : "Listo para ayudarte"}
                 </p>
               </div>
             </div>
             <button
               onClick={() => setIsExpanded(false)}
-              className="p-2 hover:bg-white/20 rounded-lg transition-colors text-white/80 hover:text-white"
+              className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-white"
             >
               <ArrowRight className="h-5 w-5 rotate-90" />
             </button>
@@ -323,7 +323,7 @@ export function AdvancedAISearch() {
                     className={`p-4 rounded-2xl ${
                       msg.sender === "user"
                         ? "bg-[#007bff] text-white ml-4"
-                        : "bg-white/20 backdrop-blur-sm text-white border border-white/30"
+                        : "bg-gray-700/80 backdrop-blur-sm text-white border border-gray-600"
                     }`}
                   >
                     <div className="flex items-start space-x-2">
@@ -339,7 +339,7 @@ export function AdvancedAISearch() {
 
                   {/* Resultados de Búsqueda Estructurados */}
                   {msg.searchResult && (
-                    <Card className="mt-3 bg-white/10 backdrop-blur-sm border border-white/30">
+                    <Card className="mt-3 bg-gray-700/60 backdrop-blur-sm border border-gray-600">
                       <CardContent className="p-4">
                         <div className="grid grid-cols-2 gap-4 mb-4">
                           <div className="space-y-2">
@@ -370,14 +370,14 @@ export function AdvancedAISearch() {
                         </div>
 
                         {msg.searchResult.recommendations.length > 0 && (
-                          <div className="mb-4 p-3 bg-white/10 rounded-lg">
+                          <div className="mb-4 p-3 bg-gray-600/50 rounded-lg">
                             <div className="flex items-center space-x-2 mb-2">
                               <Star className="h-4 w-4 text-[#FFA500]" />
                               <span className="text-sm font-medium text-white">Recomendaciones:</span>
                             </div>
                             <div className="space-y-1">
                               {msg.searchResult.recommendations.map((rec, index) => (
-                                <p key={index} className="text-xs text-white/80">
+                                <p key={index} className="text-xs text-gray-300">
                                   • {rec}
                                 </p>
                               ))}
@@ -389,7 +389,7 @@ export function AdvancedAISearch() {
                           <Button size="sm" className="bg-[#FFA500] hover:bg-[#FF8C00] text-white">
                             Ver Proveedores
                           </Button>
-                          <Button size="sm" variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                          <Button size="sm" variant="outline" className="border-gray-500 text-white hover:bg-gray-600">
                             Solicitar Cotización
                           </Button>
                         </div>
@@ -400,13 +400,13 @@ export function AdvancedAISearch() {
                   {/* Sugerencias Contextuales */}
                   {msg.suggestions && msg.suggestions.length > 0 && (
                     <div className="mt-3 space-y-2">
-                      <p className="text-xs text-white/60">Sugerencias:</p>
+                      <p className="text-xs text-gray-400">Sugerencias:</p>
                       <div className="flex flex-wrap gap-2">
                         {msg.suggestions.map((suggestion, index) => (
                           <button
                             key={index}
                             onClick={() => handleSuggestionClick(suggestion)}
-                            className="text-xs px-3 py-1 bg-white/10 hover:bg-white/20 rounded-full transition-colors text-white border border-white/30"
+                            className="text-xs px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded-full transition-colors text-white border border-gray-600"
                           >
                             {suggestion}
                           </button>
@@ -420,7 +420,7 @@ export function AdvancedAISearch() {
 
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-white/20 backdrop-blur-sm text-white border border-white/30 p-4 rounded-2xl">
+                <div className="bg-gray-700/80 backdrop-blur-sm text-white border border-gray-600 p-4 rounded-2xl">
                   <div className="flex items-center space-x-2">
                     <Loader2 className="h-4 w-4 animate-spin text-[#6610f2]" />
                     <span className="text-sm">Gow está analizando tu consulta...</span>
@@ -432,7 +432,7 @@ export function AdvancedAISearch() {
           </div>
 
           {/* Input de Mensaje */}
-          <div className="p-6 border-t border-white/20">
+          <div className="p-6 border-t border-gray-700">
             <div className="flex space-x-3">
               <div className="flex-1 relative">
                 <Input
@@ -442,14 +442,14 @@ export function AdvancedAISearch() {
                   onKeyPress={(e) => e.key === "Enter" && handleSend()}
                   placeholder="Continúa la conversación con Gow..."
                   disabled={isTyping}
-                  className="pr-12 border-white/30 bg-white/20 backdrop-blur-sm focus:border-[#007bff] focus:ring-[#007bff] text-white placeholder:text-white/60"
+                  className="pr-12 border-gray-600 bg-gray-700/50 backdrop-blur-sm focus:border-[#007bff] focus:ring-[#007bff] text-white placeholder:text-gray-400"
                 />
                 <button
                   onClick={startVoiceRecognition}
                   disabled={isListening || isTyping}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-white/20 rounded transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-600 rounded transition-colors"
                 >
-                  <Mic className={`h-4 w-4 ${isListening ? "text-red-400 animate-pulse" : "text-white/60"}`} />
+                  <Mic className={`h-4 w-4 ${isListening ? "text-red-400 animate-pulse" : "text-gray-400"}`} />
                 </button>
               </div>
               <Button
@@ -463,7 +463,7 @@ export function AdvancedAISearch() {
 
             <div className="flex items-center justify-center mt-4 space-x-2">
               <Zap className="h-4 w-4 text-[#6610f2]" />
-              <span className="text-xs text-white/70">
+              <span className="text-xs text-gray-400">
                 IA Avanzada con Base de Conocimiento GoWork • Respuestas en tiempo real
               </span>
             </div>

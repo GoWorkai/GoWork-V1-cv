@@ -134,11 +134,11 @@ export function BentoGrid() {
           return (
             <Card
               key={item.id}
-              className={`${item.className} bg-white/10 backdrop-blur-xl border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative`}
+              className={`${item.className} bg-gray-800/80 backdrop-blur-xl border border-gray-700 hover:border-gray-600 transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative`}
             >
               {/* Gradient Background */}
               <div
-                className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-20 group-hover:opacity-30 transition-opacity duration-500`}
+                className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500`}
               />
 
               <CardContent className="p-6 h-full flex flex-col relative z-10">
@@ -152,14 +152,14 @@ export function BentoGrid() {
                     </div>
                     <div>
                       <h3 className="font-bold text-white text-lg">{item.title}</h3>
-                      <p className="text-white/80 text-sm">{item.description}</p>
+                      <p className="text-gray-300 text-sm">{item.description}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Content */}
                 <div className="flex-1">
-                  <p className="text-white/90 mb-4 leading-relaxed">{item.content}</p>
+                  <p className="text-gray-200 mb-4 leading-relaxed">{item.content}</p>
 
                   {/* Stats */}
                   {item.stats && (
@@ -167,7 +167,7 @@ export function BentoGrid() {
                       {item.stats.map((stat, index) => (
                         <div key={index} className="text-center">
                           <div className="text-2xl font-bold text-white">{stat.number}</div>
-                          <div className="text-xs text-white/70">{stat.label}</div>
+                          <div className="text-xs text-gray-400">{stat.label}</div>
                         </div>
                       ))}
                     </div>
@@ -179,7 +179,7 @@ export function BentoGrid() {
                       {item.features.map((feature, index) => (
                         <div key={index} className="flex items-center space-x-2">
                           <CheckCircle className="h-4 w-4 text-green-400" />
-                          <span className="text-white/90 text-sm">{feature}</span>
+                          <span className="text-gray-200 text-sm">{feature}</span>
                         </div>
                       ))}
                     </div>
@@ -191,9 +191,9 @@ export function BentoGrid() {
                       {item.keyFeatures.map((feature, index) => {
                         const FeatureIcon = feature.icon
                         return (
-                          <div key={index} className="flex items-center space-x-2 bg-white/10 rounded-lg p-2">
-                            <FeatureIcon className="h-4 w-4 text-white/80" />
-                            <span className="text-white/90 text-xs">{feature.text}</span>
+                          <div key={index} className="flex items-center space-x-2 bg-gray-700/50 rounded-lg p-2">
+                            <FeatureIcon className="h-4 w-4 text-gray-300" />
+                            <span className="text-gray-200 text-xs">{feature.text}</span>
                           </div>
                         )
                       })}
@@ -204,8 +204,8 @@ export function BentoGrid() {
                   {item.serviceIcons && (
                     <div className="flex flex-wrap gap-2 mb-4">
                       {item.serviceIcons.map((ServiceIcon, index) => (
-                        <div key={index} className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                          <ServiceIcon className="h-4 w-4 text-white/80" />
+                        <div key={index} className="w-8 h-8 bg-gray-700/50 rounded-lg flex items-center justify-center">
+                          <ServiceIcon className="h-4 w-4 text-gray-300" />
                         </div>
                       ))}
                     </div>
@@ -215,7 +215,7 @@ export function BentoGrid() {
                   {item.benefits && (
                     <div className="space-y-1 mb-4">
                       {item.benefits.map((benefit, index) => (
-                        <div key={index} className="text-white/90 text-sm">
+                        <div key={index} className="text-gray-200 text-sm">
                           • {benefit}
                         </div>
                       ))}
@@ -230,8 +230,8 @@ export function BentoGrid() {
                           <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
                         ))}
                       </div>
-                      <p className="text-white/90 italic text-sm mb-2">"{item.testimonial.text}"</p>
-                      <div className="text-white/80 text-xs">
+                      <p className="text-gray-200 italic text-sm mb-2">"{item.testimonial.text}"</p>
+                      <div className="text-gray-300 text-xs">
                         <strong>{item.testimonial.author}</strong> - {item.testimonial.role}
                       </div>
                     </div>
@@ -242,7 +242,7 @@ export function BentoGrid() {
                 {item.cta && (
                   <Button
                     variant="outline"
-                    className="w-full border-white/30 text-white hover:bg-white/20 group-hover:border-white/50 transition-all"
+                    className="w-full border-gray-600 text-white hover:bg-gray-700 group-hover:border-gray-500 transition-all"
                   >
                     {item.cta}
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
