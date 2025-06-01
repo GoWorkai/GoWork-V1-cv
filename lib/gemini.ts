@@ -17,135 +17,112 @@ export interface ChatMessage {
 }
 
 class GeminiService {
-  private model = genAI.getGenerativeModel({ model: "gemini-pro" })
+  private model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
 
   async searchServices(query: string, location = "Santiago, Chile"): Promise<SearchResult> {
     try {
       const prompt = `
-        Eres Gow, el asistente de IA de GoWork, una plataforma de servicios freelance en Chile.
-        
-        Usuario busca: "${query}"
-        Ubicación: ${location}
-        
-        Analiza esta consulta y proporciona una respuesta estructurada con:
-        1. Número estimado de profesionales disponibles (entre 5-50)
-        2. Rango de precios en pesos chilenos
-        3. Disponibilidad típica
-        4. 3 recomendaciones específicas
-        
-        Responde en formato JSON:
-        {
-          "professionals": número,
-          "priceRange": {"min": número, "max": número},
-          "availability": "texto",
-          "recommendations": ["rec1", "rec2", "rec3"],
-          "location": "${location}"
-        }
-      `
+      Actúa como Gow, el asistente de IA de GoWork, una plataforma de servicios freelance en Chile.
+      
+      Consulta del usuario: "${query}"
+      Ubicación: ${location}
+      
+      Analiza esta consulta y responde SOLO con un objeto JSON válido con esta estructura exacta:
+      {
+        "professionals": [número entre 5-50],
+        "priceRange": {"min": [número], "max": [número]},
+        "availability": "[texto descriptivo]",
+        "recommendations": ["recomendación 1", "recomendación 2", "recomendación 3"],
+        "location": "${location}"
+      }
+      
+      No incluyas texto adicional, solo el JSON.
+    `
 
       const result = await this.model.generateContent(prompt)
       const response = await result.response
-      const text = response.text()
+      const text = response.text().trim()
 
-      try {
-        return JSON.parse(text)
-      } catch {
-        // Fallback si la respuesta no es JSON válido
-        return {
-          professionals: Math.floor(Math.random() * 45) + 5,
-          priceRange: { min: 15000, max: 80000 },
-          availability: "Disponible en 24-48 horas",
-          recommendations: [
-            "Verifica las calificaciones antes de contratar",
-            "Compara al menos 3 presupuestos",
-            "Define claramente el alcance del trabajo",
-          ],
-          location,
-        }
+      // Limpiar el texto para extraer solo el JSON
+      const jsonMatch = text.match(/\{[\s\S]*\}/)
+      if (jsonMatch) {
+        return JSON.parse(jsonMatch[0])
       }
+
+      throw new Error("No se pudo parsear la respuesta")
     } catch (error) {
       console.error("Error en búsqueda Gemini:", error)
-      throw new Error("Error al procesar la búsqueda")
+      // Fallback con datos simulados
+      return {
+        professionals: Math.floor(Math.random() * 45) + 5,
+        priceRange: { min: 15000, max: 80000 },
+        availability: "Disponible en 24-48 horas",
+        recommendations: [
+          "Verifica las calificaciones antes de contratar",
+          "Compara al menos 3 presupuestos",
+          "Define claramente el alcance del trabajo",
+        ],
+        location,
+      }
     }
   }
 
   async chatWithGow(messages: ChatMessage[]): Promise<string> {
     try {
       const systemPrompt = `
-        Eres Gow, el asistente de IA de GoWork, una plataforma que conecta talentos con oportunidades en Chile.
-        
-        Características de GoWork:
-        - Red social del talento y oportunidades humanas
-        - Conecta proveedores de servicios con clientes
-        - Servicios desde reparaciones hasta consultoría profesional
-        - Sistema de reputación y pagos seguros
-        - Geolocalización inteligente
-        - Perfil dual (cliente y proveedor)
-        
-        Tu personalidad:
-        - Amigable y profesional
-        - Conoces bien el mercado chileno
-        - Ayudas con precios, recomendaciones y procesos
-        - Usas emojis ocasionalmente
-        - Respondes en español chileno
-        
-        Siempre trata de ser útil y específico en tus respuestas.
-      `
+      Eres Gow, el asistente de IA de GoWork, una plataforma que conecta talentos con oportunidades en Chile.
+      
+      Características de GoWork:
+      - Red social del talento y oportunidades humanas
+      - Conecta proveedores de servicios con clientes
+      - Servicios desde reparaciones hasta consultoría profesional
+      - Sistema de reputación y pagos seguros
+      - Geolocalización inteligente
+      - Perfil dual (cliente y proveedor)
+      
+      Responde de manera amigable, profesional y útil. Usa español chileno y emojis ocasionalmente.
+    `
 
-      const chat = this.model.startChat({
-        history: [
-          {
-            role: "user",
-            parts: [{ text: systemPrompt }],
-          },
-          {
-            role: "model",
-            parts: [
-              {
-                text: "¡Hola! Soy Gow, tu asistente de IA en GoWork. Estoy aquí para ayudarte con todo lo relacionado con servicios, precios, y conectar tu talento con oportunidades. ¿En qué puedo ayudarte?",
-              },
-            ],
-          },
-          ...messages,
-        ],
-      })
+      // Crear el prompt completo
+      const fullPrompt = systemPrompt + "\n\nUsuario: " + messages[messages.length - 1].parts[0].text
 
-      const result = await chat.sendMessage(messages[messages.length - 1].parts[0].text)
+      const result = await this.model.generateContent(fullPrompt)
       const response = await result.response
       return response.text()
     } catch (error) {
       console.error("Error en chat Gemini:", error)
-      throw new Error("Error al procesar el mensaje")
+      return "Lo siento, tengo problemas técnicos en este momento. Por favor intenta nuevamente en unos segundos. 😔"
     }
   }
 
   async generateServiceSuggestions(category: string): Promise<string[]> {
     try {
       const prompt = `
-        Genera 5 sugerencias de búsqueda populares para la categoría "${category}" en GoWork Chile.
-        Responde solo con un array JSON de strings, sin explicaciones adicionales.
-        Ejemplo: ["Reparación de grifería", "Instalación de lavamanos", "Destape de cañerías"]
-      `
+      Genera exactamente 5 sugerencias de búsqueda populares para la categoría "${category}" en Chile.
+      Responde SOLO con un array JSON de strings.
+      Ejemplo: ["Reparación de grifería", "Instalación de lavamanos", "Destape de cañerías", "Plomero 24 horas", "Cambio de llaves"]
+    `
 
       const result = await this.model.generateContent(prompt)
       const response = await result.response
-      const text = response.text()
+      const text = response.text().trim()
 
-      try {
-        return JSON.parse(text)
-      } catch {
-        // Fallback con sugerencias genéricas
-        return [
-          `Servicios de ${category} a domicilio`,
-          `Profesional de ${category} cerca de mí`,
-          `Presupuesto para ${category}`,
-          `${category} urgente`,
-          `Mejor ${category} en mi zona`,
-        ]
+      // Intentar parsear como JSON
+      const jsonMatch = text.match(/\[[\s\S]*\]/)
+      if (jsonMatch) {
+        return JSON.parse(jsonMatch[0])
       }
+
+      throw new Error("No se pudo parsear las sugerencias")
     } catch (error) {
       console.error("Error generando sugerencias:", error)
-      return [`Buscar servicios de ${category}`]
+      return [
+        `Servicios de ${category} a domicilio`,
+        `Profesional de ${category} cerca de mí`,
+        `Presupuesto para ${category}`,
+        `${category} urgente`,
+        `Mejor ${category} en mi zona`,
+      ]
     }
   }
 
