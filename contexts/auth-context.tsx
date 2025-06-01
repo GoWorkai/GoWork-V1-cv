@@ -2,14 +2,13 @@
 
 import type React from "react"
 import { createContext, useState, useEffect, useContext } from "react"
-import { authService, type AuthUser, type AuthResponse } from "../services/auth.service"
+import { authService } from "../services/auth.service"
 
 interface AuthContextProps {
   isAuthenticated: boolean
-  user: AuthUser | null
+  user: any
   isLoading: boolean
-  login: (email: string, password: string) => Promise<AuthResponse>
-  loginDemo: () => Promise<AuthResponse>
+  login: (token: string) => Promise<void>
   logout: () => void
 }
 
@@ -17,66 +16,28 @@ const AuthContext = createContext<AuthContextProps>({
   isAuthenticated: false,
   user: null,
   isLoading: false,
-  login: async () => ({ success: false }),
-  loginDemo: async () => ({ success: false }),
+  login: async () => {},
   logout: () => {},
 })
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user, setUser] = useState<AuthUser | null>(null)
+  const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  const login = async (email: string, password: string): Promise<AuthResponse> => {
-    try {
-      setIsLoading(true)
-      const response = await authService.login(email, password)
-
-      if (response.success && response.token && response.user) {
-        localStorage.setItem("gowork_token", response.token)
-        setUser(response.user)
-        setIsAuthenticated(true)
-      }
-
-      return response
-    } catch (error) {
-      console.error("Login error:", error)
-      return { success: false, message: "Error inesperado" }
-    } finally {
-      setIsLoading(false)
+  const login = async (token: string) => {
+    localStorage.setItem("gowork_token", token)
+    const userData = await authService.validateToken(token)
+    if (userData.success) {
+      setUser(userData.user)
+      setIsAuthenticated(true)
     }
   }
 
-  const loginDemo = async (): Promise<AuthResponse> => {
-    try {
-      setIsLoading(true)
-      const response = await authService.loginDemo()
-
-      if (response.success && response.token && response.user) {
-        localStorage.setItem("gowork_token", response.token)
-        setUser(response.user)
-        setIsAuthenticated(true)
-      }
-
-      return response
-    } catch (error) {
-      console.error("Demo login error:", error)
-      return { success: false, message: "Error inesperado" }
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const logout = async () => {
-    try {
-      await authService.logout()
-    } catch (error) {
-      console.error("Logout error:", error)
-    } finally {
-      localStorage.removeItem("gowork_token")
-      setIsAuthenticated(false)
-      setUser(null)
-    }
+  const logout = () => {
+    localStorage.removeItem("gowork_token")
+    setIsAuthenticated(false)
+    setUser(null)
   }
 
   useEffect(() => {
@@ -86,8 +47,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const token = localStorage.getItem("gowork_token")
 
         if (token) {
+          // Validar token existente
           const userData = await authService.validateToken(token)
-          if (userData.success && userData.user) {
+          if (userData.success) {
             setUser(userData.user)
             setIsAuthenticated(true)
           } else {
@@ -112,7 +74,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         isLoading,
         login,
-        loginDemo,
         logout,
       }}
     >
