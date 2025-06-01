@@ -202,7 +202,7 @@ export function AdvancedAISearch() {
   if (!isExpanded) {
     return (
       <div className="w-full max-w-4xl mx-auto">
-        <Card className="bg-gray-800/90 backdrop-blur-xl border border-gray-700 shadow-2xl hover:shadow-3xl transition-all duration-500">
+        <Card className="bg-gray-800/90 backdrop-blur-xl border border-gray-700 shadow-2xl transition-all duration-700 ease-out">
           <CardContent className="p-8">
             <div className="text-center mb-6">
               <div className="flex items-center justify-center space-x-3 mb-4">
@@ -290,11 +290,11 @@ export function AdvancedAISearch() {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto">
+    <div className="w-full max-w-6xl mx-auto animate-in slide-in-from-top-4 duration-500 ease-out">
       <Card className="bg-gray-800/90 backdrop-blur-xl border border-gray-700 shadow-2xl">
         <CardContent className="p-0">
           {/* Header del Chat Expandido */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-700 bg-gradient-to-r from-[#6610f2]/20 to-[#007bff]/20">
+          <div className="flex items-center justify-between p-6 border-b border-gray-700 bg-gradient-to-r from-[#6610f2]/20 to-[#007bff]/20 animate-in fade-in duration-300 delay-100">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-[#6610f2] to-[#007bff] rounded-xl flex items-center justify-center">
                 <Brain className="h-5 w-5 text-white" />
@@ -308,16 +308,19 @@ export function AdvancedAISearch() {
             </div>
             <button
               onClick={() => setIsExpanded(false)}
-              className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-white"
+              className="p-2 hover:bg-gray-700 rounded-lg transition-all duration-200 ease-out text-gray-400 hover:text-white transform hover:scale-105"
             >
-              <ArrowRight className="h-5 w-5 rotate-90" />
+              <ArrowRight className="h-5 w-5 rotate-90 transition-transform duration-200 ease-out" />
             </button>
           </div>
 
           {/* Área de Mensajes */}
-          <div className="h-96 overflow-y-auto p-6 space-y-4">
+          <div className="h-96 overflow-y-auto p-6 space-y-4 transition-all duration-500 ease-out">
             {messages.map((msg) => (
-              <div key={msg.id} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                key={msg.id}
+                className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"} animate-in slide-in-from-bottom-2 duration-300 ease-out`}
+              >
                 <div className={`max-w-[80%] ${msg.sender === "user" ? "order-2" : "order-1"}`}>
                   <div
                     className={`p-4 rounded-2xl ${
@@ -432,9 +435,9 @@ export function AdvancedAISearch() {
           </div>
 
           {/* Input de Mensaje */}
-          <div className="p-6 border-t border-gray-700">
+          <div className="p-6 border-t border-gray-700 animate-in slide-in-from-bottom-4 duration-400 delay-200">
             <div className="flex space-x-3">
-              <div className="flex-1 relative">
+              <div className="flex-1 relative transform transition-all duration-300 ease-out">
                 <Input
                   ref={inputRef}
                   value={message}
