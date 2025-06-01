@@ -8,7 +8,6 @@ import {
   Palette,
   Sparkles,
   Grid3X3,
-  Mic,
   ArrowRight,
   FileText,
   X,
@@ -22,6 +21,14 @@ import {
   CheckCircle,
   MessageCircle,
   Search,
+  Image,
+  Video,
+  FileSpreadsheet,
+  FileIcon as Document,
+  Globe,
+  Upload,
+  MoreHorizontal,
+  Crown,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -43,6 +50,21 @@ export default function GoWorkDashboard() {
     { icon: Palette, label: "Mi Marca", id: "marca" },
     { icon: Sparkles, label: "Gow IA", id: "ia", highlight: true },
     { icon: Grid3X3, label: "Apps", id: "apps" },
+  ]
+
+  const quickAccessItems = [
+    { icon: FileSpreadsheet, label: "Hoja de cálculo", id: "spreadsheet", isNew: true },
+    { icon: Document, label: "Doc", id: "doc" },
+    { icon: Grid3X3, label: "Pizarra online", id: "whiteboard" },
+    { icon: Layout, label: "Presentación", id: "presentation" },
+    { icon: Users, label: "Redes", id: "social" },
+    { icon: Image, label: "Fotos", id: "photos", isNew: true },
+    { icon: Video, label: "Video", id: "video" },
+    { icon: FileText, label: "Imprimir", id: "print" },
+    { icon: Globe, label: "Sitio web", id: "website" },
+    { icon: Palette, label: "Personalizar", id: "customize" },
+    { icon: Upload, label: "Subir", id: "upload" },
+    { icon: MoreHorizontal, label: "Más", id: "more" },
   ]
 
   const features = [
@@ -137,42 +159,42 @@ export default function GoWorkDashboard() {
       title: "Crear perfil profesional",
       description: "Un perfil optimizado que destaque tus habilidades y experiencia",
       image: "/placeholder.svg?height=120&width=200&text=Perfil+Pro",
-      color: "bg-gradient-to-br from-[#A9746E] to-[#8A5D58]",
+      color: "bg-gradient-to-br from-[#007bff] to-[#0056b3]",
     },
     {
       title: "Generar propuestas",
       description: "Propuestas personalizadas que aumenten tus posibilidades de éxito",
       image: "/placeholder.svg?height=120&width=200&text=Propuestas",
-      color: "bg-gradient-to-br from-[#A3C585] to-[#8AAD6C]",
+      color: "bg-gradient-to-br from-[#FFA500] to-[#FF8C00]",
     },
     {
       title: "Optimizar precios",
       description: "Calculadora inteligente para establecer precios competitivos",
       image: "/placeholder.svg?height=120&width=200&text=Precios",
-      color: "bg-gradient-to-br from-[#A9746E] to-[#8A5D58]",
+      color: "bg-gradient-to-br from-[#007bff] to-[#0056b3]",
     },
     {
       title: "Escribir descripciones",
       description: "Descripciones atractivas para tus servicios y proyectos",
       image: "/placeholder.svg?height=120&width=200&text=Descripciones",
-      color: "bg-gradient-to-br from-[#A3C585] to-[#8AAD6C]",
+      color: "bg-gradient-to-br from-[#FFA500] to-[#FF8C00]",
     },
     {
       title: "Gestionar comunicación",
       description: "Respuestas automáticas y seguimiento de clientes",
       image: "/placeholder.svg?height=120&width=200&text=Chat",
-      color: "bg-gradient-to-br from-[#A9746E] to-[#8A5D58]",
+      color: "bg-gradient-to-br from-[#007bff] to-[#0056b3]",
     },
     {
       title: "Analizar mercado",
       description: "Insights sobre demanda y tendencias en tu área",
       image: "/placeholder.svg?height=120&width=200&text=Analytics",
-      color: "bg-gradient-to-br from-[#A3C585] to-[#8AAD6C]",
+      color: "bg-gradient-to-br from-[#FFA500] to-[#FF8C00]",
     },
   ]
 
   return (
-    <div className="min-h-screen bg-[#F5F5DC] relative overflow-hidden">
+    <div className="min-h-screen bg-white relative overflow-hidden">
       {/* SEO Meta Tags - These would be in the head */}
       <div className="hidden">
         <h1>GoWork - La Red Social del Talento y las Oportunidades Humanas</h1>
@@ -188,24 +210,24 @@ export default function GoWorkDashboard() {
 
       {/* Decorative background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-[#A9746E]/20 to-[#8A5D58]/20 rounded-full blur-xl"></div>
-        <div className="absolute top-40 right-32 w-24 h-24 bg-gradient-to-br from-[#A3C585]/20 to-[#8AAD6C]/20 rounded-full blur-xl"></div>
-        <div className="absolute bottom-32 left-1/3 w-40 h-40 bg-gradient-to-br from-[#A9746E]/20 to-[#8A5D58]/20 rounded-full blur-xl"></div>
-        <div className="absolute top-1/3 right-20 w-20 h-20 bg-gradient-to-br from-[#A3C585]/20 to-[#8AAD6C]/20 rounded-full blur-xl"></div>
+        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-[#007bff]/10 to-[#0056b3]/10 rounded-full blur-xl"></div>
+        <div className="absolute top-40 right-32 w-24 h-24 bg-gradient-to-br from-[#FFA500]/10 to-[#FF8C00]/10 rounded-full blur-xl"></div>
+        <div className="absolute bottom-32 left-1/3 w-40 h-40 bg-gradient-to-br from-[#007bff]/10 to-[#0056b3]/10 rounded-full blur-xl"></div>
+        <div className="absolute top-1/3 right-20 w-20 h-20 bg-gradient-to-br from-[#FFA500]/10 to-[#FF8C00]/10 rounded-full blur-xl"></div>
       </div>
 
       {/* Top Banner */}
       {showBanner && (
-        <div className="bg-gradient-to-r from-[#A9746E] via-[#A9746E] to-[#8A5D58] text-[#F5F5DC] px-6 py-3 relative z-10">
+        <div className="bg-gradient-to-r from-[#007bff] via-[#6610f2] to-[#6f42c1] text-white px-6 py-3 relative z-10">
           <div className="flex items-center justify-between max-w-7xl mx-auto">
             <div className="flex items-center space-x-2">
-              <Sparkles className="h-5 w-5" />
+              <Crown className="h-5 w-5" />
               <span className="text-sm font-medium">
-                🔥 Únete a GoWork gratis y descubre todas las oportunidades cerca de ti.
-                <button className="underline ml-1 hover:no-underline">Empezar ahora</button>
+                🔥 Prueba GoWork Pro por 30 días y descubre todos los lanzamientos de GoWork Create.
+                <button className="underline ml-1 hover:no-underline">Empezar</button>
               </span>
             </div>
-            <button onClick={() => setShowBanner(false)} className="hover:bg-[#F5F5DC]/20 p-1 rounded">
+            <button onClick={() => setShowBanner(false)} className="hover:bg-white/20 p-1 rounded">
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -214,14 +236,14 @@ export default function GoWorkDashboard() {
 
       <div className="flex">
         {/* Sidebar */}
-        <div className="w-20 lg:w-64 bg-white/80 backdrop-blur-sm border-r border-[#D3D3D3] min-h-screen flex flex-col relative z-10">
+        <div className="w-20 lg:w-64 bg-white border-r border-[#D3D3D3] min-h-screen flex flex-col relative z-10">
           {/* Logo */}
           <div className="p-6 border-b border-[#D3D3D3]">
             <div className="lg:block hidden">
-              <GoWorkLogo size={40} className="text-[#A9746E]" showText={true} />
+              <GoWorkLogo size={40} className="text-[#007bff]" showText={true} />
             </div>
             <div className="lg:hidden block flex justify-center">
-              <GoWorkLogo size={32} className="text-[#A9746E]" showText={false} />
+              <GoWorkLogo size={32} className="text-[#007bff]" showText={false} />
             </div>
           </div>
 
@@ -235,13 +257,13 @@ export default function GoWorkDashboard() {
                   onClick={() => setActiveTab(item.id)}
                   className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-200 relative group ${
                     activeTab === item.id
-                      ? "bg-[#A3C585]/20 text-[#A9746E]"
-                      : "hover:bg-[#F5F5DC] text-[#D3D3D3] hover:text-[#A9746E]"
+                      ? "bg-[#007bff]/10 text-[#007bff]"
+                      : "hover:bg-[#D3D3D3]/20 text-[#333333] hover:text-[#007bff]"
                   }`}
                 >
                   <IconComponent className="h-5 w-5 flex-shrink-0" />
                   <span className="hidden lg:block text-sm font-medium">{item.label}</span>
-                  {item.highlight && <div className="absolute top-2 right-2 w-2 h-2 bg-[#A3C585] rounded-full"></div>}
+                  {item.highlight && <div className="absolute top-2 right-2 w-2 h-2 bg-[#FFA500] rounded-full"></div>}
                 </button>
               )
             })}
@@ -249,13 +271,13 @@ export default function GoWorkDashboard() {
 
           {/* User Profile */}
           <div className="p-4 border-t border-[#D3D3D3]">
-            <button className="w-full flex items-center space-x-3 p-3 hover:bg-[#F5F5DC] rounded-xl transition-colors">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#A9746E] to-[#8A5D58] rounded-full flex items-center justify-center text-[#F5F5DC] text-sm font-bold">
+            <button className="w-full flex items-center space-x-3 p-3 hover:bg-[#D3D3D3]/20 rounded-xl transition-colors">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#007bff] to-[#0056b3] rounded-full flex items-center justify-center text-white text-sm font-bold">
                 G
               </div>
               <div className="hidden lg:block text-left">
-                <div className="text-sm font-medium text-[#A9746E]">Invitado</div>
-                <div className="text-xs text-[#D3D3D3]">Crear cuenta</div>
+                <div className="text-sm font-medium text-[#333333]">Invitado</div>
+                <div className="text-xs text-[#333333]/70">Crear cuenta</div>
               </div>
             </button>
           </div>
@@ -265,98 +287,90 @@ export default function GoWorkDashboard() {
         <div className="flex-1 relative z-10">
           {activeTab === "inicio" && (
             <div className="p-4 lg:p-8">
-              {/* Hero Section */}
-              <div className="text-center mb-16">
-                <h1 className="text-4xl lg:text-6xl font-bold text-[#A9746E] mb-6 leading-tight">
-                  GoWork: La red social del{" "}
-                  <span className="bg-gradient-to-r from-[#A9746E] via-[#A9746E] to-[#8A5D58] bg-clip-text text-transparent">
-                    talento
-                  </span>{" "}
-                  y las oportunidades humanas
+              {/* Hero Section - Canva Style */}
+              <div className="text-center mb-16 max-w-5xl mx-auto">
+                <h1 className="text-4xl lg:text-6xl font-bold text-[#333333] mb-6 leading-tight">
+                  ¿Qué <span className="text-[#007bff]">diseñaremos</span> hoy?
                 </h1>
 
-                <p className="text-lg lg:text-xl text-[#2F4F4F] mb-8 leading-relaxed max-w-4xl mx-auto">
-                  Transforma tus habilidades en ingresos reales. Conecta con personas que necesitan lo que sabes hacer y
-                  encuentra oportunidades cerca de ti.
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                  <Button
-                    size="lg"
-                    onClick={() => setShowRegisterForm(true)}
-                    className="bg-[#A3C585] hover:bg-[#8AAD6C] text-white text-lg px-8 py-4 rounded-xl hover:shadow-lg transition-all"
-                  >
-                    Crear Cuenta Gratis
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    onClick={() => setActiveTab("explorar")}
-                    className="border-2 border-[#A3C585] text-[#A9746E] hover:bg-[#A3C585]/10 text-lg px-8 py-4 rounded-xl"
-                  >
-                    Explorar Servicios
-                  </Button>
+                <div className="max-w-3xl mx-auto mb-8">
+                  <div className="relative">
+                    <Input
+                      placeholder="Describe tu idea, y yo la haré realidad"
+                      className="text-lg py-6 pl-6 pr-16 border-2 border-[#D3D3D3] rounded-full bg-white focus:border-[#007bff] focus:ring-[#007bff] placeholder:text-[#333333]/50 text-[#333333]"
+                    />
+                    <button className="absolute right-4 top-1/2 -translate-y-1/2 bg-[#007bff] text-white p-2 rounded-full hover:bg-[#0056b3] transition-colors">
+                      <ArrowRight className="h-5 w-5" />
+                    </button>
+                  </div>
                 </div>
 
-                {/* AI Search Box */}
-                <div className="max-w-4xl mx-auto mb-16">
-                  <Card className="bg-white/80 backdrop-blur-sm border-[#D3D3D3] shadow-lg">
-                    <CardContent className="p-6 lg:p-8">
-                      <div className="relative">
-                        <Input
-                          placeholder="¿Qué servicio necesitas? Describe tu proyecto y Gow te ayudará..."
-                          className="text-lg py-6 pl-6 pr-20 border-0 bg-transparent focus:ring-0 placeholder:text-[#D3D3D3] text-[#2F4F4F]"
-                        />
-                        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center space-x-2">
-                          <button className="p-2 hover:bg-[#F5F5DC] rounded-lg transition-colors">
-                            <Mic className="h-5 w-5 text-[#D3D3D3]" />
-                          </button>
-                          <button className="p-2 hover:bg-[#F5F5DC] rounded-lg transition-colors">
-                            <ArrowRight className="h-5 w-5 text-[#D3D3D3]" />
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap items-center justify-center gap-4 mt-6 pt-6 border-t border-[#D3D3D3]">
-                        <button className="flex items-center space-x-2 px-4 py-2 bg-[#F5F5DC] hover:bg-[#F5F5DC]/80 rounded-lg transition-colors">
-                          <Users className="h-4 w-4 text-[#A9746E]" />
-                          <span className="text-sm font-medium text-[#A9746E]">Encontrar talento</span>
-                        </button>
-                        <button className="flex items-center space-x-2 px-4 py-2 bg-[#F5F5DC] hover:bg-[#F5F5DC]/80 rounded-lg transition-colors">
-                          <FileText className="h-4 w-4 text-[#A9746E]" />
-                          <span className="text-sm font-medium text-[#A9746E]">Crear perfil</span>
-                        </button>
-                        <button className="flex items-center space-x-2 px-4 py-2 bg-[#F5F5DC] hover:bg-[#F5F5DC]/80 rounded-lg transition-colors">
-                          <Sparkles className="h-4 w-4 text-[#A9746E]" />
-                          <span className="text-sm font-medium text-[#A9746E]">Optimizar con IA</span>
-                        </button>
-                      </div>
-
-                      <p className="text-center text-xs text-[#D3D3D3] mt-4">
-                        Gow IA te ayuda a encontrar las mejores oportunidades.{" "}
-                        <button className="text-[#A3C585] hover:underline">Conoce más</button> •{" "}
-                        <button className="text-[#A3C585] hover:underline">Enviar feedback</button>
-                      </p>
-                    </CardContent>
-                  </Card>
+                <div className="flex flex-wrap justify-center gap-2 mb-8">
+                  <button className="flex items-center space-x-2 px-4 py-2 bg-white border border-[#D3D3D3] hover:border-[#007bff] rounded-full transition-colors">
+                    <FileText className="h-4 w-4 text-[#333333]" />
+                    <span className="text-sm font-medium text-[#333333]">Mis diseños</span>
+                  </button>
+                  <button className="flex items-center space-x-2 px-4 py-2 bg-white border border-[#D3D3D3] hover:border-[#007bff] rounded-full transition-colors">
+                    <Layout className="h-4 w-4 text-[#333333]" />
+                    <span className="text-sm font-medium text-[#333333]">Plantillas</span>
+                  </button>
+                  <button className="flex items-center space-x-2 px-4 py-2 bg-[#6610f2]/10 border border-[#6610f2]/20 hover:border-[#6610f2] rounded-full transition-colors relative">
+                    <Sparkles className="h-4 w-4 text-[#6610f2]" />
+                    <span className="text-sm font-medium text-[#6610f2]">GoWork IA</span>
+                    <span className="absolute -top-2 -right-2 bg-[#6610f2] text-white text-xs px-2 py-0.5 rounded-full">
+                      Nuevo
+                    </span>
+                  </button>
                 </div>
+
+                {/* Quick Access Icons - Canva Style */}
+                <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-4 max-w-6xl mx-auto mb-16">
+                  {quickAccessItems.map((item, index) => {
+                    const IconComponent = item.icon
+                    return (
+                      <div key={index} className="flex flex-col items-center relative">
+                        <button className="w-16 h-16 flex items-center justify-center bg-white border border-[#D3D3D3] rounded-xl hover:border-[#007bff] hover:shadow-md transition-all group">
+                          <IconComponent className="h-6 w-6 text-[#333333] group-hover:text-[#007bff]" />
+                        </button>
+                        <span className="mt-2 text-xs text-[#333333]">{item.label}</span>
+                        {item.isNew && (
+                          <span className="absolute -top-1 -right-1 bg-[#6610f2] text-white text-xs px-1.5 py-0.5 rounded-md">
+                            Nuevo
+                          </span>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {/* Illustration - Canva Style */}
+                <div className="flex justify-center mb-8">
+                  <div className="relative w-64 h-64">
+                    <Image
+                      src="/placeholder.svg?height=256&width=256&text=Mundo+de+Posibilidades"
+                      alt="Ilustración"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                </div>
+
+                <h2 className="text-2xl font-bold text-[#333333] mb-8">Hay un mundo de posibilidades</h2>
               </div>
 
               {/* Stats Section */}
               <div className="mb-16">
-                <h2 className="text-2xl lg:text-3xl font-bold text-center text-[#A9746E] mb-8">
+                <h2 className="text-2xl lg:text-3xl font-bold text-center text-[#333333] mb-8">
                   Estadísticas de Nuestra Comunidad
                 </h2>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
                   {stats.map((stat, index) => {
                     const IconComponent = stat.icon
                     return (
-                      <Card key={index} className="bg-white/80 backdrop-blur-sm border-[#D3D3D3] text-center">
+                      <Card key={index} className="bg-white border-[#D3D3D3] text-center">
                         <CardContent className="p-6">
-                          <IconComponent className="h-8 w-8 text-[#A3C585] mx-auto mb-3" />
-                          <div className="text-2xl lg:text-3xl font-bold text-[#A9746E] mb-1">{stat.number}</div>
-                          <div className="text-sm text-[#D3D3D3]">{stat.label}</div>
+                          <IconComponent className="h-8 w-8 text-[#007bff] mx-auto mb-3" />
+                          <div className="text-2xl lg:text-3xl font-bold text-[#333333] mb-1">{stat.number}</div>
+                          <div className="text-sm text-[#333333]/70">{stat.label}</div>
                         </CardContent>
                       </Card>
                     )
@@ -365,10 +379,10 @@ export default function GoWorkDashboard() {
               </div>
 
               {/* What is GoWork Section */}
-              <div className="mb-16 bg-[#F5F5DC] py-12 -mx-8 px-8">
+              <div className="mb-16 bg-[#D3D3D3]/20 py-12 -mx-8 px-8">
                 <div className="max-w-4xl mx-auto text-center">
-                  <h2 className="text-3xl lg:text-4xl font-bold text-[#A9746E] mb-6">¿Qué es GoWork?</h2>
-                  <p className="text-lg text-[#2F4F4F] leading-relaxed mb-8">
+                  <h2 className="text-3xl lg:text-4xl font-bold text-[#333333] mb-6">¿Qué es GoWork?</h2>
+                  <p className="text-lg text-[#333333] leading-relaxed mb-8">
                     GoWork es una red social del talento que conecta personas con habilidades con quienes necesitan sus
                     servicios. Nuestra plataforma combina tecnología avanzada con un enfoque humano para crear
                     oportunidades reales de crecimiento profesional y económico en tu comunidad local.
@@ -378,7 +392,7 @@ export default function GoWorkDashboard() {
 
               {/* Features Section */}
               <div className="mb-16">
-                <h2 className="text-3xl lg:text-4xl font-bold text-center text-[#A9746E] mb-12">
+                <h2 className="text-3xl lg:text-4xl font-bold text-center text-[#333333] mb-12">
                   Funcionalidades Clave
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -387,14 +401,14 @@ export default function GoWorkDashboard() {
                     return (
                       <Card
                         key={index}
-                        className="bg-white/80 backdrop-blur-sm border-[#D3D3D3] hover:shadow-lg transition-all duration-300"
+                        className="bg-white border-[#D3D3D3] hover:shadow-lg transition-all duration-300"
                       >
                         <CardContent className="p-6">
-                          <div className="w-12 h-12 bg-[#A3C585]/20 rounded-xl flex items-center justify-center mb-4">
-                            <IconComponent className="h-6 w-6 text-[#A3C585]" />
+                          <div className="w-12 h-12 bg-[#007bff]/10 rounded-xl flex items-center justify-center mb-4">
+                            <IconComponent className="h-6 w-6 text-[#007bff]" />
                           </div>
-                          <h3 className="text-lg font-semibold text-[#A9746E] mb-3">{feature.title}</h3>
-                          <p className="text-[#2F4F4F] leading-relaxed">{feature.description}</p>
+                          <h3 className="text-lg font-semibold text-[#333333] mb-3">{feature.title}</h3>
+                          <p className="text-[#333333]/80 leading-relaxed">{feature.description}</p>
                         </CardContent>
                       </Card>
                     )
@@ -403,8 +417,8 @@ export default function GoWorkDashboard() {
               </div>
 
               {/* Benefits Section */}
-              <div className="mb-16 bg-[#F5F5DC] py-12 -mx-8 px-8">
-                <h2 className="text-3xl lg:text-4xl font-bold text-center text-[#A9746E] mb-12">
+              <div className="mb-16 bg-[#D3D3D3]/20 py-12 -mx-8 px-8">
+                <h2 className="text-3xl lg:text-4xl font-bold text-center text-[#333333] mb-12">
                   ¿Por Qué Elegir GoWork?
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
@@ -413,14 +427,14 @@ export default function GoWorkDashboard() {
                     return (
                       <Card
                         key={index}
-                        className="bg-white/80 backdrop-blur-sm border-[#D3D3D3] hover:shadow-lg transition-all duration-300 text-center"
+                        className="bg-white border-[#D3D3D3] hover:shadow-lg transition-all duration-300 text-center"
                       >
                         <CardContent className="p-6">
-                          <div className="w-16 h-16 bg-gradient-to-br from-[#A9746E] to-[#8A5D58] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <IconComponent className="h-8 w-8 text-[#F5F5DC]" />
+                          <div className="w-16 h-16 bg-gradient-to-br from-[#007bff] to-[#0056b3] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <IconComponent className="h-8 w-8 text-white" />
                           </div>
-                          <h3 className="text-lg font-semibold text-[#A9746E] mb-3">{benefit.title}</h3>
-                          <p className="text-[#2F4F4F] leading-relaxed">{benefit.description}</p>
+                          <h3 className="text-lg font-semibold text-[#333333] mb-3">{benefit.title}</h3>
+                          <p className="text-[#333333]/80 leading-relaxed">{benefit.description}</p>
                         </CardContent>
                       </Card>
                     )
@@ -430,15 +444,12 @@ export default function GoWorkDashboard() {
 
               {/* Testimonials Section */}
               <div className="mb-16">
-                <h2 className="text-3xl lg:text-4xl font-bold text-center text-[#A9746E] mb-12">
+                <h2 className="text-3xl lg:text-4xl font-bold text-center text-[#333333] mb-12">
                   Lo que dicen nuestros usuarios
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                   {testimonials.map((testimonial, index) => (
-                    <Card
-                      key={index}
-                      className="bg-white/80 backdrop-blur-sm border-[#D3D3D3] hover:shadow-lg transition-all duration-300"
-                    >
+                    <Card key={index} className="bg-white border-[#D3D3D3] hover:shadow-lg transition-all duration-300">
                       <CardContent className="p-6">
                         <div className="flex items-center mb-4">
                           <img
@@ -447,16 +458,16 @@ export default function GoWorkDashboard() {
                             className="w-12 h-12 rounded-full mr-4"
                           />
                           <div>
-                            <h4 className="font-semibold text-[#A9746E]">{testimonial.name}</h4>
-                            <p className="text-sm text-[#D3D3D3]">{testimonial.role}</p>
+                            <h4 className="font-semibold text-[#333333]">{testimonial.name}</h4>
+                            <p className="text-sm text-[#333333]/70">{testimonial.role}</p>
                           </div>
                         </div>
                         <div className="flex mb-3">
                           {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star key={i} className="h-4 w-4 text-[#A3C585] fill-current" />
+                            <Star key={i} className="h-4 w-4 text-[#FFA500] fill-current" />
                           ))}
                         </div>
-                        <p className="text-[#2F4F4F] italic">"{testimonial.content}"</p>
+                        <p className="text-[#333333]/80 italic">"{testimonial.content}"</p>
                       </CardContent>
                     </Card>
                   ))}
@@ -464,25 +475,25 @@ export default function GoWorkDashboard() {
               </div>
 
               {/* AI Capabilities Section */}
-              <div className="mb-16 bg-[#F5F5DC] py-12 -mx-8 px-8">
-                <h2 className="text-3xl lg:text-4xl font-bold text-center text-[#A9746E] mb-12">
+              <div className="mb-16 bg-[#D3D3D3]/20 py-12 -mx-8 px-8">
+                <h2 className="text-3xl lg:text-4xl font-bold text-center text-[#333333] mb-12">
                   Descubre lo que puedes hacer con Gow IA
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
                   {aiCapabilities.map((capability, index) => (
                     <Card
                       key={index}
-                      className="group cursor-pointer hover:shadow-lg transition-all duration-300 bg-white/80 backdrop-blur-sm border-[#D3D3D3] overflow-hidden"
+                      className="group cursor-pointer hover:shadow-lg transition-all duration-300 bg-white border-[#D3D3D3] overflow-hidden"
                     >
                       <CardContent className="p-0">
                         <div className="p-4">
                           <div className="flex items-center space-x-2 mb-3">
-                            <span className="text-sm font-semibold text-[#A9746E]">{capability.title}</span>
+                            <span className="text-sm font-semibold text-[#333333]">{capability.title}</span>
                           </div>
-                          <p className="text-sm text-[#2F4F4F] mb-4 line-clamp-2">{capability.description}</p>
+                          <p className="text-sm text-[#333333]/80 mb-4 line-clamp-2">{capability.description}</p>
                         </div>
                         <div className={`h-24 ${capability.color} relative overflow-hidden`}>
-                          <img
+                          <Image
                             src={capability.image || "/placeholder.svg"}
                             alt={capability.title}
                             className="w-full h-full object-cover opacity-80"
@@ -496,7 +507,7 @@ export default function GoWorkDashboard() {
 
               {/* CTA Section */}
               <div className="text-center">
-                <Card className="bg-gradient-to-r from-[#A9746E] to-[#8A5D58] text-[#F5F5DC] max-w-4xl mx-auto">
+                <Card className="bg-gradient-to-r from-[#007bff] to-[#0056b3] text-white max-w-4xl mx-auto">
                   <CardContent className="p-8 lg:p-12">
                     <h2 className="text-3xl lg:text-4xl font-bold mb-6">
                       ¿Listo para transformar tus habilidades en ingresos?
@@ -508,7 +519,7 @@ export default function GoWorkDashboard() {
                       <Button
                         size="lg"
                         onClick={() => setShowRegisterForm(true)}
-                        className="bg-[#A3C585] hover:bg-[#8AAD6C] text-white text-lg px-8 py-4 rounded-xl"
+                        className="bg-[#FFA500] hover:bg-[#FF8C00] text-white text-lg px-8 py-4 rounded-xl"
                       >
                         Crear Cuenta Gratis
                         <ArrowRight className="ml-2 h-5 w-5" />
@@ -516,7 +527,7 @@ export default function GoWorkDashboard() {
                       <Button
                         size="lg"
                         variant="outline"
-                        className="border-2 border-[#F5F5DC] text-[#F5F5DC] hover:bg-[#F5F5DC]/10 text-lg px-8 py-4 rounded-xl"
+                        className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-4 rounded-xl"
                       >
                         Conoce más
                       </Button>
@@ -530,10 +541,10 @@ export default function GoWorkDashboard() {
           {/* Other tabs content would go here */}
           {activeTab !== "inicio" && (
             <div className="p-8 text-center">
-              <h2 className="text-2xl font-bold text-[#A9746E] mb-4">
+              <h2 className="text-2xl font-bold text-[#333333] mb-4">
                 {sidebarItems.find((item) => item.id === activeTab)?.label}
               </h2>
-              <p className="text-[#2F4F4F]">Esta sección está en desarrollo. ¡Pronto estará disponible!</p>
+              <p className="text-[#333333]/80">Esta sección está en desarrollo. ¡Pronto estará disponible!</p>
             </div>
           )}
         </div>
@@ -542,58 +553,58 @@ export default function GoWorkDashboard() {
       {/* Register Modal */}
       {showRegisterForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <Card className="w-full max-w-md bg-white">
+          <Card className="w-full max-w-md bg-white border-[#D3D3D3]">
             <CardContent className="p-8">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-[#A9746E]">Crear Cuenta Gratis</h2>
-                <button onClick={() => setShowRegisterForm(false)} className="text-[#D3D3D3] hover:text-[#A9746E]">
+                <h2 className="text-2xl font-bold text-[#333333]">Crear Cuenta Gratis</h2>
+                <button onClick={() => setShowRegisterForm(false)} className="text-[#333333]/70 hover:text-[#333333]">
                   <X className="h-6 w-6" />
                 </button>
               </div>
 
               <form className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#A9746E] mb-2">Nombre completo</label>
+                  <label className="block text-sm font-medium text-[#333333] mb-2">Nombre completo</label>
                   <Input
                     type="text"
                     placeholder="Tu nombre completo"
-                    className="border-[#D3D3D3] focus:border-[#A3C585] focus:ring-[#A3C585] text-[#2F4F4F]"
+                    className="border-[#D3D3D3] focus:border-[#007bff] focus:ring-[#007bff] text-[#333333]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#A9746E] mb-2">Email</label>
+                  <label className="block text-sm font-medium text-[#333333] mb-2">Email</label>
                   <Input
                     type="email"
                     placeholder="tu@email.com"
-                    className="border-[#D3D3D3] focus:border-[#A3C585] focus:ring-[#A3C585] text-[#2F4F4F]"
+                    className="border-[#D3D3D3] focus:border-[#007bff] focus:ring-[#007bff] text-[#333333]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#A9746E] mb-2">Teléfono</label>
+                  <label className="block text-sm font-medium text-[#333333] mb-2">Teléfono</label>
                   <Input
                     type="tel"
                     placeholder="+56 9 1234 5678"
-                    className="border-[#D3D3D3] focus:border-[#A3C585] focus:ring-[#A3C585] text-[#2F4F4F]"
+                    className="border-[#D3D3D3] focus:border-[#007bff] focus:ring-[#007bff] text-[#333333]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#A9746E] mb-2">¿Qué te interesa más?</label>
-                  <select className="w-full p-3 border border-[#D3D3D3] rounded-lg focus:border-[#A3C585] focus:ring-[#A3C585] text-[#2F4F4F]">
+                  <label className="block text-sm font-medium text-[#333333] mb-2">¿Qué te interesa más?</label>
+                  <select className="w-full p-3 border border-[#D3D3D3] rounded-lg focus:border-[#007bff] focus:ring-[#007bff] text-[#333333]">
                     <option>Ofrecer mis servicios</option>
                     <option>Contratar servicios</option>
                     <option>Ambos</option>
                   </select>
                 </div>
 
-                <Button className="w-full bg-[#A3C585] hover:bg-[#8AAD6C] text-white">Crear Cuenta Gratis</Button>
+                <Button className="w-full bg-[#FFA500] hover:bg-[#FF8C00] text-white">Crear Cuenta Gratis</Button>
 
                 <div className="text-center pt-4 border-t border-[#D3D3D3]">
-                  <p className="text-sm text-[#2F4F4F]">
+                  <p className="text-sm text-[#333333]/80">
                     ¿Ya tienes cuenta?{" "}
-                    <button className="text-[#A3C585] hover:text-[#8AAD6C] font-medium">Iniciar sesión</button>
+                    <button className="text-[#007bff] hover:text-[#0056b3] font-medium">Iniciar sesión</button>
                   </p>
                 </div>
               </form>

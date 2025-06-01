@@ -20,11 +20,12 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // GoWork "Conexión Humana" Palette
-        "mocha-mousse": "#A9746E",
-        "crema-suave": "#F5F5DC",
-        "verde-bambu": "#A3C585",
-        "gris-claro": "#D3D3D3",
+        // GoWork "Innovadora y Energética" Palette
+        "primary-blue": "#007bff",
+        "secondary-gray": "#D3D3D3",
+        "accent-orange": "#FFA500",
+        "text-dark": "#333333",
+        "text-light": "#FFFFFF",
 
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

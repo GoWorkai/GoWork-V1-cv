@@ -22,8 +22,8 @@ export function GoWorkLogo({ size = 40, className = "", showText = true }: GoWor
 
       {showText && (
         <span className="text-2xl font-bold" style={{ fontFamily: "NovaSquare, sans-serif" }}>
-          <span className="text-[#A9746E]">Go</span>
-          <span className="text-[#2F4F4F]">Work</span>
+          <span className="text-[#007bff]">Go</span>
+          <span className="text-[#333333]">Work</span>
         </span>
       )}
     </div>
