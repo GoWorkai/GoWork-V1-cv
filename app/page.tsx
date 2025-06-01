@@ -77,11 +77,11 @@ export default function GoWorkAdvanced() {
         <SidebarNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
         {/* Main Content */}
-        <div className="flex-1 relative z-30 lg:ml-0">
+        <div className="flex-1 relative z-30">
           {activeTab === "inicio" && (
             <main>
-              {/* Hero Section */}
-              <section id="inicio" className="pt-12 pb-16 px-6">
+              {/* Hero Section - Con sidebar */}
+              <section id="inicio" className="pt-12 pb-16 px-6 lg:ml-0">
                 <div className="max-w-7xl mx-auto text-center">
                   {/* Main Title */}
                   <div className="mb-12">
@@ -126,113 +126,116 @@ export default function GoWorkAdvanced() {
                 </div>
               </section>
 
-              {/* BentoGrid Section */}
-              <section id="servicios" className="py-20 px-6">
-                <div className="max-w-7xl mx-auto text-center mb-16">
-                  <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">Descubre el Ecosistema GoWork</h2>
-                  <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                    Una plataforma completa diseñada para empoderar tu talento y conectarte con oportunidades reales
-                  </p>
-                </div>
+              {/* Todas las secciones siguientes ocupan ancho completo */}
+              <div className="lg:ml-0">
+                {/* BentoGrid Section - Ancho completo */}
+                <section id="servicios" className="py-20 px-6">
+                  <div className="max-w-7xl mx-auto text-center mb-16">
+                    <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">Descubre el Ecosistema GoWork</h2>
+                    <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                      Una plataforma completa diseñada para empoderar tu talento y conectarte con oportunidades reales
+                    </p>
+                  </div>
 
-                <BentoGrid />
-              </section>
+                  <BentoGrid />
+                </section>
 
-              {/* Community Stats */}
-              <section id="comunidad" className="py-20 px-6">
-                <div className="max-w-7xl mx-auto">
-                  <h2 className="text-4xl lg:text-5xl font-bold text-center text-white mb-16">
-                    📈 Nuestra Comunidad en Crecimiento
-                  </h2>
+                {/* Community Stats - Ancho completo */}
+                <section id="comunidad" className="py-20 px-6">
+                  <div className="max-w-7xl mx-auto">
+                    <h2 className="text-4xl lg:text-5xl font-bold text-center text-white mb-16">
+                      📈 Nuestra Comunidad en Crecimiento
+                    </h2>
 
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
-                    {communityStats.map((stat, index) => {
-                      const IconComponent = stat.icon
-                      return (
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+                      {communityStats.map((stat, index) => {
+                        const IconComponent = stat.icon
+                        return (
+                          <Card
+                            key={index}
+                            className="bg-gray-800/80 backdrop-blur-xl border border-gray-700 text-center hover:scale-105 transition-all duration-300"
+                          >
+                            <CardContent className="p-8">
+                              <IconComponent className="h-12 w-12 text-[#FFA500] mx-auto mb-4" />
+                              <div className="text-4xl lg:text-5xl font-bold text-white mb-2">{stat.number}</div>
+                              <div className="text-gray-300">{stat.label}</div>
+                            </CardContent>
+                          </Card>
+                        )
+                      })}
+                    </div>
+
+                    {/* Testimonials */}
+                    <div className="text-center mb-12">
+                      <h3 className="text-3xl lg:text-4xl font-bold text-white mb-6">Lo que dicen nuestros usuarios</h3>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                      {testimonials.map((testimonial, index) => (
                         <Card
                           key={index}
-                          className="bg-gray-800/80 backdrop-blur-xl border border-gray-700 text-center hover:scale-105 transition-all duration-300"
+                          className="bg-gray-800/80 backdrop-blur-xl border border-gray-700 hover:scale-105 transition-all duration-300"
                         >
                           <CardContent className="p-8">
-                            <IconComponent className="h-12 w-12 text-[#FFA500] mx-auto mb-4" />
-                            <div className="text-4xl lg:text-5xl font-bold text-white mb-2">{stat.number}</div>
-                            <div className="text-gray-300">{stat.label}</div>
+                            <div className="flex items-center mb-6">
+                              <img
+                                src={testimonial.avatar || "/placeholder.svg"}
+                                alt={testimonial.name}
+                                className="w-16 h-16 rounded-full mr-4 border-2 border-gray-600"
+                              />
+                              <div>
+                                <h4 className="font-bold text-white text-lg">{testimonial.name}</h4>
+                                <p className="text-gray-300">{testimonial.role}</p>
+                              </div>
+                            </div>
+                            <div className="flex mb-4">
+                              {[...Array(testimonial.rating)].map((_, i) => (
+                                <Star key={i} className="h-5 w-5 text-[#FFA500] fill-current" />
+                              ))}
+                            </div>
+                            <p className="text-gray-200 italic leading-relaxed">"{testimonial.content}"</p>
                           </CardContent>
                         </Card>
-                      )
-                    })}
+                      ))}
+                    </div>
                   </div>
+                </section>
 
-                  {/* Testimonials */}
-                  <div className="text-center mb-12">
-                    <h3 className="text-3xl lg:text-4xl font-bold text-white mb-6">Lo que dicen nuestros usuarios</h3>
+                {/* Final CTA - Ancho completo */}
+                <section className="py-20 px-6">
+                  <div className="max-w-4xl mx-auto text-center">
+                    <Card className="bg-gradient-to-r from-[#007bff]/20 to-[#6610f2]/20 backdrop-blur-xl border border-gray-700">
+                      <CardContent className="p-12">
+                        <h2 className="text-4xl lg:text-5xl font-bold text-white mb-8">
+                          🎯 Únete a GoWork Hoy y Libera Tu Talento
+                        </h2>
+                        <p className="text-xl text-gray-200 mb-10 leading-relaxed">
+                          No esperes más. Empieza a transformar tu talento en oportunidades reales. Regístrate gratis y
+                          forma parte de una comunidad que valora y necesita lo que sabes hacer.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                          <Button
+                            size="lg"
+                            onClick={() => setShowRegisterForm(true)}
+                            className="bg-gradient-to-r from-[#FFA500] to-[#FF8C00] hover:from-[#FF8C00] hover:to-[#FFA500] text-white text-xl px-10 py-6 rounded-2xl hover:shadow-2xl transition-all duration-300"
+                          >
+                            Regístrate Ahora
+                            <ArrowRight className="ml-3 h-6 w-6" />
+                          </Button>
+                          <Button
+                            size="lg"
+                            variant="outline"
+                            className="border-2 border-gray-600 text-white hover:bg-gray-800 text-xl px-10 py-6 rounded-2xl"
+                          >
+                            Descubre Cómo Funciona
+                            <Sparkles className="ml-3 h-6 w-6" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {testimonials.map((testimonial, index) => (
-                      <Card
-                        key={index}
-                        className="bg-gray-800/80 backdrop-blur-xl border border-gray-700 hover:scale-105 transition-all duration-300"
-                      >
-                        <CardContent className="p-8">
-                          <div className="flex items-center mb-6">
-                            <img
-                              src={testimonial.avatar || "/placeholder.svg"}
-                              alt={testimonial.name}
-                              className="w-16 h-16 rounded-full mr-4 border-2 border-gray-600"
-                            />
-                            <div>
-                              <h4 className="font-bold text-white text-lg">{testimonial.name}</h4>
-                              <p className="text-gray-300">{testimonial.role}</p>
-                            </div>
-                          </div>
-                          <div className="flex mb-4">
-                            {[...Array(testimonial.rating)].map((_, i) => (
-                              <Star key={i} className="h-5 w-5 text-[#FFA500] fill-current" />
-                            ))}
-                          </div>
-                          <p className="text-gray-200 italic leading-relaxed">"{testimonial.content}"</p>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              </section>
-
-              {/* Final CTA */}
-              <section className="py-20 px-6">
-                <div className="max-w-4xl mx-auto text-center">
-                  <Card className="bg-gradient-to-r from-[#007bff]/20 to-[#6610f2]/20 backdrop-blur-xl border border-gray-700">
-                    <CardContent className="p-12">
-                      <h2 className="text-4xl lg:text-5xl font-bold text-white mb-8">
-                        🎯 Únete a GoWork Hoy y Libera Tu Talento
-                      </h2>
-                      <p className="text-xl text-gray-200 mb-10 leading-relaxed">
-                        No esperes más. Empieza a transformar tu talento en oportunidades reales. Regístrate gratis y
-                        forma parte de una comunidad que valora y necesita lo que sabes hacer.
-                      </p>
-                      <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                        <Button
-                          size="lg"
-                          onClick={() => setShowRegisterForm(true)}
-                          className="bg-gradient-to-r from-[#FFA500] to-[#FF8C00] hover:from-[#FF8C00] hover:to-[#FFA500] text-white text-xl px-10 py-6 rounded-2xl hover:shadow-2xl transition-all duration-300"
-                        >
-                          Regístrate Ahora
-                          <ArrowRight className="ml-3 h-6 w-6" />
-                        </Button>
-                        <Button
-                          size="lg"
-                          variant="outline"
-                          className="border-2 border-gray-600 text-white hover:bg-gray-800 text-xl px-10 py-6 rounded-2xl"
-                        >
-                          Descubre Cómo Funciona
-                          <Sparkles className="ml-3 h-6 w-6" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </section>
+                </section>
+              </div>
             </main>
           )}
 

@@ -126,7 +126,7 @@ export function BentoGrid() {
   ]
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-6">
+    <div className="w-full max-w-full mx-auto px-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-fr">
         {bentoItems.map((item) => {
           const IconComponent = item.icon
