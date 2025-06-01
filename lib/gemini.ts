@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
 
-const API_KEY = "AIzaSyBqVQ0ONMO0U9lHJ7nBRGmCwoojFxuqwZw"
+// Usamos la clave API proporcionada
+const API_KEY = "AIzaSyAChwfahZWZJLRnqIu82qUXrQuMW9-CoyQ"
 const genAI = new GoogleGenerativeAI(API_KEY)
 
 export interface SearchResult {
@@ -17,7 +18,9 @@ export interface ChatMessage {
 }
 
 class GeminiService {
-  private model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+  // Actualizamos para usar gemini-1.5-pro en lugar de gemini-1.5-flash
+  // ya que puede tener diferentes permisos
+  private model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" })
 
   async searchServices(query: string, location = "Santiago, Chile"): Promise<SearchResult> {
     try {
@@ -39,9 +42,11 @@ class GeminiService {
     No incluyas texto adicional, solo el JSON.
   `
 
+      console.log("Enviando solicitud a Gemini...")
       const result = await this.model.generateContent(prompt)
       const response = await result.response
       const text = response.text().trim()
+      console.log("Respuesta recibida:", text)
 
       // Limpiar el texto para extraer solo el JSON
       const jsonMatch = text.match(/\{[\s\S]*\}/)
@@ -131,6 +136,7 @@ Responde como Gow, usando chilenismos apropiados según el contexto.
         ...messages,
       ]
 
+      console.log("Enviando chat a Gemini...")
       const result = await this.model.generateContent({
         contents: fullMessages,
       })
@@ -210,6 +216,20 @@ Responde como Gow, usando chilenismos apropiados según el contexto.
     } catch (error) {
       console.error("Error optimizando perfil:", error)
       return ["Ups, me mandé un condoro generando sugerencias. Inténtalo de nuevo po."]
+    }
+  }
+
+  // Método para probar la conexión con Gemini
+  async testConnection(): Promise<boolean> {
+    try {
+      const result = await this.model.generateContent("Responde solo con la palabra 'OK' para verificar la conexión")
+      const response = await result.response
+      const text = response.text().trim()
+      console.log("Test de conexión Gemini:", text)
+      return text.includes("OK")
+    } catch (error) {
+      console.error("Error en test de conexión Gemini:", error)
+      return false
     }
   }
 }
