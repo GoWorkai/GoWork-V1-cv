@@ -42,7 +42,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(profileResponse.data)
           setIsAuthenticated(true)
           // Si ya está autenticado, redirigir al dashboard
-          window.location.href = "/dashboard"
+          if (window.location.pathname === "/" || window.location.pathname === "/login") {
+            window.location.href = "/dashboard"
+          }
         } else {
           // Token inválido, limpiar datos
           localStorage.removeItem("gowork_token")
@@ -69,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(true)
 
         // Redirigir al dashboard interno
-        window.location.href = "/dashboard"
+        // window.location.href = "/dashboard"
         return true
       } else {
         console.error("Login failed:", response.error)
@@ -93,7 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(true)
 
         // Redirigir al dashboard interno después del registro
-        window.location.href = "/dashboard"
+        // window.location.href = "/dashboard"
         return true
       } else {
         console.error("Registration failed:", response.error)

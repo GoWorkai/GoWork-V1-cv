@@ -31,10 +31,12 @@ export function LoginForm({ onBack, onSwitchToRegister }: LoginFormProps) {
 
     try {
       const success = await login({ email, password })
-      if (!success) {
+      if (success) {
+        // Redirigir manualmente al dashboard
+        window.location.href = "/dashboard"
+      } else {
         setError("Credenciales incorrectas. Intenta nuevamente.")
       }
-      // Si es exitoso, el AuthContext se encarga de la redirección
     } catch (err) {
       setError("Error al iniciar sesión. Intenta nuevamente.")
     } finally {

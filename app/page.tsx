@@ -74,7 +74,7 @@ const stats = [
 ]
 
 export default function HomePage() {
-  const { user } = useAuth()
+  const { user, login } = useAuth()
   const [showOnboarding, setShowOnboarding] = useState(false)
 
   const handleOnboardingComplete = (userData: any) => {
@@ -146,6 +146,11 @@ export default function HomePage() {
             {user ? (
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-gray-700">Hola, {user.name}</span>
+                <Link href="/dashboard">
+                  <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                    Ir al Dashboard
+                  </Button>
+                </Link>
                 <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">{user.name[0]}</span>
                 </div>
@@ -157,6 +162,23 @@ export default function HomePage() {
                 </Button>
                 <Button size="sm" className="bg-purple-600 hover:bg-purple-700" onClick={() => setShowOnboarding(true)}>
                   Registrarse
+                </Button>
+                {/* Botón de login demo */}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-green-500 text-green-600 hover:bg-green-50"
+                  onClick={async () => {
+                    const success = await login({
+                      email: "demo@gowork.com",
+                      password: "demo123",
+                    })
+                    if (success) {
+                      window.location.href = "/dashboard"
+                    }
+                  }}
+                >
+                  Demo Login
                 </Button>
               </div>
             )}
