@@ -20,6 +20,13 @@ const config: Config = {
     },
     extend: {
       colors: {
+        // GoWork Brand Colors
+        "gowork-blue": "#4A90E2",
+        "gowork-orange": "#D35400",
+        "gowork-dark": "#2C3E50",
+        "gowork-yellow": "#F5A623",
+        "gowork-light": "#C9DEF6",
+
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -68,10 +75,21 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "fade-in-up": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(10px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in-up": "fade-in-up 0.5s ease-out",
       },
     },
   },

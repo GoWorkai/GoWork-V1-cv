@@ -15,14 +15,15 @@ export function GoWorkLogo({ size = 40, className = "", showText = true }: GoWor
           alt="GoWork Logo"
           width={size}
           height={size}
-          className="object-contain mix-blend-multiply"
+          className="object-contain"
           priority
         />
       </div>
 
       {showText && (
-        <span className="text-2xl font-bold text-white" style={{ fontFamily: "NovaSquare, sans-serif" }}>
-          GoWork
+        <span className="text-2xl font-bold" style={{ fontFamily: "NovaSquare, sans-serif" }}>
+          <span className="text-blue-600">Go</span>
+          <span className="text-gray-900">Work</span>
         </span>
       )}
     </div>
@@ -37,7 +38,7 @@ export function GoWorkIcon({ size = 32, className = "" }: { size?: number; class
         alt="GoWork"
         width={size}
         height={size}
-        className="object-contain mix-blend-multiply"
+        className="object-contain"
         priority
       />
     </div>
@@ -52,7 +53,7 @@ export function GoWorkHeroLogo({ size = 120, className = "" }: { size?: number; 
         alt="GoWork Hero Logo"
         width={size}
         height={size}
-        className="object-contain mix-blend-multiply"
+        className="object-contain"
         priority
       />
     </div>
