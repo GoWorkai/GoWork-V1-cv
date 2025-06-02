@@ -1,10 +1,9 @@
 import type React from "react"
 import type { Metadata } from "next"
 import "./globals.css"
-import { GowProvider } from "@/components/gow-ai/gow-provider"
-import { GowChatWidget } from "@/components/gow-ai/gow-chat-widget"
 import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
+import { AuthProvider } from "@/components/auth/auth-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -23,10 +22,7 @@ export default function RootLayout({
     <html lang="es">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark">
-          <GowProvider>
-            {children}
-            <GowChatWidget />
-          </GowProvider>
+          <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>
       </body>
     </html>
