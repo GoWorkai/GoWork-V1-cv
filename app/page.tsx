@@ -64,33 +64,43 @@ export default function HomePage() {
     setIsLoading(true)
 
     try {
-      // Llamada real a Gemini API
+      // Llamada simplificada a la API
       const response = await fetch("/api/ai/gow-query", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          userId: "demo-user",
+          role: "client",
           message: currentInput,
           context: {
-            userId: "demo-user",
-            role: "client",
             location: "Santiago, Chile",
-            chatHistory: chatMessages.slice(-5), // Últimos 5 mensajes para contexto
+            currentPage: "dashboard",
+            chatHistory: chatMessages.slice(-3), // Últimos 3 mensajes para contexto
           },
         }),
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error("Error en la respuesta del servidor")
+        throw new Error(data.error || "Error en la respuesta del servidor")
       }
 
-      const data = await response.json()
+      // Extraer el texto de la respuesta
+      let responseText = "Lo siento, no pude procesar tu consulta."
+
+      if (data.success && data.data) {
+        responseText = data.data.text || data.data.content || responseText
+      } else if (data.fallback) {
+        responseText = data.fallback.text || responseText
+      }
 
       const assistantMessage: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: "assistant",
-        content: data.text || "Lo siento, no pude procesar tu consulta en este momento.",
+        content: responseText,
         timestamp: new Date(),
       }
 
@@ -102,7 +112,7 @@ export default function HomePage() {
         id: `error-${Date.now()}`,
         role: "assistant",
         content:
-          "Disculpa, estoy teniendo problemas para conectarme. Como asistente de GoWork, puedo ayudarte con: buscar servicios, optimizar tu perfil, analizar precios del mercado chileno, y encontrar oportunidades de trabajo. ¿En qué específicamente te gustaría que te ayude?",
+          "¡Hola! Soy Gow, tu asistente de GoWork. Puedo ayudarte con:\n\n• Buscar servicios y proveedores\n• Optimizar tu perfil profesional\n• Analizar precios del mercado chileno\n• Encontrar oportunidades de trabajo\n• Crear y gestionar tus servicios\n\n¿En qué te gustaría que te ayude hoy?",
         timestamp: new Date(),
       }
 
