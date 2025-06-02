@@ -1,416 +1,378 @@
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import {
-  MessageCircle,
-  MapPin,
-  User,
-  Brain,
-  ArrowRight,
-  TrendingUp,
-  Palette,
-  Code,
-  Camera,
-  Music,
-  Briefcase,
-  Heart,
-  Globe,
-  Smartphone,
-  Headphones,
-  Video,
-  Edit,
-  Target,
-  Sparkles,
-} from "lucide-react"
-import IntelligentSearch from "@/components/ai-search/intelligent-search"
+import { IntelligentSearchBento } from "@/components/ai-search/intelligent-search-bento"
 
 export default function Page() {
-  const gridItems = [
-    {
-      id: 1,
-      title: "Desarrollo Web",
-      description: "Crea sitios web increíbles",
-      icon: Code,
-      color: "from-blue-500 to-cyan-500",
-      size: "col-span-2 row-span-2",
-      link: "/servicios?category=desarrollo",
-    },
-    {
-      id: 2,
-      title: "Diseño UI/UX",
-      description: "Interfaces que enamoran",
-      icon: Palette,
-      color: "from-purple-500 to-pink-500",
-      size: "col-span-1 row-span-1",
-      link: "/servicios?category=diseno",
-    },
-    {
-      id: 3,
-      title: "Fotografía",
-      description: "Captura momentos únicos",
-      icon: Camera,
-      color: "from-orange-500 to-red-500",
-      size: "col-span-1 row-span-1",
-      link: "/servicios?category=fotografia",
-    },
-    {
-      id: 4,
-      title: "Marketing Digital",
-      description: "Haz crecer tu negocio",
-      icon: TrendingUp,
-      color: "from-green-500 to-emerald-500",
-      size: "col-span-2 row-span-1",
-      link: "/servicios?category=marketing",
-    },
-    {
-      id: 5,
-      title: "Música & Audio",
-      description: "Sonidos profesionales",
-      icon: Music,
-      color: "from-indigo-500 to-purple-500",
-      size: "col-span-1 row-span-2",
-      link: "/servicios?category=audio",
-    },
-    {
-      id: 6,
-      title: "Consultoría",
-      description: "Expertos a tu alcance",
-      icon: Briefcase,
-      color: "from-gray-600 to-gray-800",
-      size: "col-span-1 row-span-1",
-      link: "/servicios?category=consultoria",
-    },
-    {
-      id: 7,
-      title: "Bienestar",
-      description: "Cuida tu salud mental",
-      icon: Heart,
-      color: "from-pink-500 to-rose-500",
-      size: "col-span-1 row-span-1",
-      link: "/servicios?category=bienestar",
-    },
-    {
-      id: 8,
-      title: "Traducción",
-      description: "Conecta con el mundo",
-      icon: Globe,
-      color: "from-teal-500 to-cyan-500",
-      size: "col-span-2 row-span-1",
-      link: "/servicios?category=traduccion",
-    },
-    {
-      id: 9,
-      title: "Apps Móviles",
-      description: "Ideas que se mueven",
-      icon: Smartphone,
-      color: "from-violet-500 to-purple-500",
-      size: "col-span-1 row-span-1",
-      link: "/servicios?category=mobile",
-    },
-    {
-      id: 10,
-      title: "Podcasting",
-      description: "Tu voz al mundo",
-      icon: Headphones,
-      color: "from-amber-500 to-orange-500",
-      size: "col-span-1 row-span-1",
-      link: "/servicios?category=podcast",
-    },
-    {
-      id: 11,
-      title: "Video & Animación",
-      description: "Historias en movimiento",
-      icon: Video,
-      color: "from-red-500 to-pink-500",
-      size: "col-span-2 row-span-1",
-      link: "/servicios?category=video",
-    },
-    {
-      id: 12,
-      title: "Copywriting",
-      description: "Palabras que venden",
-      icon: Edit,
-      color: "from-emerald-500 to-teal-500",
-      size: "col-span-1 row-span-1",
-      link: "/servicios?category=copywriting",
-    },
-  ]
-
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section con búsqueda central potenciada */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-white">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#00E5B4]/5 to-[#0066FF]/5"></div>
-          <div className="absolute top-20 left-20 w-72 h-72 bg-[#00E5B4]/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-[#0066FF]/10 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
-          <div className="text-center">
-            {/* Logo y Badge */}
-            <div className="flex justify-center mb-8">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-[#00E5B4] to-[#0066FF] rounded-2xl flex items-center justify-center">
-                  <Sparkles className="h-6 w-6 text-white" />
-                </div>
-                <div className="text-left">
-                  <h1 className="text-2xl font-bold text-gray-900">GoWork</h1>
-                  <Badge className="bg-[#00E5B4]/20 text-[#00E5B4] border-[#00E5B4]/30 text-xs">
-                    Powered by Gemini AI
-                  </Badge>
-                </div>
-              </div>
+    <div className="min-h-screen bg-tertiary p-4 md:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Logo y navegación */}
+        <header className="flex justify-between items-center mb-8">
+          <div className="flex items-center">
+            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center mr-2">
+              <span className="font-bold text-secondary">G</span>
             </div>
+            <span className="font-bold text-secondary text-xl">GoWork</span>
+          </div>
+          <nav className="hidden md:flex space-x-6">
+            <Link href="#" className="text-secondary hover:text-primary-dark">
+              Servicios
+            </Link>
+            <Link href="#" className="text-secondary hover:text-primary-dark">
+              Profesionales
+            </Link>
+            <Link href="#" className="text-secondary hover:text-primary-dark">
+              Cómo funciona
+            </Link>
+            <Link href="#" className="text-secondary hover:text-primary-dark">
+              Contacto
+            </Link>
+          </nav>
+          <div className="flex space-x-3">
+            <Link
+              href="/auth/login"
+              className="px-4 py-2 border border-secondary text-secondary rounded-lg hover:bg-secondary hover:text-white transition-colors"
+            >
+              Iniciar sesión
+            </Link>
+            <Link
+              href="/onboarding"
+              className="px-4 py-2 bg-primary text-secondary rounded-lg hover:bg-primary-dark transition-colors"
+            >
+              Registrarse
+            </Link>
+          </div>
+        </header>
 
-            <h2 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-              Encuentra el{" "}
-              <span className="bg-gradient-to-r from-[#00E5B4] to-[#0066FF] bg-clip-text text-transparent">
-                talento perfecto
-              </span>
-            </h2>
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8">
+          {/* Bloque principal con la búsqueda inteligente */}
+          <div className="md:col-span-6 md:row-span-2 bg-secondary rounded-3xl p-6">
+            <IntelligentSearchBento />
+          </div>
 
-            <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-              La plataforma inteligente que conecta freelancers y clientes usando IA. Descubre servicios increíbles o
-              monetiza tus habilidades.
-            </p>
-
-            {/* Barra de Búsqueda Central Potenciada */}
-            <div className="mb-16 max-w-4xl mx-auto">
-              <div className="relative">
-                <IntelligentSearch />
-              </div>
-
-              {/* Sugerencias rápidas debajo de la búsqueda */}
-              <div className="mt-6 flex flex-wrap justify-center gap-3">
-                <Badge
-                  variant="outline"
-                  className="px-4 py-2 text-sm hover:bg-gray-50 cursor-pointer transition-colors"
-                >
-                  🎨 Diseño web
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="px-4 py-2 text-sm hover:bg-gray-50 cursor-pointer transition-colors"
-                >
-                  💻 Desarrollo
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="px-4 py-2 text-sm hover:bg-gray-50 cursor-pointer transition-colors"
-                >
-                  📱 Marketing
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="px-4 py-2 text-sm hover:bg-gray-50 cursor-pointer transition-colors"
-                >
-                  🎵 Audio
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="px-4 py-2 text-sm hover:bg-gray-50 cursor-pointer transition-colors"
-                >
-                  📝 Copywriting
-                </Badge>
-              </div>
+          {/* Bloque de logo grande */}
+          <div className="md:col-span-6 md:row-span-2 bg-primary rounded-3xl p-6 flex items-center justify-center relative overflow-hidden">
+            <div className="absolute inset-0 opacity-10">
+              <svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="40" stroke="#1A1C1B" strokeWidth="0.5" fill="none" />
+                <circle cx="50" cy="50" r="30" stroke="#1A1C1B" strokeWidth="0.5" fill="none" />
+                <circle cx="50" cy="50" r="20" stroke="#1A1C1B" strokeWidth="0.5" fill="none" />
+              </svg>
             </div>
-
-            {/* Stats rápidas */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#00E5B4] mb-2">15K+</div>
-                <div className="text-gray-600 text-sm">Freelancers</div>
+            <div className="relative z-10 text-center">
+              <h1 className="text-6xl md:text-8xl font-bold text-secondary">GoWork</h1>
+              <div className="w-16 h-16 bg-secondary rounded-lg flex items-center justify-center mx-auto mt-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-primary"
+                >
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#0066FF] mb-2">8K+</div>
-                <div className="text-gray-600 text-sm">Proyectos</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#00E5B4] mb-2">95%</div>
-                <div className="text-gray-600 text-sm">Satisfacción</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#0066FF] mb-2">24/7</div>
-                <div className="text-gray-600 text-sm">Soporte IA</div>
-              </div>
+              <p className="mt-4 text-secondary font-medium">La Red Social del Talento</p>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Vento Grid Section - Estilo Canva */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Explora por categorías</h3>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Descubre miles de servicios organizados para que encuentres exactamente lo que necesitas
+          {/* Bloque de estadísticas */}
+          <div className="md:col-span-3 bg-accent-blue rounded-3xl p-6 text-white">
+            <h3 className="text-xl font-bold mb-2">Estadísticas</h3>
+            <div className="text-3xl font-bold mb-1">15K+</div>
+            <p className="text-white/80 text-sm">Usuarios activos</p>
+          </div>
+
+          {/* Bloque de categorías populares */}
+          <div className="md:col-span-3 bg-accent-yellow rounded-3xl p-6">
+            <h3 className="text-xl font-bold text-secondary mb-2">Categorías</h3>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="bg-white/20 p-2 rounded-lg text-center">
+                <span className="text-xs font-medium text-secondary">Diseño</span>
+              </div>
+              <div className="bg-white/20 p-2 rounded-lg text-center">
+                <span className="text-xs font-medium text-secondary">Desarrollo</span>
+              </div>
+              <div className="bg-white/20 p-2 rounded-lg text-center">
+                <span className="text-xs font-medium text-secondary">Marketing</span>
+              </div>
+              <div className="bg-white/20 p-2 rounded-lg text-center">
+                <span className="text-xs font-medium text-secondary">Educación</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bloque de color hexadecimal */}
+          <div className="md:col-span-2 bg-tertiary rounded-3xl p-4 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-xs text-secondary/60 uppercase tracking-wider mb-1">Color principal</div>
+              <div className="text-lg font-mono font-bold text-secondary">#1EE2AA</div>
+            </div>
+          </div>
+
+          {/* Bloque de color hexadecimal secundario */}
+          <div className="md:col-span-2 bg-secondary rounded-3xl p-4 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-xs text-white/60 uppercase tracking-wider mb-1">Color secundario</div>
+              <div className="text-lg font-mono font-bold text-white">#1A1C1B</div>
+            </div>
+          </div>
+
+          {/* Bloque de color hexadecimal terciario */}
+          <div className="md:col-span-2 bg-white rounded-3xl p-4 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-xs text-secondary/60 uppercase tracking-wider mb-1">Color terciario</div>
+              <div className="text-lg font-mono font-bold text-secondary">#D1E5D9</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Sección de características */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-secondary"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-secondary mb-2">Experiencia intuitiva</h3>
+            <p className="text-secondary/70">Interfaz moderna y fácil de usar para encontrar servicios rápidamente.</p>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-secondary"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-secondary mb-2">Perfiles verificados</h3>
+            <p className="text-secondary/70">
+              Todos los profesionales pasan por un proceso de verificación de identidad.
             </p>
           </div>
 
-          {/* Grid estilo Canva/Vento */}
-          <div className="grid grid-cols-4 gap-4 auto-rows-[120px]">
-            {gridItems.map((item) => {
-              const IconComponent = item.icon
-              return (
-                <Link key={item.id} href={item.link}>
-                  <Card
-                    className={`${item.size} group cursor-pointer border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] overflow-hidden`}
-                  >
-                    <CardContent className={`h-full p-0 bg-gradient-to-br ${item.color} relative`}>
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
-                      <div className="relative h-full flex flex-col justify-between p-6 text-white">
-                        <div className="flex justify-between items-start">
-                          <IconComponent className="h-8 w-8 text-white/90" />
-                          <ArrowRight className="h-5 w-5 text-white/70 group-hover:text-white group-hover:translate-x-1 transition-all" />
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-lg mb-1">{item.title}</h4>
-                          <p className="text-white/80 text-sm">{item.description}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Potenciado por Inteligencia Artificial
-            </h3>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Nuestra IA hace que encontrar y ofrecer servicios sea más inteligente y eficiente
+          <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-secondary"
+              >
+                <path d="M12 2v4"></path>
+                <path d="M12 18v4"></path>
+                <path d="m4.93 4.93 2.83 2.83"></path>
+                <path d="m16.24 16.24 2.83 2.83"></path>
+                <path d="M2 12h4"></path>
+                <path d="M18 12h4"></path>
+                <path d="m4.93 19.07 2.83-2.83"></path>
+                <path d="m16.24 7.76 2.83-2.83"></path>
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-secondary mb-2">IA avanzada</h3>
+            <p className="text-secondary/70">
+              Nuestro asistente Gow te ayuda a encontrar exactamente lo que necesitas.
             </p>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-[#00E5B4] to-[#0066FF] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Brain className="h-8 w-8 text-white" />
-                </div>
-                <CardTitle className="text-gray-900">Matching Inteligente</CardTitle>
-                <CardDescription className="text-gray-600">
-                  IA que conecta automáticamente freelancers con proyectos perfectos según habilidades y experiencia
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-[#0066FF] to-[#B297FF] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <MessageCircle className="h-8 w-8 text-white" />
-                </div>
-                <CardTitle className="text-gray-900">Asistente Gemini</CardTitle>
-                <CardDescription className="text-gray-600">
-                  Chat inteligente que ayuda en negociaciones, propuestas y resolución de dudas 24/7
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-[#FF6D3A] to-[#FF9500] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Target className="h-8 w-8 text-white" />
-                </div>
-                <CardTitle className="text-gray-900">Búsqueda Avanzada</CardTitle>
-                <CardDescription className="text-gray-600">
-                  Encuentra exactamente lo que buscas con filtros inteligentes y recomendaciones personalizadas
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
         </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-[#00E5B4]/10 to-[#0066FF]/10">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">¿Listo para empezar?</h3>
-          <p className="text-xl text-gray-600 mb-8">Únete a miles de freelancers y empresas que ya confían en GoWork</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/onboarding">
-              <Button size="lg" className="bg-[#00E5B4] hover:bg-[#00E5B4]/90 text-gray-900 font-semibold px-8">
-                Crear cuenta gratis
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="/servicios">
-              <Button size="lg" variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8">
-                Explorar servicios
-              </Button>
-            </Link>
+        {/* Footer */}
+        <footer className="border-t border-secondary/10 pt-8 pb-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center mb-4">
+                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center mr-2">
+                  <span className="font-bold text-secondary text-sm">G</span>
+                </div>
+                <span className="font-bold text-secondary">GoWork</span>
+              </div>
+              <p className="text-secondary/70 text-sm">
+                La plataforma que conecta talento con oportunidades usando inteligencia artificial.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-secondary mb-4">Plataforma</h4>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <Link href="#" className="text-secondary/70 hover:text-primary">
+                    Cómo funciona
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-secondary/70 hover:text-primary">
+                    Precios
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-secondary/70 hover:text-primary">
+                    Testimonios
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-secondary/70 hover:text-primary">
+                    FAQ
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-secondary mb-4">Recursos</h4>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <Link href="#" className="text-secondary/70 hover:text-primary">
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-secondary/70 hover:text-primary">
+                    Guías
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-secondary/70 hover:text-primary">
+                    Eventos
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-secondary/70 hover:text-primary">
+                    Comunidad
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-secondary mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <Link href="#" className="text-secondary/70 hover:text-primary">
+                    Términos de servicio
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-secondary/70 hover:text-primary">
+                    Política de privacidad
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-secondary/70 hover:text-primary">
+                    Cookies
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* Quick Access Footer */}
-      <section className="py-12 bg-white border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Link href="/chat">
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-50 p-4 h-auto"
-              >
-                <MessageCircle className="h-5 w-5 mr-3" />
-                <div className="text-left">
-                  <div className="font-medium">Chat con Gemini</div>
-                  <div className="text-sm text-gray-500">Asistente IA 24/7</div>
-                </div>
-              </Button>
-            </Link>
-
-            <Link href="/map">
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-50 p-4 h-auto"
-              >
-                <MapPin className="h-5 w-5 mr-3" />
-                <div className="text-left">
-                  <div className="font-medium">Mapa de talentos</div>
-                  <div className="text-sm text-gray-500">Encuentra cerca de ti</div>
-                </div>
-              </Button>
-            </Link>
-
-            <Link href="/dashboard">
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-50 p-4 h-auto"
-              >
-                <User className="h-5 w-5 mr-3" />
-                <div className="text-left">
-                  <div className="font-medium">Mi dashboard</div>
-                  <div className="text-sm text-gray-500">Gestiona proyectos</div>
-                </div>
-              </Button>
-            </Link>
-
-            <Link href="/ai-dashboard">
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-50 p-4 h-auto"
-              >
-                <Brain className="h-5 w-5 mr-3" />
-                <div className="text-left">
-                  <div className="font-medium">Centro de IA</div>
-                  <div className="text-sm text-gray-500">Herramientas inteligentes</div>
-                </div>
-              </Button>
-            </Link>
+          <div className="mt-8 pt-8 border-t border-secondary/10 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-secondary/70 text-sm">© 2025 GoWork. Todos los derechos reservados.</p>
+            <div className="flex space-x-4 mt-4 md:mt-0">
+              <Link href="#" className="text-secondary/70 hover:text-primary">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+              </Link>
+              <Link href="#" className="text-secondary/70 hover:text-primary">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </Link>
+              <Link href="#" className="text-secondary/70 hover:text-primary">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+                </svg>
+              </Link>
+              <Link href="#" className="text-secondary/70 hover:text-primary">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                  <rect x="2" y="9" width="4" height="12"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </footer>
+      </div>
     </div>
   )
 }
