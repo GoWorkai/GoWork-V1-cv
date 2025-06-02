@@ -3,7 +3,24 @@
 import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
-import { Mic, Send, Search, ImageIcon, Loader2, Bot, Paperclip, User, Menu } from "lucide-react"
+import {
+  Mic,
+  Send,
+  Search,
+  ImageIcon,
+  Loader2,
+  Bot,
+  Paperclip,
+  User,
+  Plus,
+  Home,
+  Compass,
+  Briefcase,
+  Users,
+  Settings,
+  Download,
+  HelpCircle,
+} from "lucide-react"
 
 interface ChatMessage {
   id: string
@@ -20,7 +37,6 @@ export default function HomePage() {
   const [showLogin, setShowLogin] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
-  const chatContainerRef = useRef<HTMLDivElement>(null)
 
   // Auto scroll to bottom of chat
   useEffect(() => {
@@ -108,181 +124,252 @@ export default function HomePage() {
     }
   }
 
-  const quickActions = [
-    "Buscar diseñadores gráficos",
-    "Desarrolladores web en Santiago",
-    "¿Cómo crear mi perfil?",
-    "Precios de marketing digital",
-    "Servicios de redacción",
-    "Consultores freelance",
+  const sidebarItems = [
+    { icon: Home, label: "Inicio", active: true },
+    { icon: Compass, label: "Descubrir" },
+    { icon: Briefcase, label: "Servicios" },
+    { icon: Users, label: "Red Social" },
   ]
 
+  const footerLinks = ["Pro", "Empresa", "API", "Blog", "Privacidad", "Carreras", "Tienda", "Finanzas"]
+
   return (
-    <div className="min-h-screen bg-white">
-      {/* Minimal Top Navigation */}
-      <div className="flex justify-between items-center p-4 border-b border-gray-100">
-        <button className="p-2 text-gray-600 hover:text-gray-900 transition-colors">
-          <Menu className="h-5 w-5" />
-        </button>
-        <div className="flex items-center space-x-3">
-          <h1 className="text-xl font-semibold text-gray-900">GoWork</h1>
-          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Red Social & Marketplace</span>
+    <div className="min-h-screen bg-gray-900 text-white flex">
+      {/* Sidebar - Perplexity Style */}
+      <div className="w-16 bg-gray-900 border-r border-gray-800 flex flex-col items-center py-4 space-y-6">
+        {/* Logo */}
+        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+          <span className="text-gray-900 font-bold text-sm">G</span>
         </div>
-        <button onClick={() => setShowLogin(true)} className="p-2 text-gray-600 hover:text-gray-900 transition-colors">
-          <User className="h-5 w-5" />
+
+        {/* New Chat Button */}
+        <button className="w-8 h-8 border border-gray-700 rounded-lg flex items-center justify-center hover:bg-gray-800 transition-colors">
+          <Plus className="h-4 w-4" />
         </button>
+
+        {/* Navigation Items */}
+        <div className="flex flex-col space-y-4">
+          {sidebarItems.map((item, index) => (
+            <button
+              key={index}
+              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+                item.active ? "bg-gray-800" : "hover:bg-gray-800"
+              }`}
+              title={item.label}
+            >
+              <item.icon className="h-4 w-4" />
+            </button>
+          ))}
+        </div>
+
+        {/* Bottom Items */}
+        <div className="flex-1"></div>
+        <div className="flex flex-col space-y-4">
+          <button
+            onClick={() => setShowLogin(true)}
+            className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors"
+          >
+            <User className="h-4 w-4" />
+          </button>
+          <button className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-800 transition-colors">
+            <Settings className="h-4 w-4" />
+          </button>
+          <button className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-800 transition-colors">
+            <Download className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
-      {/* Main Content - Perplexity Style */}
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-4">
-        <div className="w-full max-w-2xl">
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col">
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col items-center justify-center px-8">
           {chatMessages.length === 0 ? (
-            // Initial State - Clean Perplexity Style
-            <div className="text-center mb-12">
-              <div className="flex items-center justify-center mb-8">
-                <div className="w-12 h-12 bg-gray-900 rounded-xl flex items-center justify-center mr-3">
-                  <Bot className="h-6 w-6 text-white" />
-                </div>
-                <h1 className="text-3xl font-semibold text-gray-900">Gow</h1>
+            // Initial State - Perplexity Style
+            <div className="w-full max-w-2xl">
+              <div className="text-center mb-12">
+                <h1 className="text-4xl font-light text-white mb-8 tracking-wide">gowork</h1>
               </div>
-              <p className="text-gray-600 text-lg mb-2">Tu asistente inteligente de GoWork</p>
-              <p className="text-gray-500 text-sm">Encuentra servicios, conecta con talento, haz crecer tu negocio</p>
-            </div>
-          ) : (
-            // Chat Messages - Clean Container
-            <div ref={chatContainerRef} className="mb-8 relative" style={{ maxHeight: "400px" }}>
-              {/* Subtle fade effect at the top */}
-              <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none"></div>
 
-              {/* Chat messages container */}
-              <div className="max-h-96 overflow-y-auto flex flex-col-reverse">
-                <div className="space-y-6 py-4">
-                  {isLoading && (
-                    <div className="flex justify-start">
-                      <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
-                        <div className="flex items-center space-x-2">
-                          <Loader2 className="h-4 w-4 text-gray-600 animate-spin" />
-                          <span className="text-sm text-gray-600">Gow está pensando...</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {[...chatMessages].reverse().map((message) => (
-                    <div
-                      key={message.id}
-                      className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
-                    >
-                      <div
-                        className={`max-w-[85%] rounded-2xl p-4 ${
-                          message.role === "user"
-                            ? "bg-gray-900 text-white"
-                            : "bg-gray-50 text-gray-900 border border-gray-100"
+              {/* Search Bar - Exact Perplexity Style */}
+              <div className="relative mb-8">
+                <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                  <div className="flex items-center p-4">
+                    <textarea
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Buscar servicios, proveedores, proyectos..."
+                      className="flex-1 bg-transparent text-white placeholder-gray-400 resize-none outline-none text-sm leading-relaxed"
+                      rows={1}
+                      style={{ minHeight: "20px", maxHeight: "120px" }}
+                    />
+                    <div className="flex items-center space-x-3 ml-4">
+                      <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                        <Search className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                        <ImageIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                        <Paperclip className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => setIsRecording(!isRecording)}
+                        className={`p-2 transition-colors ${
+                          isRecording ? "text-cyan-400" : "text-gray-400 hover:text-white"
                         }`}
                       >
-                        {message.role === "assistant" && (
-                          <div className="flex items-center mb-2">
-                            <Bot className="h-4 w-4 text-gray-600 mr-2" />
-                            <span className="text-xs font-medium text-gray-600">Gow</span>
+                        <Mic className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={handleSendMessage}
+                        disabled={!chatInput.trim() || isLoading}
+                        className="p-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <Send className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            // Chat Messages
+            <div className="w-full max-w-2xl mb-8">
+              {/* Chat Container */}
+              <div className="mb-8 relative" style={{ maxHeight: "400px" }}>
+                <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-gray-900 to-transparent z-10 pointer-events-none"></div>
+
+                <div className="max-h-96 overflow-y-auto flex flex-col-reverse">
+                  <div className="space-y-6 py-4">
+                    {isLoading && (
+                      <div className="flex justify-start">
+                        <div className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+                          <div className="flex items-center space-x-2">
+                            <Loader2 className="h-4 w-4 text-cyan-400 animate-spin" />
+                            <span className="text-sm text-gray-300">Gow está pensando...</span>
                           </div>
-                        )}
-                        <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                        <div className="text-xs opacity-60 mt-2">
-                          {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                         </div>
                       </div>
+                    )}
+
+                    {[...chatMessages].reverse().map((message) => (
+                      <div
+                        key={message.id}
+                        className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                      >
+                        <div
+                          className={`max-w-[85%] rounded-2xl p-4 ${
+                            message.role === "user"
+                              ? "bg-gray-700 text-white"
+                              : "bg-gray-800 text-gray-100 border border-gray-700"
+                          }`}
+                        >
+                          {message.role === "assistant" && (
+                            <div className="flex items-center mb-2">
+                              <Bot className="h-4 w-4 text-cyan-400 mr-2" />
+                              <span className="text-xs font-medium text-cyan-400">Gow</span>
+                            </div>
+                          )}
+                          <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                          <div className="text-xs opacity-60 mt-2">
+                            {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <div ref={chatEndRef} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Search Bar for Chat Mode */}
+              <div className="relative">
+                <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                  <div className="flex items-center p-4">
+                    <textarea
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Continúa la conversación..."
+                      className="flex-1 bg-transparent text-white placeholder-gray-400 resize-none outline-none text-sm leading-relaxed"
+                      rows={1}
+                      style={{ minHeight: "20px", maxHeight: "120px" }}
+                    />
+                    <div className="flex items-center space-x-3 ml-4">
+                      <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                        <Search className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                        <ImageIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                        <Paperclip className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => setIsRecording(!isRecording)}
+                        className={`p-2 transition-colors ${
+                          isRecording ? "text-cyan-400" : "text-gray-400 hover:text-white"
+                        }`}
+                      >
+                        <Mic className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={handleSendMessage}
+                        disabled={!chatInput.trim() || isLoading}
+                        className="p-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <Send className="h-4 w-4" />
+                      </button>
                     </div>
-                  ))}
-                  <div ref={chatEndRef} />
+                  </div>
                 </div>
               </div>
             </div>
           )}
+        </div>
 
-          {/* Search Bar - Perplexity Style */}
-          <div className="relative">
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden focus-within:border-gray-300 focus-within:shadow-md transition-all">
-              <div className="flex items-center p-4">
-                <textarea
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Busca servicios, proveedores, proyectos..."
-                  className="flex-1 bg-transparent text-gray-900 placeholder-gray-500 resize-none outline-none text-sm leading-relaxed"
-                  rows={1}
-                  style={{ minHeight: "20px", maxHeight: "120px" }}
-                />
-                <div className="flex items-center space-x-2 ml-4">
-                  <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                    <Search className="h-4 w-4" />
-                  </button>
-                  <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                    <ImageIcon className="h-4 w-4" />
-                  </button>
-                  <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                    <Paperclip className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => setIsRecording(!isRecording)}
-                    className={`p-2 transition-colors ${
-                      isRecording ? "text-red-500" : "text-gray-400 hover:text-gray-600"
-                    }`}
-                  >
-                    <Mic className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={handleSendMessage}
-                    disabled={!chatInput.trim() || isLoading}
-                    className="p-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <Send className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
+        {/* Footer - Perplexity Style */}
+        <div className="border-t border-gray-800 p-4">
+          <div className="flex items-center justify-center space-x-6 text-sm text-gray-400">
+            {footerLinks.map((link, index) => (
+              <button key={index} className="hover:text-white transition-colors">
+                {link}
+              </button>
+            ))}
+            <button className="hover:text-white transition-colors">español</button>
+            <button className="hover:text-white transition-colors">
+              <HelpCircle className="h-4 w-4" />
+            </button>
           </div>
-
-          {/* Quick Actions - Only show when no chat */}
-          {chatMessages.length === 0 && (
-            <div className="mt-8 grid grid-cols-2 md:grid-cols-3 gap-3">
-              {quickActions.map((action, index) => (
-                <button
-                  key={index}
-                  onClick={() => setChatInput(action)}
-                  className="p-3 bg-gray-50 hover:bg-gray-100 rounded-xl text-sm text-gray-700 transition-colors text-left border border-gray-100"
-                >
-                  {action}
-                </button>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
       {/* Login Modal */}
       {showLogin && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4 text-center">Iniciar Sesión</h2>
+          <div className="bg-gray-800 rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl border border-gray-700">
+            <h2 className="text-xl font-semibold text-white mb-4 text-center">Iniciar Sesión</h2>
             <form className="space-y-4">
               <input
                 type="email"
-                className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                className="w-full p-3 bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white placeholder-gray-400"
                 placeholder="Email"
               />
               <input
                 type="password"
-                className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                className="w-full p-3 bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white placeholder-gray-400"
                 placeholder="Contraseña"
               />
               <button
                 type="submit"
-                className="w-full bg-gray-900 text-white py-3 rounded-xl font-medium hover:bg-gray-800 transition-colors"
+                className="w-full bg-cyan-500 text-white py-3 rounded-xl font-medium hover:bg-cyan-600 transition-colors"
               >
                 Entrar
               </button>
             </form>
-            <button onClick={() => setShowLogin(false)} className="w-full mt-4 text-gray-500 hover:text-gray-700">
+            <button onClick={() => setShowLogin(false)} className="w-full mt-4 text-gray-400 hover:text-white">
               Cancelar
             </button>
           </div>
