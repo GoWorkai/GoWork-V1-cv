@@ -42,10 +42,13 @@ export default function HomePage() {
   const [showLogin, setShowLogin] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
+  const chatContainerRef = useRef<HTMLDivElement>(null)
 
   // Auto scroll to bottom of chat
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" })
+    }
   }, [chatMessages])
 
   const handleSendMessage = async () => {
@@ -218,42 +221,50 @@ export default function HomePage() {
             <p className="text-gray-600 text-lg mb-8">Tu asistente inteligente de GoWork</p>
           </div>
         ) : (
-          // Chat Messages
-          <div className="w-full max-w-3xl mb-6 flex-1 overflow-y-auto">
-            <div className="space-y-4 p-4">
-              {chatMessages.map((message) => (
-                <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div
-                    className={`max-w-[80%] rounded-2xl p-4 ${
-                      message.role === "user"
-                        ? "bg-gray-900 text-white"
-                        : "bg-white/90 backdrop-blur-sm text-gray-800 border border-gray-200"
-                    }`}
-                  >
-                    {message.role === "assistant" && (
-                      <div className="flex items-center mb-2">
-                        <Bot className="h-4 w-4 text-teal-500 mr-2" />
-                        <span className="text-xs font-medium text-teal-500">Gow</span>
+          // Chat Messages - Fixed Height Container with Fade Effect
+          <div ref={chatContainerRef} className="w-full max-w-3xl mb-6 relative" style={{ height: "320px" }}>
+            {/* Fade effect at the top */}
+            <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-[#7DD3FC] to-transparent z-10 pointer-events-none"></div>
+
+            {/* Chat messages container with fixed height */}
+            <div className="h-full overflow-y-auto flex flex-col-reverse p-4">
+              <div className="space-y-4">
+                {isLoading && (
+                  <div className="flex justify-start">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 border border-gray-200">
+                      <div className="flex items-center space-x-2">
+                        <Loader2 className="h-4 w-4 text-teal-500 animate-spin" />
+                        <span className="text-sm text-gray-600">Gow está pensando...</span>
                       </div>
-                    )}
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                    <div className="text-xs opacity-60 mt-2">
-                      {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </div>
                   </div>
-                </div>
-              ))}
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 border border-gray-200">
-                    <div className="flex items-center space-x-2">
-                      <Loader2 className="h-4 w-4 text-teal-500 animate-spin" />
-                      <span className="text-sm text-gray-600">Gow está pensando...</span>
+                )}
+
+                {/* Reversed messages to show newest at bottom */}
+                {[...chatMessages].reverse().map((message) => (
+                  <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                    <div
+                      className={`max-w-[80%] rounded-2xl p-4 ${
+                        message.role === "user"
+                          ? "bg-gray-900 text-white"
+                          : "bg-white/90 backdrop-blur-sm text-gray-800 border border-gray-200"
+                      }`}
+                    >
+                      {message.role === "assistant" && (
+                        <div className="flex items-center mb-2">
+                          <Bot className="h-4 w-4 text-teal-500 mr-2" />
+                          <span className="text-xs font-medium text-teal-500">Gow</span>
+                        </div>
+                      )}
+                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      <div className="text-xs opacity-60 mt-2">
+                        {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-              <div ref={chatEndRef} />
+                ))}
+                <div ref={chatEndRef} />
+              </div>
             </div>
           </div>
         )}
