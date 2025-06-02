@@ -1,4 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server"
+import { GoogleGenerativeAI } from "@google/generative-ai"
+
+// Inicializar Gemini con la nueva API key
+const genAI = new GoogleGenerativeAI("AIzaSyBjFUyd4Ds6MWtn8r8NOy_cgENiSNZ7MnI")
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,15 +14,53 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Mensaje requerido" }, { status: 400 })
     }
 
-    // Respuestas inteligentes basadas en GoWork
-    const responses = getGowResponse(message, context)
+    // Usar Gemini AI real
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" })
+
+    const prompt = `
+Eres Gow, el asistente IA de GoWork en Chile. Tu personalidad es:
+- Cálido y empático
+- Directo y eficiente  
+- Usa expresiones chilenas naturales ("al tiro", "pega", "cachai", "bro")
+- Siempre positivo y motivador
+
+CONTEXTO DE GOWORK:
+GoWork es la red social del talento y las oportunidades humanas en Chile. Es una plataforma que conecta clientes con proveedores de servicios freelance.
+
+INFORMACIÓN CLAVE:
+- Ubicación principal: Santiago, Chile
+- Servicios populares: Diseño, Desarrollo, Marketing, Redacción, Consultoría
+- Precios promedio: $15.000 - $200.000 CLP según servicio
+- Enfoque: Economía independiente y colaborativa
+
+CONTEXTO DEL USUARIO:
+- Rol: ${role || "cliente"}
+- Ubicación: ${context?.location || "Santiago, Chile"}
+- Historial: ${context?.chatHistory?.map((h: any) => `${h.role}: ${h.content}`).join("\n") || "Primera conversación"}
+
+MENSAJE DEL USUARIO: "${message}"
+
+INSTRUCCIONES:
+1. Responde de manera natural y útil
+2. Usa información específica de GoWork cuando sea relevante
+3. Incluye precios en pesos chilenos cuando corresponda
+4. Sé específico sobre servicios disponibles en la plataforma
+5. Máximo 200 palabras
+6. Si no sabes algo específico, sé honesto pero útil
+
+Responde como Gow:
+`
+
+    const result = await model.generateContent(prompt)
+    const response = await result.response
+    const text = response.text()
 
     return NextResponse.json({
       success: true,
       data: {
-        text: responses.text,
-        confidence: responses.confidence,
-        suggestions: responses.suggestions,
+        text: text.trim(),
+        confidence: 90,
+        suggestions: generateSuggestions(message),
       },
       context: {
         sessionId: Date.now().toString(),
@@ -26,86 +68,75 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error("Error in Gow query:", error)
+    console.error("Error with Gemini AI:", error)
 
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Error interno del servidor",
-        fallback: {
-          text: "¡Hola! Soy Gow, tu asistente de GoWork. Estoy aquí para ayudarte con cualquier consulta sobre nuestra plataforma. ¿En qué puedo asistirte?",
-          confidence: 75,
-        },
+    // Fallback inteligente si Gemini falla
+    const fallbackResponse = getFallbackResponse(body)
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        text: fallbackResponse.text,
+        confidence: fallbackResponse.confidence,
+        suggestions: fallbackResponse.suggestions,
       },
-      { status: 200 }, // Cambiar a 200 para que no se trate como error
-    )
+      context: {
+        sessionId: Date.now().toString(),
+        timestamp: new Date().toISOString(),
+        fallback: true,
+      },
+    })
   }
 }
 
-function getGowResponse(message: string, context: any) {
+function generateSuggestions(message: string): string[] {
   const lowerMessage = message.toLowerCase()
 
-  // Respuestas específicas basadas en palabras clave
-  if (lowerMessage.includes("hola") || lowerMessage.includes("hi") || lowerMessage.includes("buenos")) {
+  if (lowerMessage.includes("servicio") || lowerMessage.includes("buscar")) {
+    return ["¿Qué tipo de servicio específico?", "¿Cuál es tu presupuesto?", "¿En qué comuna?"]
+  }
+
+  if (lowerMessage.includes("perfil") || lowerMessage.includes("optimizar")) {
+    return ["Mejorar descripción", "Subir portfolio", "Ajustar precios"]
+  }
+
+  if (lowerMessage.includes("precio") || lowerMessage.includes("costo")) {
+    return ["Ver precios por categoría", "Calcular presupuesto", "Comparar tarifas"]
+  }
+
+  return ["¿Cómo funciona GoWork?", "Buscar servicios", "Optimizar perfil"]
+}
+
+function getFallbackResponse(body: any) {
+  const lowerMessage = body.message.toLowerCase()
+
+  if (lowerMessage.includes("hola") || lowerMessage.includes("hi")) {
     return {
-      text: "¡Hola! 👋 Soy Gow, tu asistente personal de GoWork. Estoy aquí para ayudarte a navegar por nuestra plataforma, encontrar servicios, optimizar tu perfil y descubrir nuevas oportunidades. ¿En qué puedo ayudarte hoy?",
-      confidence: 95,
-      suggestions: ["¿Cómo funciona GoWork?", "Buscar servicios", "Optimizar mi perfil"],
+      text: "¡Hola! 👋 Soy Gow, tu asistente de GoWork. Estoy aquí para ayudarte a navegar por nuestra plataforma, encontrar servicios increíbles y optimizar tu experiencia. ¿En qué puedo echarte una mano al tiro?",
+      confidence: 85,
+      suggestions: ["¿Cómo funciona GoWork?", "Buscar servicios", "Crear mi perfil"],
     }
   }
 
-  if (lowerMessage.includes("servicio") || lowerMessage.includes("buscar") || lowerMessage.includes("encontrar")) {
+  if (lowerMessage.includes("servicio") || lowerMessage.includes("buscar")) {
     return {
-      text: "¡Perfecto! Te ayudo a encontrar servicios en GoWork. Puedes buscar por:\n\n🔍 **Categorías populares:**\n• Diseño y creatividad\n• Desarrollo y tecnología\n• Marketing digital\n• Redacción y traducción\n• Consultoría\n\n📍 **Por ubicación:** Especialmente en Santiago y regiones de Chile\n\n💰 **Por presupuesto:** Desde $15.000 CLP\n\n¿Qué tipo de servicio específico necesitas?",
-      confidence: 90,
+      text: "¡Bacán! Te ayudo a encontrar servicios en GoWork. Tenemos proveedores top en:\n\n🎨 Diseño y creatividad\n💻 Desarrollo y tecnología\n📱 Marketing digital\n✍️ Redacción y contenido\n💼 Consultoría\n\nLos precios van desde $15.000 CLP. ¿Qué tipo de servicio necesitas, bro?",
+      confidence: 80,
       suggestions: ["Servicios de diseño", "Desarrollo web", "Marketing digital"],
     }
   }
 
-  if (lowerMessage.includes("perfil") || lowerMessage.includes("optimizar") || lowerMessage.includes("mejorar")) {
-    return {
-      text: "¡Excelente! Optimizar tu perfil es clave para el éxito en GoWork. Te recomiendo:\n\n✨ **Elementos esenciales:**\n• Foto profesional y atractiva\n• Descripción clara de tus habilidades\n• Portfolio con trabajos anteriores\n• Certificaciones y experiencia\n\n🎯 **Tips para destacar:**\n• Usa palabras clave relevantes\n• Incluye testimonios de clientes\n• Mantén precios competitivos\n• Responde rápido a mensajes\n\n¿En qué área específica te gustaría mejorar tu perfil?",
-      confidence: 88,
-      suggestions: ["Mejorar descripción", "Subir portfolio", "Ajustar precios"],
-    }
-  }
-
-  if (lowerMessage.includes("precio") || lowerMessage.includes("costo") || lowerMessage.includes("tarifa")) {
-    return {
-      text: "💰 **Análisis de precios en GoWork Chile:**\n\n📊 **Rangos promedio por categoría:**\n• Diseño gráfico: $25.000 - $80.000 CLP\n• Desarrollo web: $50.000 - $200.000 CLP\n• Marketing digital: $30.000 - $100.000 CLP\n• Redacción: $15.000 - $50.000 CLP\n• Consultoría: $40.000 - $150.000 CLP\n\n🎯 **Factores que influyen:**\n• Experiencia y portfolio\n• Complejidad del proyecto\n• Plazos de entrega\n• Ubicación geográfica\n\n¿Para qué servicio específico necesitas información de precios?",
-      confidence: 85,
-      suggestions: ["Precios de diseño", "Tarifas de desarrollo", "Costos de marketing"],
-    }
-  }
-
-  if (lowerMessage.includes("trabajo") || lowerMessage.includes("freelance") || lowerMessage.includes("oportunidad")) {
-    return {
-      text: "🚀 **Oportunidades de trabajo en GoWork:**\n\n🔥 **Sectores con mayor demanda:**\n• Tecnología y desarrollo\n• Marketing digital\n• Diseño y creatividad\n• Educación online\n• Servicios profesionales\n\n📈 **Cómo aumentar tus oportunidades:**\n• Completa tu perfil al 100%\n• Mantente activo en la plataforma\n• Responde rápido a propuestas\n• Construye una buena reputación\n• Especialízate en nichos específicos\n\n¿En qué área te gustaría encontrar más trabajo?",
-      confidence: 87,
-      suggestions: ["Trabajos de tecnología", "Proyectos de diseño", "Servicios de marketing"],
-    }
-  }
-
-  if (lowerMessage.includes("gowork") || lowerMessage.includes("plataforma") || lowerMessage.includes("funciona")) {
-    return {
-      text: "🌟 **GoWork: La Red Social del Talento**\n\nSomos una plataforma chilena que conecta talento con oportunidades:\n\n🎯 **Para Clientes:**\n• Encuentra proveedores verificados\n• Compara precios y portfolios\n• Gestiona proyectos fácilmente\n• Pagos seguros y protegidos\n\n💼 **Para Proveedores:**\n• Crea tu perfil profesional\n• Recibe propuestas de trabajo\n• Construye tu reputación\n• Accede a herramientas de IA\n\n🤖 **Con Gow (yo), tienes:**\n• Asistencia 24/7\n• Recomendaciones personalizadas\n• Análisis de mercado\n• Optimización automática\n\n¿Te gustaría saber más sobre algún aspecto específico?",
-      confidence: 92,
-      suggestions: ["Crear mi perfil", "Buscar mi primer proyecto", "Conocer las tarifas"],
-    }
-  }
-
-  // Respuesta general para otras consultas
   return {
-    text: `Entiendo tu consulta sobre "${message}". Como asistente de GoWork, puedo ayudarte con:\n\n🔍 **Búsqueda de servicios** - Encuentra el talento perfecto\n👤 **Optimización de perfil** - Mejora tu presencia\n💰 **Análisis de precios** - Conoce el mercado\n🚀 **Oportunidades** - Descubre nuevos proyectos\n📊 **Estadísticas** - Analiza tu rendimiento\n\n¿Podrías ser más específico sobre lo que necesitas? Estoy aquí para ayudarte a tener éxito en GoWork.`,
+    text: "¡Hola! Soy Gow, tu asistente de GoWork. Puedo ayudarte con todo lo relacionado a nuestra plataforma: buscar servicios, optimizar tu perfil, entender precios del mercado chileno, y encontrar las mejores oportunidades. ¿En qué te puedo ayudar al tiro?",
     confidence: 75,
-    suggestions: ["¿Cómo empezar?", "Buscar servicios", "Crear mi perfil"],
+    suggestions: ["¿Cómo empezar?", "Buscar servicios", "Optimizar perfil"],
   }
 }
 
 export async function GET() {
   return NextResponse.json({
-    status: "Gow AI Assistant está funcionando correctamente",
-    version: "1.0.0",
+    status: "Gow AI Assistant con Gemini está funcionando",
+    version: "2.0.0",
     timestamp: new Date().toISOString(),
   })
 }

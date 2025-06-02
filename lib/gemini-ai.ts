@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
 
 // Nueva API Key proporcionada
-const genAI = new GoogleGenerativeAI("AIzaSyAvA3G9wtVeslJHzJk-N-GrzaryRhWg7sQ")
+const genAI = new GoogleGenerativeAI("AIzaSyBjFUyd4Ds6MWtn8r8NOy_cgENiSNZ7MnI")
 
 export interface GeminiResponse {
   text: string
