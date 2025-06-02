@@ -40,13 +40,14 @@ CONTEXTO DEL USUARIO:
 
 MENSAJE DEL USUARIO: "${message}"
 
-INSTRUCCIONES:
-1. Responde de manera natural y útil
-2. Usa información específica de GoWork cuando sea relevante
-3. Incluye precios en pesos chilenos cuando corresponda
-4. Sé específico sobre servicios disponibles en la plataforma
-5. Máximo 200 palabras
-6. Si no sabes algo específico, sé honesto pero útil
+INSTRUCCIONES CRÍTICAS:
+1. Responde de manera EXTREMADAMENTE BREVE y concisa
+2. Máximo 2-3 oraciones cortas
+3. Máximo 50 palabras en total
+4. Sé directo y ve al grano inmediatamente
+5. Evita introducciones largas o explicaciones detalladas
+6. Usa lenguaje conversacional chileno
+7. Incluye solo la información más esencial
 
 Responde como Gow:
 `
@@ -71,7 +72,7 @@ Responde como Gow:
     console.error("Error with Gemini AI:", error)
 
     // Fallback inteligente si Gemini falla
-    const fallbackResponse = getFallbackResponse(body)
+    const fallbackResponse = getFallbackResponse(request?.body?.message || "")
 
     return NextResponse.json({
       success: true,
@@ -107,12 +108,12 @@ function generateSuggestions(message: string): string[] {
   return ["¿Cómo funciona GoWork?", "Buscar servicios", "Optimizar perfil"]
 }
 
-function getFallbackResponse(body: any) {
-  const lowerMessage = body.message.toLowerCase()
+function getFallbackResponse(message: string) {
+  const lowerMessage = message.toLowerCase()
 
   if (lowerMessage.includes("hola") || lowerMessage.includes("hi")) {
     return {
-      text: "¡Hola! 👋 Soy Gow, tu asistente de GoWork. Estoy aquí para ayudarte a navegar por nuestra plataforma, encontrar servicios increíbles y optimizar tu experiencia. ¿En qué puedo echarte una mano al tiro?",
+      text: "¡Hola! Soy Gow, tu asistente de GoWork. ¿En qué te puedo ayudar al tiro?",
       confidence: 85,
       suggestions: ["¿Cómo funciona GoWork?", "Buscar servicios", "Crear mi perfil"],
     }
@@ -120,14 +121,14 @@ function getFallbackResponse(body: any) {
 
   if (lowerMessage.includes("servicio") || lowerMessage.includes("buscar")) {
     return {
-      text: "¡Bacán! Te ayudo a encontrar servicios en GoWork. Tenemos proveedores top en:\n\n🎨 Diseño y creatividad\n💻 Desarrollo y tecnología\n📱 Marketing digital\n✍️ Redacción y contenido\n💼 Consultoría\n\nLos precios van desde $15.000 CLP. ¿Qué tipo de servicio necesitas, bro?",
+      text: "¡Bacán! Tenemos servicios de diseño, desarrollo, marketing y más. ¿Qué tipo necesitas?",
       confidence: 80,
       suggestions: ["Servicios de diseño", "Desarrollo web", "Marketing digital"],
     }
   }
 
   return {
-    text: "¡Hola! Soy Gow, tu asistente de GoWork. Puedo ayudarte con todo lo relacionado a nuestra plataforma: buscar servicios, optimizar tu perfil, entender precios del mercado chileno, y encontrar las mejores oportunidades. ¿En qué te puedo ayudar al tiro?",
+    text: "¡Hola! Soy Gow. ¿Necesitas ayuda con servicios, perfiles o precios en GoWork?",
     confidence: 75,
     suggestions: ["¿Cómo empezar?", "Buscar servicios", "Optimizar perfil"],
   }
