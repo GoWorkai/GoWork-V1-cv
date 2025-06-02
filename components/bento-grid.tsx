@@ -10,10 +10,8 @@ import {
   Zap,
   TrendingUp,
   Heart,
-  CheckCircle,
   MessageCircle,
   ArrowRight,
-  Brain,
   Rocket,
   Camera,
   Wrench,
@@ -22,8 +20,6 @@ import {
   Music,
   PaintBucket,
   Plus,
-  Phone,
-  Video,
 } from "lucide-react"
 import { useState } from "react"
 import { OnboardingFlow } from "@/components/onboarding/onboarding-flow"
@@ -55,147 +51,247 @@ export function BentoGrid() {
     setShowOnboarding(false)
   }
 
+  const handleCardClick = (destination: string) => {
+    switch (destination) {
+      case "search":
+        router.push("/buscar")
+        break
+      case "services":
+        router.push("/servicios")
+        break
+      case "dashboard":
+        router.push("/dashboard")
+        break
+      case "profile":
+        router.push("/dashboard/perfil")
+        break
+      default:
+        console.log(`Navegando a: ${destination}`)
+    }
+  }
+
   return (
     <div className="w-full max-w-full mx-auto px-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 auto-rows-fr">
-        {/* Tarjeta Principal - Bienvenida a GoWork */}
-        <Card className="md:col-span-2 lg:col-span-3 md:row-span-2 bg-gradient-to-br from-[#007bff] to-[#0056b3] text-white overflow-hidden relative group hover:scale-[1.02] transition-all duration-500">
-          <CardContent className="p-8 h-full flex flex-col relative z-10">
-            <div className="mb-6">
-              <h1 className="text-4xl md:text-5xl font-bold mb-2">Bienvenido a</h1>
-              <h2 className="text-5xl md:text-6xl font-bold mb-4 text-[#FFA500]">GoWork</h2>
-              <p className="text-xl opacity-90 leading-relaxed">
-                La Red Social del Talento y las Oportunidades Humanas
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-fr">
+        {/* Tarjeta Principal - ¿Qué es GoWork? */}
+        <Card
+          className="md:col-span-2 md:row-span-2 bg-gray-800/80 backdrop-blur-xl border border-gray-700 hover:border-gray-600 transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative cursor-pointer"
+          onClick={() => setShowOnboarding(true)}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-[#007bff] to-[#0056b3] opacity-10 group-hover:opacity-20 transition-opacity duration-500" />
+          <CardContent className="p-6 h-full flex flex-col relative z-10">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#007bff] to-[#0056b3] rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Rocket className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-lg">🚀 ¿Qué es GoWork?</h3>
+                  <p className="text-gray-300 text-sm">
+                    La red social del talento que transforma habilidades en ingresos reales
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex-1">
+              <p className="text-gray-200 mb-4 leading-relaxed">
+                GoWork es más que una aplicación; es una comunidad digital que combina lo mejor de una red social y un
+                marketplace inteligente de servicios.
               </p>
             </div>
-
-            <div className="flex-1 flex items-center justify-center">
-              <div className="w-32 h-32 bg-white/20 rounded-3xl flex items-center justify-center backdrop-blur-sm">
-                <Rocket className="h-16 w-16 text-white" />
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <p className="text-lg mb-4 opacity-90">Transforma tus habilidades en ingresos reales</p>
-              <Button
-                onClick={() => setShowOnboarding(true)}
-                className="bg-[#FFA500] hover:bg-[#FF8C00] text-white font-semibold px-6 py-3"
-              >
-                Comenzar Ahora
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </div>
+            <Button
+              variant="outline"
+              className="w-full border-gray-600 text-white hover:bg-gray-700 group-hover:border-gray-500 transition-all"
+            >
+              Descubre Más
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
           </CardContent>
         </Card>
 
-        {/* Estadísticas de la Comunidad */}
-        <Card className="md:col-span-1 bg-gradient-to-br from-[#FFA500] to-[#FF8C00] text-white hover:scale-[1.02] transition-all duration-500">
-          <CardContent className="p-6 h-full flex flex-col justify-center text-center">
-            <TrendingUp className="h-12 w-12 mx-auto mb-4" />
-            <div className="text-3xl font-bold mb-2">15K+</div>
-            <div className="text-sm opacity-90">Profesionales</div>
-            <div className="text-2xl font-bold mt-2">8K+</div>
-            <div className="text-sm opacity-90">Proyectos</div>
-          </CardContent>
-        </Card>
-
-        {/* Gow IA Assistant */}
-        <Card className="md:col-span-1 bg-gradient-to-br from-[#6610f2] to-[#007bff] text-white hover:scale-[1.02] transition-all duration-500">
-          <CardContent className="p-6 h-full flex flex-col justify-center text-center">
-            <Brain className="h-12 w-12 mx-auto mb-4" />
-            <h3 className="font-bold text-lg mb-2">Gow IA</h3>
-            <p className="text-sm opacity-90 mb-4">Tu asistente inteligente</p>
-            <div className="space-y-1 text-xs">
-              <div className="flex items-center justify-center">
-                <CheckCircle className="h-3 w-3 mr-1" />
-                <span>Búsqueda inteligente</span>
+        {/* Estadísticas */}
+        <Card
+          className="md:col-span-1 bg-gray-800/80 backdrop-blur-xl border border-gray-700 hover:border-gray-600 transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative cursor-pointer"
+          onClick={() => handleCardClick("dashboard")}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-[#FFA500] to-[#FF8C00] opacity-10 group-hover:opacity-20 transition-opacity duration-500" />
+          <CardContent className="p-6 h-full flex flex-col relative z-10">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#FFA500] to-[#FF8C00] rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <TrendingUp className="h-6 w-6 text-white" />
               </div>
-              <div className="flex items-center justify-center">
-                <CheckCircle className="h-3 w-3 mr-1" />
-                <span>Optimización</span>
+              <div>
+                <h3 className="font-bold text-white text-lg">📈 Comunidad Activa</h3>
+                <p className="text-gray-300 text-sm">Miles de talentos conectados</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white">15K+</div>
+                <div className="text-xs text-gray-400">Talentos</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white">8K+</div>
+                <div className="text-xs text-gray-400">Proyectos</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white">95%</div>
+                <div className="text-xs text-gray-400">Satisfacción</div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Gow IA Chat Widget - ACTUALIZADO según la imagen */}
+        {/* Gow IA Chat - Mantiene el nuevo diseño */}
         <Card className="md:col-span-2 bg-transparent border-none hover:scale-[1.02] transition-all duration-500">
           <CardContent className="p-0 h-full">
             <GowChatWidget />
           </CardContent>
         </Card>
 
-        {/* Categorías de Servicios */}
-        <Card className="md:col-span-1 bg-gradient-to-br from-[#007bff] to-[#FFA500] text-white hover:scale-[1.02] transition-all duration-500">
-          <CardContent className="p-6 h-full flex flex-col justify-center">
-            <h3 className="font-bold text-lg mb-4 text-center">Servicios</h3>
-            <div className="grid grid-cols-3 gap-2">
-              {[Camera, Wrench, Laptop, Briefcase, Music, PaintBucket].map((Icon, index) => (
-                <div key={index} className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                  <Icon className="h-4 w-4" />
-                </div>
-              ))}
+        {/* Servicios */}
+        <Card
+          className="md:col-span-1 bg-gray-800/80 backdrop-blur-xl border border-gray-700 hover:border-gray-600 transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative cursor-pointer"
+          onClick={() => handleCardClick("services")}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-[#FFA500] to-[#007bff] opacity-10 group-hover:opacity-20 transition-opacity duration-500" />
+          <CardContent className="p-6 h-full flex flex-col relative z-10">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#FFA500] to-[#007bff] rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Wrench className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-white text-lg">🛠️ Servicios</h3>
+                <p className="text-gray-300 text-sm">Todas las categorías</p>
+              </div>
             </div>
-            <p className="text-sm text-center mt-4 opacity-90">Todas las categorías disponibles</p>
+            <div className="flex-1">
+              <p className="text-gray-200 mb-4 leading-relaxed">Desde reparaciones hasta consultoría profesional</p>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {[Camera, Wrench, Laptop, Briefcase, Music, PaintBucket].map((ServiceIcon, index) => (
+                  <div key={index} className="w-8 h-8 bg-gray-700/50 rounded-lg flex items-center justify-center">
+                    <ServiceIcon className="h-4 w-4 text-gray-300" />
+                  </div>
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Funcionalidades Clave */}
-        <Card className="md:col-span-2 bg-gradient-to-br from-[#007bff] to-[#6610f2] text-white hover:scale-[1.02] transition-all duration-500">
-          <CardContent className="p-6 h-full flex flex-col">
-            <div className="flex items-center space-x-3 mb-4">
-              <Zap className="h-6 w-6" />
-              <h3 className="font-bold text-lg">Funcionalidades</h3>
+        {/* Funcionalidades */}
+        <Card
+          className="md:col-span-2 bg-gray-800/80 backdrop-blur-xl border border-gray-700 hover:border-gray-600 transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative cursor-pointer"
+          onClick={() => handleCardClick("search")}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-[#007bff] to-[#6610f2] opacity-10 group-hover:opacity-20 transition-opacity duration-500" />
+          <CardContent className="p-6 h-full flex flex-col relative z-10">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#007bff] to-[#6610f2] rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Zap className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-lg">⚡ Funcionalidades</h3>
+                  <p className="text-gray-300 text-sm">Todo lo que necesitas</p>
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-3 flex-1">
-              {[
-                { icon: Users, text: "Registro Simple" },
-                { icon: MapPin, text: "Geolocalización" },
-                { icon: Shield, text: "Pagos Seguros" },
-                { icon: Star, text: "Reputación" },
-              ].map((feature, index) => {
-                const FeatureIcon = feature.icon
-                return (
-                  <div key={index} className="flex items-center space-x-2 bg-white/10 rounded-lg p-3">
-                    <FeatureIcon className="h-5 w-5" />
-                    <span className="text-sm font-medium">{feature.text}</span>
+            <div className="flex-1">
+              <p className="text-gray-200 mb-4 leading-relaxed">
+                Registro simple, geolocalización, perfil dual, pagos seguros
+              </p>
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                {[
+                  { icon: Users, text: "Registro Simple" },
+                  { icon: MapPin, text: "Geolocalización" },
+                  { icon: Shield, text: "Pagos Seguros" },
+                  { icon: Star, text: "Reputación" },
+                ].map((feature, index) => {
+                  const FeatureIcon = feature.icon
+                  return (
+                    <div key={index} className="flex items-center space-x-2 bg-gray-700/50 rounded-lg p-2">
+                      <FeatureIcon className="h-4 w-4 text-gray-300" />
+                      <span className="text-gray-200 text-xs">{feature.text}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Beneficios */}
+        <Card
+          className="md:col-span-1 bg-gray-800/80 backdrop-blur-xl border border-gray-700 hover:border-gray-600 transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative cursor-pointer"
+          onClick={() => handleCardClick("profile")}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-[#007bff] to-[#FFA500] opacity-10 group-hover:opacity-20 transition-opacity duration-500" />
+          <CardContent className="p-6 h-full flex flex-col relative z-10">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#007bff] to-[#FFA500] rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Heart className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-white text-lg">🌟 Beneficios</h3>
+                <p className="text-gray-300 text-sm">¿Por qué elegir GoWork?</p>
+              </div>
+            </div>
+            <div className="flex-1">
+              <p className="text-gray-200 mb-4 leading-relaxed">Libertad, autonomía, comunidad e impacto real</p>
+              <div className="space-y-1 mb-4">
+                {["Libertad total", "Comunidad activa", "Crecimiento", "Impacto local"].map((benefit, index) => (
+                  <div key={index} className="text-gray-200 text-sm">
+                    • {benefit}
                   </div>
-                )
-              })}
+                ))}
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Testimonios */}
-        <Card className="md:col-span-2 bg-gradient-to-br from-[#6610f2] to-[#FFA500] text-white hover:scale-[1.02] transition-all duration-500">
-          <CardContent className="p-6 h-full flex flex-col justify-center">
-            <div className="flex items-center space-x-3 mb-4">
-              <MessageCircle className="h-6 w-6" />
-              <h3 className="font-bold text-lg">Testimonios</h3>
+        <Card
+          className="md:col-span-2 bg-gray-800/80 backdrop-blur-xl border border-gray-700 hover:border-gray-600 transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative cursor-pointer"
+          onClick={() => handleCardClick("testimonials")}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-[#6610f2] to-[#FFA500] opacity-10 group-hover:opacity-20 transition-opacity duration-500" />
+          <CardContent className="p-6 h-full flex flex-col relative z-10">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#6610f2] to-[#FFA500] rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <MessageCircle className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-lg">💬 Testimonios</h3>
+                  <p className="text-gray-300 text-sm">Lo que dicen nuestros usuarios</p>
+                </div>
+              </div>
             </div>
-            <div className="flex mb-3">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-4 w-4 text-yellow-300 fill-current" />
-              ))}
-            </div>
-            <p className="text-lg italic mb-4">
-              "GoWork me ha permitido conectar con clientes increíbles en mi barrio"
-            </p>
-            <div className="text-sm">
-              <strong>María González</strong> - Diseñadora Gráfica
+            <div className="flex-1">
+              <div className="flex mb-2">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-200 italic text-sm mb-2">
+                "GoWork me ha permitido conectar con clientes increíbles en mi barrio"
+              </p>
+              <div className="text-gray-300 text-xs">
+                <strong>María González</strong> - Diseñadora Gráfica
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Acceso Rápido */}
-        <Card className="md:col-span-1 bg-white border-2 border-gray-200 hover:border-[#FFA500] hover:scale-[1.02] transition-all duration-500">
-          <CardContent className="p-6 h-full flex flex-col justify-center text-center">
+        <Card className="md:col-span-1 bg-gray-800/80 backdrop-blur-xl border border-gray-700 hover:border-gray-600 transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative">
+          <CardContent className="p-6 h-full flex flex-col justify-center text-center relative z-10">
             {user ? (
               <div className="space-y-3">
                 <div className="w-12 h-12 bg-[#FFA500] rounded-full flex items-center justify-center mx-auto">
                   <span className="text-white font-bold">{user.name?.[0] || "U"}</span>
                 </div>
-                <p className="text-sm text-gray-600">Hola, {user.name}</p>
+                <p className="text-sm text-gray-300">Hola, {user.name}</p>
                 <Button
                   onClick={() => router.push("/dashboard")}
                   size="sm"
@@ -207,29 +303,12 @@ export function BentoGrid() {
             ) : (
               <div className="space-y-3">
                 <Plus className="h-12 w-12 text-[#007bff] mx-auto" />
-                <h3 className="font-bold text-gray-800">Únete</h3>
+                <h3 className="font-bold text-white">Únete</h3>
                 <Button onClick={handleDemoLogin} size="sm" className="bg-[#FFA500] hover:bg-[#FF8C00] w-full">
                   Demo Login
                 </Button>
               </div>
             )}
-          </CardContent>
-        </Card>
-
-        {/* Contacto y Soporte */}
-        <Card className="md:col-span-1 bg-gradient-to-br from-[#FFA500] to-[#007bff] text-white hover:scale-[1.02] transition-all duration-500">
-          <CardContent className="p-6 h-full flex flex-col justify-center text-center">
-            <Heart className="h-8 w-8 mx-auto mb-3" />
-            <h3 className="font-bold mb-2">Soporte 24/7</h3>
-            <p className="text-sm opacity-90 mb-4">Estamos aquí para ayudarte</p>
-            <div className="flex justify-center space-x-2">
-              <button className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                <Phone className="h-4 w-4" />
-              </button>
-              <button className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                <Video className="h-4 w-4" />
-              </button>
-            </div>
           </CardContent>
         </Card>
       </div>
