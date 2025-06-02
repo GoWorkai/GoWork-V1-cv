@@ -1,13 +1,9 @@
 import Link from "next/link"
 import { IntelligentSearchBento } from "@/components/ai-search/intelligent-search-bento"
-import { VersionIndicator } from "@/components/version-indicator"
 
 export default function Page() {
   return (
     <div className="min-h-screen bg-tertiary p-4 md:p-8">
-      {/* Indicador de versión para verificar deployment */}
-      <VersionIndicator />
-
       <div className="max-w-7xl mx-auto">
         {/* Logo y navegación */}
         <header className="flex justify-between items-center mb-8">
