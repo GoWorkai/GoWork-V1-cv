@@ -1,348 +1,361 @@
 "use client"
 
-import { useState } from "react"
+import type React from "react"
+
+import { useState, useRef, useEffect } from "react"
 import {
-  Sparkles,
   Mic,
   Send,
   Menu,
   Bookmark,
-  Grid3X3,
   Search,
-  CheckCircle,
-  Plus,
-  X,
   MapPin,
-  Droplets,
-  Thermometer,
-  Cloud,
   Youtube,
   Mail,
   MessageCircle,
   Phone,
-  Twitter,
-  Users,
-  Zap,
-  Target,
-  TrendingUp,
   Settings,
   User,
+  ImageIcon,
+  Loader2,
+  Bot,
+  Paperclip,
 } from "lucide-react"
 
+interface ChatMessage {
+  id: string
+  role: "user" | "assistant"
+  content: string
+  timestamp: Date
+  isTyping?: boolean
+}
+
 export default function HomePage() {
-  const [searchQuery, setSearchQuery] = useState("")
   const [todoItems, setTodoItems] = useState([
     { id: 1, text: "Reunión Matías Lunes", completed: true },
     { id: 2, text: "Revisar propuestas", completed: false },
   ])
 
-  const [chatMessages, setChatMessages] = useState([
-    {
-      id: 1,
-      role: "assistant",
-      content: "¡Hola! Soy Gow, tu asistente personal en GoWork 👋 ¿En qué puedo ayudarte hoy?",
-      timestamp: new Date(),
-    },
-  ])
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [chatInput, setChatInput] = useState("")
-  const [isTyping, setIsTyping] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [showLogin, setShowLogin] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
+  const chatEndRef = useRef<HTMLDivElement>(null)
+
+  // Auto scroll to bottom of chat
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [chatMessages])
 
   const handleSendMessage = async () => {
-    if (!chatInput.trim()) return
+    if (!chatInput.trim() || isLoading) return
 
-    const userMessage = {
-      id: Date.now(),
+    const userMessage: ChatMessage = {
+      id: `user-${Date.now()}`,
       role: "user",
       content: chatInput,
       timestamp: new Date(),
     }
 
     setChatMessages((prev) => [...prev, userMessage])
+    const currentInput = chatInput
     setChatInput("")
-    setIsTyping(true)
+    setIsLoading(true)
 
-    // Simular respuesta de Gow
-    setTimeout(() => {
-      const responses = [
-        "Perfecto, puedo ayudarte a encontrar el servicio que necesitas. ¿En qué área específica estás buscando?",
-        "Excelente pregunta. Basándome en tu perfil, te recomiendo estos proveedores cercanos a ti.",
-        "Te ayudo a optimizar tu perfil. ¿Qué habilidades te gustaría destacar más?",
-        "Analicemos los precios del mercado para ese servicio. En Santiago, el rango promedio es...",
-        "¡Gran idea de negocio! Te sugiero estos pasos para comenzar en GoWork.",
-      ]
+    try {
+      // Llamada real a Gemini API
+      const response = await fetch("/api/ai/gow-query", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: currentInput,
+          context: {
+            userId: "demo-user",
+            role: "client",
+            location: "Santiago, Chile",
+            chatHistory: chatMessages.slice(-5), // Últimos 5 mensajes para contexto
+          },
+        }),
+      })
 
-      const gowResponse = {
-        id: Date.now() + 1,
+      if (!response.ok) {
+        throw new Error("Error en la respuesta del servidor")
+      }
+
+      const data = await response.json()
+
+      const assistantMessage: ChatMessage = {
+        id: `assistant-${Date.now()}`,
         role: "assistant",
-        content: responses[Math.floor(Math.random() * responses.length)],
+        content: data.text || "Lo siento, no pude procesar tu consulta en este momento.",
         timestamp: new Date(),
       }
 
-      setChatMessages((prev) => [...prev, gowResponse])
-      setIsTyping(false)
-    }, 1500)
+      setChatMessages((prev) => [...prev, assistantMessage])
+    } catch (error) {
+      console.error("Error calling Gemini API:", error)
+
+      const errorMessage: ChatMessage = {
+        id: `error-${Date.now()}`,
+        role: "assistant",
+        content:
+          "Disculpa, estoy teniendo problemas para conectarme. Como asistente de GoWork, puedo ayudarte con: buscar servicios, optimizar tu perfil, analizar precios del mercado chileno, y encontrar oportunidades de trabajo. ¿En qué específicamente te gustaría que te ayude?",
+        timestamp: new Date(),
+      }
+
+      setChatMessages((prev) => [...prev, errorMessage])
+    } finally {
+      setIsLoading(false)
+    }
   }
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault()
+      handleSendMessage()
+    }
+  }
+
+  const quickActions = [
+    "¿Cómo funciona GoWork?",
+    "Buscar servicios de diseño",
+    "Optimizar mi perfil",
+    "Precios de desarrollo web",
+    "Encontrar trabajo freelance",
+    "Crear mi primer servicio",
+  ]
+
   return (
-    <div className="min-h-screen p-4" style={{ backgroundColor: "#7DD3FC" }}>
-      {/* Top Navigation */}
-      <div className="flex justify-between items-center mb-6">
-        <button className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-          <Menu className="h-5 w-5 text-white" />
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#7DD3FC" }}>
+      {/* Compact Top Navigation */}
+      <div className="flex justify-between items-center p-3">
+        <button className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+          <Menu className="h-4 w-4 text-white" />
         </button>
-        <div className="flex items-center space-x-4">
-          <h1 className="text-2xl font-bold text-white">GoWork</h1>
-          <div className="flex space-x-3">
-            <button className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-              <Bookmark className="h-5 w-5 text-white" />
-            </button>
-            <button className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-              <Grid3X3 className="h-5 w-5 text-white" />
-            </button>
-          </div>
+        <h1 className="text-xl font-bold text-white">GoWork</h1>
+        <div className="flex space-x-2">
+          <button className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+            <Bookmark className="h-4 w-4 text-white" />
+          </button>
+          <button
+            onClick={() => setShowLogin(true)}
+            className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm"
+          >
+            <User className="h-4 w-4 text-white" />
+          </button>
         </div>
       </div>
 
-      {/* Main Dashboard Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-6">
-        {/* To Do List Widget */}
-        <div className="md:col-span-3 bg-white/80 backdrop-blur-sm rounded-3xl p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 hover:bg-white/90">
-          <h3 className="text-lg font-semibold mb-4 text-gray-800">To Do List</h3>
-          <div className="space-y-3">
-            {todoItems.map((item) => (
-              <div key={item.id} className="flex items-center space-x-3">
-                <button
-                  className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                    item.completed ? "bg-teal-500" : "bg-gray-200"
-                  }`}
-                >
-                  {item.completed && <CheckCircle className="h-4 w-4 text-white" />}
-                </button>
-                <span className={`text-sm ${item.completed ? "line-through text-gray-500" : "text-gray-800"}`}>
-                  {item.text}
-                </span>
-                {item.completed && (
-                  <button className="ml-auto">
-                    <X className="h-4 w-4 text-gray-400" />
-                  </button>
-                )}
-              </div>
-            ))}
-            <div className="flex items-center space-x-3 mt-4">
-              <button className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center">
-                <Plus className="h-4 w-4 text-white" />
-              </button>
-              <input
-                type="text"
-                placeholder="Add task..."
-                className="text-sm bg-transparent border-none outline-none text-gray-600 placeholder-gray-400"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* GoWork Status Widget */}
-        <div className="md:col-span-5 bg-white/80 backdrop-blur-sm rounded-3xl p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 hover:bg-white/90">
-          <h3 className="text-lg font-semibold mb-4 text-gray-800">Estado GoWork</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-teal-500 rounded-2xl p-4 text-white">
-              <div className="flex items-center space-x-2 mb-2">
-                <Droplets className="h-4 w-4" />
-                <span className="text-sm font-medium">Actividad 85%</span>
-              </div>
-            </div>
-            <div className="bg-white rounded-2xl p-4">
-              <div className="flex items-center space-x-2 mb-2">
-                <Thermometer className="h-4 w-4 text-teal-500" />
-                <span className="text-sm text-gray-600">15 - 25 proyectos</span>
-              </div>
-            </div>
-            <div className="bg-teal-600 rounded-2xl p-4 text-white col-span-2">
-              <div className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4" />
-                <span className="text-sm font-medium">Santiago, Chile</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Performance Widget */}
-        <div className="md:col-span-4 bg-white/60 backdrop-blur-sm rounded-full p-8 flex flex-col items-center justify-center hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 hover:bg-white/70">
-          <div className="text-4xl font-bold text-gray-800 mb-2">95%</div>
-          <Cloud className="h-12 w-12 text-gray-400 mb-2" />
-          <div className="text-sm text-gray-600 text-center">Satisfacción Cliente</div>
-        </div>
-      </div>
-
-      {/* Gow IA Assistant - Chat Activo */}
-      <div className="max-w-6xl mx-auto mb-6">
-        <div className="bg-gray-900 rounded-3xl p-6 text-white">
-          <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-teal-500 rounded-xl flex items-center justify-center mr-4">
-              <Sparkles className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold">Gow IA Assistant</h3>
-              <p className="text-sm opacity-70">Asistente Inteligente de GoWork - Chat Activo</p>
-            </div>
-          </div>
-
-          {/* Chat Messages */}
-          <div className="bg-white/5 rounded-2xl p-4 mb-4 max-h-60 overflow-y-auto">
-            {chatMessages.map((message) => (
-              <div key={message.id} className={`mb-3 ${message.role === "user" ? "text-right" : "text-left"}`}>
-                <div
-                  className={`inline-block p-3 rounded-2xl max-w-xs ${
-                    message.role === "user" ? "bg-teal-500 text-white" : "bg-white/10 text-white"
-                  }`}
-                >
-                  <p className="text-sm">{message.content}</p>
-                  <span className="text-xs opacity-70">
-                    {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+      {/* Compact Dashboard Widgets */}
+      <div className="px-4 mb-4">
+        <div className="grid grid-cols-12 gap-3 max-w-7xl mx-auto">
+          {/* Compact To Do List */}
+          <div className="col-span-3 bg-white/80 backdrop-blur-sm rounded-2xl p-4 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <h3 className="text-sm font-semibold mb-3 text-gray-800">To Do</h3>
+            <div className="space-y-2">
+              {todoItems.slice(0, 2).map((item) => (
+                <div key={item.id} className="flex items-center space-x-2">
+                  <div className={`w-4 h-4 rounded-full ${item.completed ? "bg-teal-500" : "bg-gray-300"}`}></div>
+                  <span className={`text-xs ${item.completed ? "line-through text-gray-500" : "text-gray-800"}`}>
+                    {item.text}
                   </span>
                 </div>
-              </div>
-            ))}
-            {isTyping && (
-              <div className="text-left mb-3">
-                <div className="inline-block p-3 rounded-2xl bg-white/10 text-white">
-                  <p className="text-sm">Gow está escribiendo...</p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Chat Input */}
-          <div className="relative mb-6">
-            <input
-              type="text"
-              value={chatInput}
-              onChange={(e) => setChatInput(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-              placeholder="Escribe tu consulta aquí..."
-              className="w-full rounded-2xl py-4 px-6 pr-24 text-white placeholder-white/70 focus:outline-none bg-white/10 border border-white/20"
-            />
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-              <button className="p-2 opacity-70 hover:opacity-100">
-                <Mic size={20} />
-              </button>
-              <button
-                onClick={handleSendMessage}
-                className="p-3 bg-teal-500 rounded-full hover:bg-teal-600 transition-colors"
-              >
-                <Send size={18} />
-              </button>
+              ))}
             </div>
           </div>
 
-          {/* Botones de acción rápida */}
-          <div className="grid grid-cols-4 gap-4">
-            {[
-              { emoji: "🔍", label: "Buscar servicios", icon: Search },
-              { emoji: "👤", label: "Optimizar perfil", icon: User },
-              { emoji: "💰", label: "Analizar precios", icon: TrendingUp },
-              { emoji: "💡", label: "Ideas de negocio", icon: Target },
-            ].map((item, index) => (
-              <button
-                key={index}
-                onClick={() => setChatInput(`Ayúdame con: ${item.label}`)}
-                className="bg-white/10 rounded-2xl p-4 flex flex-col items-center space-y-3 transition-colors hover:bg-white/20"
-              >
-                <div className="w-10 h-10 bg-teal-500 rounded-xl flex items-center justify-center">
-                  <item.icon className="h-5 w-5 text-white" />
+          {/* Compact Status */}
+          <div className="col-span-6 bg-white/80 backdrop-blur-sm rounded-2xl p-4 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <h3 className="text-sm font-semibold mb-3 text-gray-800">Estado GoWork</h3>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="bg-teal-500 rounded-xl p-2 text-white text-center">
+                <div className="text-lg font-bold">85%</div>
+                <div className="text-xs">Actividad</div>
+              </div>
+              <div className="bg-blue-500 rounded-xl p-2 text-white text-center">
+                <div className="text-lg font-bold">23</div>
+                <div className="text-xs">Proyectos</div>
+              </div>
+              <div className="bg-green-500 rounded-xl p-2 text-white text-center">
+                <div className="text-lg font-bold">95%</div>
+                <div className="text-xs">Satisfacción</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Compact Performance */}
+          <div className="col-span-3 bg-white/60 backdrop-blur-sm rounded-2xl p-4 flex flex-col items-center justify-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <div className="text-2xl font-bold text-gray-800">4.8★</div>
+            <div className="text-xs text-gray-600 text-center">Rating</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Gow AI Assistant - Perplexity Style */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4 max-w-4xl mx-auto w-full">
+        {chatMessages.length === 0 ? (
+          // Initial State - Perplexity Style
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center mb-6">
+              <div className="w-16 h-16 bg-gray-900 rounded-2xl flex items-center justify-center mr-4">
+                <Bot className="h-8 w-8 text-teal-400" />
+              </div>
+              <h1 className="text-4xl font-bold text-gray-900">Gow</h1>
+            </div>
+            <p className="text-gray-600 text-lg mb-8">Tu asistente inteligente de GoWork</p>
+          </div>
+        ) : (
+          // Chat Messages
+          <div className="w-full max-w-3xl mb-6 flex-1 overflow-y-auto">
+            <div className="space-y-4 p-4">
+              {chatMessages.map((message) => (
+                <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div
+                    className={`max-w-[80%] rounded-2xl p-4 ${
+                      message.role === "user"
+                        ? "bg-gray-900 text-white"
+                        : "bg-white/90 backdrop-blur-sm text-gray-800 border border-gray-200"
+                    }`}
+                  >
+                    {message.role === "assistant" && (
+                      <div className="flex items-center mb-2">
+                        <Bot className="h-4 w-4 text-teal-500 mr-2" />
+                        <span className="text-xs font-medium text-teal-500">Gow</span>
+                      </div>
+                    )}
+                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    <div className="text-xs opacity-60 mt-2">
+                      {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </div>
+                  </div>
                 </div>
-                <span className="text-xs text-center">{item.label}</span>
-              </button>
-            ))}
+              ))}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 border border-gray-200">
+                    <div className="flex items-center space-x-2">
+                      <Loader2 className="h-4 w-4 text-teal-500 animate-spin" />
+                      <span className="text-sm text-gray-600">Gow está pensando...</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+          </div>
+        )}
+
+        {/* Perplexity-style Search Bar */}
+        <div className="w-full max-w-3xl">
+          <div className="relative">
+            <div className="bg-gray-900 rounded-2xl border border-gray-700 overflow-hidden">
+              <div className="flex items-center p-4">
+                <textarea
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Pregunta algo sobre GoWork..."
+                  className="flex-1 bg-transparent text-white placeholder-gray-400 resize-none outline-none text-sm"
+                  rows={1}
+                  style={{ minHeight: "20px", maxHeight: "100px" }}
+                />
+                <div className="flex items-center space-x-2 ml-4">
+                  <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                    <Search className="h-4 w-4" />
+                  </button>
+                  <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                    <ImageIcon className="h-4 w-4" />
+                  </button>
+                  <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                    <MapPin className="h-4 w-4" />
+                  </button>
+                  <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                    <Paperclip className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => setIsRecording(!isRecording)}
+                    className={`p-2 transition-colors ${
+                      isRecording ? "text-red-400" : "text-gray-400 hover:text-white"
+                    }`}
+                  >
+                    <Mic className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={handleSendMessage}
+                    disabled={!chatInput.trim() || isLoading}
+                    className="p-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Send className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="mt-6 flex items-center justify-between text-xs opacity-60">
-            <span>🤖 Potenciado por Google Gemini + Base de Conocimiento GoWork</span>
-            <span className="text-green-400">● En línea</span>
-          </div>
+          {/* Quick Actions */}
+          {chatMessages.length === 0 && (
+            <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-3">
+              {quickActions.map((action, index) => (
+                <button
+                  key={index}
+                  onClick={() => setChatInput(action)}
+                  className="p-3 bg-white/80 backdrop-blur-sm rounded-xl text-sm text-gray-700 hover:bg-white/90 transition-colors text-left"
+                >
+                  {action}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Bottom Section */}
-      <div className="flex justify-between items-center">
-        {/* AI Tools */}
-        <button className="bg-white/80 backdrop-blur-sm rounded-2xl px-6 py-3 flex items-center space-x-3">
-          <Zap className="h-5 w-5 text-teal-500" />
-          <span className="font-medium text-gray-800">AI Tools</span>
-        </button>
-
-        {/* App Icons */}
-        <div className="flex space-x-4">
-          {[
-            { icon: Youtube, color: "bg-red-500" },
-            { icon: Mail, color: "bg-blue-500" },
-            { icon: MessageCircle, color: "bg-teal-500" },
-            { icon: Phone, color: "bg-green-500" },
-            { icon: Twitter, color: "bg-blue-400" },
-            { icon: Users, color: "bg-purple-500" },
-            { icon: Target, color: "bg-orange-500" },
-            { icon: Settings, color: "bg-gray-500" },
-          ].map((app, index) => (
-            <button
-              key={index}
-              className={`w-12 h-12 ${app.color} rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform`}
-            >
-              <app.icon className="h-6 w-6" />
-            </button>
-          ))}
-        </div>
-
-        {/* Profile/Settings */}
-        <button
-          onClick={() => setShowLogin(true)}
-          className="w-16 h-16 bg-teal-500 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform"
-        >
-          <User className="h-8 w-8" />
-        </button>
+      {/* Compact Bottom Navigation */}
+      <div className="p-3 flex justify-center space-x-3">
+        {[
+          { icon: Youtube, color: "bg-red-500" },
+          { icon: Mail, color: "bg-blue-500" },
+          { icon: MessageCircle, color: "bg-teal-500" },
+          { icon: Phone, color: "bg-green-500" },
+          { icon: Settings, color: "bg-gray-500" },
+        ].map((app, index) => (
+          <button
+            key={index}
+            className={`w-10 h-10 ${app.color} rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform`}
+          >
+            <app.icon className="h-5 w-5" />
+          </button>
+        ))}
       </div>
 
-      {/* Modal de Login */}
+      {/* Login Modal */}
       {showLogin && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-4">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">Iniciar Sesión</h2>
-              <p className="text-gray-600">Accede a tu cuenta de GoWork</p>
-            </div>
-
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full mx-4">
+            <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">Iniciar Sesión</h2>
             <form className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                <input
-                  type="email"
-                  className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  placeholder="tu@email.com"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
-                <input
-                  type="password"
-                  className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  placeholder="••••••••"
-                />
-              </div>
-
+              <input
+                type="email"
+                className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
+                placeholder="Email"
+              />
+              <input
+                type="password"
+                className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
+                placeholder="Contraseña"
+              />
               <button
                 type="submit"
                 className="w-full bg-teal-500 text-white py-3 rounded-xl font-medium hover:bg-teal-600 transition-colors"
               >
-                Iniciar Sesión
+                Entrar
               </button>
             </form>
-
-            <div className="mt-6 text-center">
-              <button onClick={() => setShowLogin(false)} className="text-gray-500 hover:text-gray-700">
-                Cancelar
-              </button>
-            </div>
+            <button onClick={() => setShowLogin(false)} className="w-full mt-4 text-gray-500 hover:text-gray-700">
+              Cancelar
+            </button>
           </div>
         </div>
       )}
