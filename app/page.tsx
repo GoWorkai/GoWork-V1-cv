@@ -43,13 +43,16 @@ export default function HomePage() {
         <button className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
           <Menu className="h-5 w-5 text-white" />
         </button>
-        <div className="flex space-x-3">
-          <button className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-            <Bookmark className="h-5 w-5 text-white" />
-          </button>
-          <button className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-            <Grid3X3 className="h-5 w-5 text-white" />
-          </button>
+        <div className="flex items-center space-x-4">
+          <h1 className="text-2xl font-bold text-white">GoWork</h1>
+          <div className="flex space-x-3">
+            <button className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+              <Bookmark className="h-5 w-5 text-white" />
+            </button>
+            <button className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+              <Grid3X3 className="h-5 w-5 text-white" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -124,25 +127,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="max-w-4xl mx-auto mb-6">
-        <div className="relative">
-          <div className="flex items-center bg-white/80 backdrop-blur-sm rounded-full p-4">
-            <Search className="h-5 w-5 text-gray-400 mr-4" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Busca servicios, proveedores, proyectos..."
-              className="flex-1 bg-transparent border-none outline-none text-gray-800 placeholder-gray-400"
-            />
-            <button className="bg-teal-500 text-white px-6 py-2 rounded-full font-medium hover:bg-teal-600 transition-colors">
-              Search
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Gow IA Assistant - Posición Hero */}
       <div className="max-w-6xl mx-auto mb-6">
         <div className="md:col-span-8 bg-gray-900 rounded-3xl p-6 text-white">
@@ -203,31 +187,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Search Options */}
-      <div className="max-w-4xl mx-auto mb-8">
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 text-center">
-            <h4 className="font-medium text-gray-800 mb-3">Buscar con</h4>
-          </div>
-          {[
-            { name: "GoWork", active: true },
-            { name: "Google", active: false },
-            { name: "Freelancer", active: false },
-            { name: "LinkedIn", active: false },
-            { name: "Upwork", active: false },
-          ].map((option, index) => (
-            <button
-              key={index}
-              className={`rounded-2xl p-4 text-sm font-medium transition-colors ${
-                option.active ? "bg-teal-500 text-white" : "bg-white/60 text-gray-700 hover:bg-white/80"
-              }`}
-            >
-              {option.name}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* Bottom Section */}
       <div className="flex justify-between items-center">
         {/* AI Tools */}
@@ -261,12 +220,6 @@ export default function HomePage() {
         <button className="w-16 h-16 bg-teal-500 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform">
           <User className="h-8 w-8" />
         </button>
-      </div>
-
-      {/* GoWork Branding */}
-      <div className="text-center mt-8">
-        <h1 className="text-4xl font-bold text-white mb-2">GoWork</h1>
-        <p className="text-white/80">La Red Social del Talento y las Oportunidades Humanas</p>
       </div>
     </div>
   )
