@@ -6,7 +6,6 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Brain, Search, User, DollarSign, Lightbulb, Mic, Send, Loader2, Sparkles } from "lucide-react"
-import { geminiService } from "@/lib/gemini"
 
 export function GowChatWidget() {
   const [message, setMessage] = useState("")
@@ -51,20 +50,25 @@ export function GowChatWidget() {
 
     setIsLoading(true)
     try {
-      const response = await geminiService.chatWithGow([
-        {
-          role: "user",
-          parts: [{ text: `Como Gow, el asistente IA de GoWork: ${textToSend}` }],
-        },
-      ])
-      setResponse(response)
+      // Simulación de respuesta de Gemini (en producción, usar la API real)
+      setTimeout(() => {
+        const responses = [
+          "Puedo ayudarte a encontrar los mejores servicios en tu área. ¿Qué tipo de servicio estás buscando específicamente?",
+          "Para optimizar tu perfil, asegúrate de tener una foto profesional, una descripción detallada de tus servicios y algunas muestras de tu trabajo anterior.",
+          "Para establecer precios competitivos, te recomiendo investigar lo que cobran otros profesionales similares en tu área y considerar tu nivel de experiencia.",
+          "Una gran idea para GoWork podría ser ofrecer servicios de consultoría en tu área de especialización. ¿Cuáles son tus habilidades principales?",
+          "GoWork te permite conectar con clientes potenciales en tu vecindario. ¿En qué área geográfica estás buscando oportunidades?",
+        ]
+        setResponse(responses[Math.floor(Math.random() * responses.length)])
+        setIsLoading(false)
+      }, 1500)
     } catch (error) {
       console.error("Error al comunicarse con Gow:", error)
       setResponse("Lo siento, tengo problemas técnicos. ¿Podrías intentar de nuevo?")
-    } finally {
       setIsLoading(false)
-      if (!messageToSend) setMessage("")
     }
+
+    if (!messageToSend) setMessage("")
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
