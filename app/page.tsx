@@ -1,247 +1,279 @@
-"use client"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { MessageCircle, MapPin, Calendar, User, Star, Brain, ArrowRight, TrendingUp, Shield, Zap } from "lucide-react"
+import IntelligentSearch from "@/components/ai-search/intelligent-search"
 
-import { useState } from "react"
-import { Sparkles, Mic, Send } from "lucide-react"
-
-export default function HomePage() {
-  const [searchQuery, setSearchQuery] = useState("")
-
+export default function Page() {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#D1E5D9" }}>
-      {/* Indicador de versión NUEVO para verificar que carga */}
-      <div
-        className="fixed top-4 right-4 px-4 py-2 rounded-full text-sm font-bold z-50"
-        style={{ backgroundColor: "#1EE2AA", color: "#1A1C1B" }}
-      >
-        ✅ NUEVA VERSIÓN BENTO GRID - {new Date().toLocaleTimeString()}
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#00E5B4]/10 to-[#0066FF]/10"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+          <div className="text-center">
+            <div className="flex justify-center mb-6">
+              <Badge className="bg-[#00E5B4]/20 text-[#00E5B4] border-[#00E5B4]/30 px-4 py-2">
+                <Brain className="h-4 w-4 mr-2" />
+                Powered by AI
+              </Badge>
+            </div>
 
-      <div className="max-w-7xl mx-auto p-4 md:p-8">
-        {/* Header simplificado */}
-        <header className="flex justify-between items-center mb-8">
-          <div className="flex items-center">
-            <div
-              className="w-10 h-10 rounded-lg flex items-center justify-center mr-2"
-              style={{ backgroundColor: "#1EE2AA" }}
-            >
-              <span className="font-bold" style={{ color: "#1A1C1B" }}>
-                G
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              Conecta con el{" "}
+              <span className="bg-gradient-to-r from-[#00E5B4] to-[#0066FF] bg-clip-text text-transparent">
+                talento perfecto
               </span>
-            </div>
-            <span className="font-bold text-xl" style={{ color: "#1A1C1B" }}>
-              GoWork
-            </span>
-          </div>
-          <div className="flex space-x-3">
-            <button
-              className="px-4 py-2 border rounded-lg transition-colors"
-              style={{
-                borderColor: "#1A1C1B",
-                color: "#1A1C1B",
-              }}
-            >
-              Iniciar sesión
-            </button>
-            <button
-              className="px-4 py-2 rounded-lg transition-colors"
-              style={{
-                backgroundColor: "#1EE2AA",
-                color: "#1A1C1B",
-              }}
-            >
-              Registrarse
-            </button>
-          </div>
-        </header>
+            </h1>
 
-        {/* Bento Grid Principal */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8">
-          {/* BLOQUE 1: Búsqueda IA - Prioridad máxima */}
-          <div
-            className="md:col-span-6 md:row-span-2 rounded-3xl p-6 text-white"
-            style={{ backgroundColor: "#1A1C1B" }}
-          >
-            <div className="flex items-center mb-4">
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center mr-3"
-                style={{ backgroundColor: "#1EE2AA" }}
-              >
-                <Sparkles className="h-5 w-5" style={{ color: "#1A1C1B" }} />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold">Gow IA Assistant</h3>
-                <p className="text-sm opacity-70">Asistente Inteligente de GoWork</p>
-              </div>
-            </div>
-
-            <p className="opacity-80 text-sm mb-4">
-              Conversa conmigo para encontrar servicios, analizar precios, optimizar tu perfil y descubrir oportunidades
+            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+              GoWork usa inteligencia artificial para conectar freelancers y clientes de manera inteligente. Encuentra
+              proyectos, contrata talento y haz crecer tu negocio.
             </p>
 
-            {/* Barra de búsqueda principal */}
-            <div className="relative mb-4">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="¿Qué servicio necesitas? Pregúntame cualquier cosa sobre GoWork..."
-                className="w-full rounded-2xl py-3 px-4 pr-20 text-white placeholder-white focus:outline-none"
-                style={{
-                  backgroundColor: "rgba(255,255,255,0.1)",
-                  border: "1px solid rgba(255,255,255,0.2)",
-                }}
-              />
-              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                <button className="p-2 opacity-70 hover:opacity-100">
-                  <Mic size={18} />
-                </button>
-                <button className="p-2 rounded-full" style={{ backgroundColor: "#1EE2AA", color: "#1A1C1B" }}>
-                  <Send size={18} />
-                </button>
-              </div>
+            {/* Barra de Búsqueda Inteligente Integrada */}
+            <div className="mb-12">
+              <IntelligentSearch />
             </div>
 
-            {/* Botones de acción rápida */}
-            <div className="grid grid-cols-4 gap-3">
-              {[
-                { emoji: "🔍", label: "Buscar servicios" },
-                { emoji: "👤", label: "Optimizar perfil" },
-                { emoji: "💰", label: "Analizar precios" },
-                { emoji: "💡", label: "Ideas de negocio" },
-              ].map((item, index) => (
-                <button
-                  key={index}
-                  className="rounded-xl p-3 flex flex-col items-center space-y-2 transition-colors hover:bg-white hover:bg-opacity-20"
-                  style={{ backgroundColor: "rgba(255,255,255,0.1)" }}
-                >
-                  <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: "#1EE2AA" }}
-                  >
-                    <span className="text-sm">{item.emoji}</span>
-                  </div>
-                  <span className="text-xs text-center">{item.label}</span>
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-4 flex items-center justify-between text-xs opacity-60">
-              <span>🤖 Potenciado por Google Gemini + Base de Conocimiento GoWork</span>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/onboarding">
+                <Button size="lg" className="bg-[#00E5B4] hover:bg-[#00E5B4]/90 text-gray-900 font-semibold px-8">
+                  Comenzar ahora
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="/servicios">
+                <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800 px-8">
+                  Explorar servicios
+                </Button>
+              </Link>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* BLOQUE 2: Logo principal */}
-          <div
-            className="md:col-span-6 md:row-span-2 rounded-3xl p-6 flex items-center justify-center relative overflow-hidden"
-            style={{ backgroundColor: "#1EE2AA" }}
-          >
-            <div className="absolute inset-0 opacity-10">
-              <svg width="100%" height="100%" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="40" stroke="#1A1C1B" strokeWidth="0.5" fill="none" />
-                <circle cx="50" cy="50" r="30" stroke="#1A1C1B" strokeWidth="0.5" fill="none" />
-                <circle cx="50" cy="50" r="20" stroke="#1A1C1B" strokeWidth="0.5" fill="none" />
-              </svg>
+      {/* Stats Section */}
+      <section className="py-16 bg-gray-800/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-[#00E5B4] mb-2">15K+</div>
+              <div className="text-gray-400">Freelancers activos</div>
             </div>
-            <div className="relative z-10 text-center">
-              <h1 className="text-6xl md:text-8xl font-bold" style={{ color: "#1A1C1B" }}>
-                GoWork
-              </h1>
-              <div
-                className="w-16 h-16 rounded-lg flex items-center justify-center mx-auto mt-4"
-                style={{ backgroundColor: "#1A1C1B" }}
-              >
-                <svg
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  style={{ color: "#1EE2AA" }}
-                >
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                </svg>
-              </div>
-              <p className="mt-4 font-medium" style={{ color: "#1A1C1B" }}>
-                La Red Social del Talento
-              </p>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-[#00E5B4] mb-2">8K+</div>
+              <div className="text-gray-400">Proyectos completados</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-[#00E5B4] mb-2">95%</div>
+              <div className="text-gray-400">Satisfacción cliente</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-[#00E5B4] mb-2">24/7</div>
+              <div className="text-gray-400">Soporte IA</div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* BLOQUE 3: Estadísticas */}
-          <div className="md:col-span-3 rounded-3xl p-6 text-white" style={{ backgroundColor: "#2260DD" }}>
-            <h3 className="text-xl font-bold mb-2">Estadísticas</h3>
-            <div className="text-3xl font-bold mb-1">15K+</div>
-            <p className="opacity-80 text-sm">Usuarios activos</p>
+      {/* Features Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Funcionalidades potenciadas por IA</h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Nuestra plataforma usa inteligencia artificial para hacer más eficiente la conexión entre talento y
+              oportunidades
+            </p>
           </div>
 
-          {/* BLOQUE 4: Categorías */}
-          <div className="md:col-span-3 rounded-3xl p-6" style={{ backgroundColor: "#E0E020" }}>
-            <h3 className="text-xl font-bold mb-2" style={{ color: "#1A1C1B" }}>
-              Categorías
-            </h3>
-            <div className="grid grid-cols-2 gap-2">
-              {["Diseño", "Desarrollo", "Marketing", "Educación"].map((category) => (
-                <div
-                  key={category}
-                  className="p-2 rounded-lg text-center"
-                  style={{ backgroundColor: "rgba(255,255,255,0.2)" }}
-                >
-                  <span className="text-xs font-medium" style={{ color: "#1A1C1B" }}>
-                    {category}
-                  </span>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="bg-gray-800 border-gray-700 hover:border-[#00E5B4]/50 transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 bg-[#00E5B4]/20 rounded-lg flex items-center justify-center mb-4">
+                  <Brain className="h-6 w-6 text-[#00E5B4]" />
                 </div>
-              ))}
-            </div>
-          </div>
+                <CardTitle className="text-white">Matching Inteligente</CardTitle>
+                <CardDescription className="text-gray-400">
+                  IA que conecta automáticamente freelancers con proyectos perfectos según habilidades y experiencia
+                </CardDescription>
+              </CardHeader>
+            </Card>
 
-          {/* BLOQUES DE COLORES */}
-          <div
-            className="md:col-span-2 rounded-3xl p-4 flex items-center justify-center"
-            style={{ backgroundColor: "#D1E5D9" }}
-          >
-            <div className="text-center">
-              <div className="text-xs uppercase tracking-wider mb-1 opacity-60" style={{ color: "#1A1C1B" }}>
-                Principal
-              </div>
-              <div className="text-lg font-mono font-bold" style={{ color: "#1A1C1B" }}>
-                #1EE2AA
-              </div>
-            </div>
-          </div>
+            <Card className="bg-gray-800 border-gray-700 hover:border-[#00E5B4]/50 transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 bg-[#0066FF]/20 rounded-lg flex items-center justify-center mb-4">
+                  <MessageCircle className="h-6 w-6 text-[#0066FF]" />
+                </div>
+                <CardTitle className="text-white">Chat en Tiempo Real</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Comunicación instantánea con asistente IA que ayuda en negociaciones y dudas
+                </CardDescription>
+              </CardHeader>
+            </Card>
 
-          <div
-            className="md:col-span-2 rounded-3xl p-4 flex items-center justify-center"
-            style={{ backgroundColor: "#1A1C1B" }}
-          >
-            <div className="text-center">
-              <div className="text-xs text-white uppercase tracking-wider mb-1 opacity-60">Secundario</div>
-              <div className="text-lg font-mono font-bold text-white">#1A1C1B</div>
-            </div>
-          </div>
+            <Card className="bg-gray-800 border-gray-700 hover:border-[#00E5B4]/50 transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 bg-[#FF6D3A]/20 rounded-lg flex items-center justify-center mb-4">
+                  <MapPin className="h-6 w-6 text-[#FF6D3A]" />
+                </div>
+                <CardTitle className="text-white">Geolocalización</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Encuentra talento cerca de ti con mapas interactivos y filtros de ubicación
+                </CardDescription>
+              </CardHeader>
+            </Card>
 
-          <div className="md:col-span-2 bg-white rounded-3xl p-4 flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-xs uppercase tracking-wider mb-1 opacity-60" style={{ color: "#1A1C1B" }}>
-                Terciario
-              </div>
-              <div className="text-lg font-mono font-bold" style={{ color: "#1A1C1B" }}>
-                #D1E5D9
-              </div>
-            </div>
+            <Card className="bg-gray-800 border-gray-700 hover:border-[#00E5B4]/50 transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 bg-[#B297FF]/20 rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="h-6 w-6 text-[#B297FF]" />
+                </div>
+                <CardTitle className="text-white">Propuestas Automáticas</CardTitle>
+                <CardDescription className="text-gray-400">
+                  IA genera propuestas personalizadas y optimiza perfiles para mayor éxito
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-gray-800 border-gray-700 hover:border-[#00E5B4]/50 transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 bg-[#00E5B4]/20 rounded-lg flex items-center justify-center mb-4">
+                  <Shield className="h-6 w-6 text-[#00E5B4]" />
+                </div>
+                <CardTitle className="text-white">Pagos Seguros</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Sistema de pagos protegido con escrow y verificación de identidad
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-gray-800 border-gray-700 hover:border-[#00E5B4]/50 transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 bg-[#FF6D3A]/20 rounded-lg flex items-center justify-center mb-4">
+                  <TrendingUp className="h-6 w-6 text-[#FF6D3A]" />
+                </div>
+                <CardTitle className="text-white">Analytics Avanzados</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Métricas detalladas de rendimiento y sugerencias de mejora por IA
+                </CardDescription>
+              </CardHeader>
+            </Card>
           </div>
         </div>
+      </section>
 
-        {/* Mensaje de confirmación */}
-        <div className="text-center py-8">
-          <h2 className="text-3xl font-bold mb-4" style={{ color: "#1A1C1B" }}>
-            🎉 ¡Nuevo Diseño Bento Grid Cargado Exitosamente!
-          </h2>
-          <p className="text-lg" style={{ color: "#1A1C1B" }}>
-            Si ves este mensaje, la nueva versión se ha desplegado correctamente.
-          </p>
+      {/* Test Functions Section */}
+      <section className="py-16 bg-gray-800/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h3 className="text-2xl font-bold text-white mb-4">Prueba las funciones</h3>
+            <p className="text-gray-400">Explora todas las funcionalidades de GoWork</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Link href="/chat">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800 p-6 h-auto"
+              >
+                <MessageCircle className="h-5 w-5 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Chat en tiempo real</div>
+                  <div className="text-sm text-gray-500">Comunícate con Gow, nuestro asistente IA</div>
+                </div>
+              </Button>
+            </Link>
+
+            <Link href="/map">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800 p-6 h-auto"
+              >
+                <MapPin className="h-5 w-5 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Mapa interactivo</div>
+                  <div className="text-sm text-gray-500">Encuentra talento cerca de ti</div>
+                </div>
+              </Button>
+            </Link>
+
+            <Link href="/booking/1">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800 p-6 h-auto"
+              >
+                <Calendar className="h-5 w-5 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Flujo de reservas</div>
+                  <div className="text-sm text-gray-500">Reserva servicios fácilmente</div>
+                </div>
+              </Button>
+            </Link>
+
+            <Link href="/dashboard">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800 p-6 h-auto"
+              >
+                <User className="h-5 w-5 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Dashboard cliente</div>
+                  <div className="text-sm text-gray-500">Gestiona tus proyectos</div>
+                </div>
+              </Button>
+            </Link>
+
+            <Link href="/provider-dashboard">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800 p-6 h-auto"
+              >
+                <Star className="h-5 w-5 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Dashboard proveedor</div>
+                  <div className="text-sm text-gray-500">Administra tus servicios</div>
+                </div>
+              </Button>
+            </Link>
+
+            <Link href="/ai-dashboard">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800 p-6 h-auto"
+              >
+                <Brain className="h-5 w-5 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Centro de IA</div>
+                  <div className="text-sm text-gray-500">Explora nuestros agentes inteligentes</div>
+                </div>
+              </Button>
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-[#00E5B4]/10 to-[#0066FF]/10">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">¿Listo para revolucionar tu trabajo?</h2>
+          <p className="text-xl text-gray-300 mb-8">Únete a miles de freelancers y empresas que ya confían en GoWork</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/onboarding">
+              <Button size="lg" className="bg-[#00E5B4] hover:bg-[#00E5B4]/90 text-gray-900 font-semibold px-8">
+                Crear cuenta gratis
+              </Button>
+            </Link>
+            <Link href="/servicios">
+              <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800 px-8">
+                Ver servicios
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

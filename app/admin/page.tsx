@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/components/auth/auth-provider"
+import { analyticsAPI, analyticsUtils, type AnalyticsData } from "@/lib/analytics"
 import {
   TrendingUp,
   TrendingDown,
@@ -21,161 +22,33 @@ import {
   RefreshCw,
 } from "lucide-react"
 
-// Tipos simulados para evitar dependencias externas
-interface AnalyticsData {
-  revenue: {
-    total: number
-    growth: number
-  }
-  users: {
-    total: number
-    growth: number
-    freelancers: number
-    clients: number
-  }
-  projects: {
-    total: number
-    active: number
-    success_rate: number
-  }
-  payments: {
-    platform_fees: number
-    average_project_value: number
-    payment_success_rate: number
-  }
-}
-
-// Funciones de utilidad simuladas
-const analyticsUtils = {
-  formatCurrency: (amount: number) => `$${amount.toLocaleString("es-CL")}`,
-  formatPercentage: (value: number) => `${value.toFixed(1)}%`,
-  generateColors: (count: number) => ["#1EE2AA", "#1A1C1B", "#D1E5D9", "#E0E020", "#2260DD"].slice(0, count),
-}
-
 export default function AdminDashboard() {
-  const [mounted, setMounted] = useState(false)
-  const [user, setUser] = useState<any>(null)
+  const { user } = useAuth()
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
   const [topFreelancers, setTopFreelancers] = useState<any[]>([])
   const [activeProjects, setActiveProjects] = useState<any[]>([])
   const [categoryStats, setCategoryStats] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
-  const auth = useAuth()
 
   useEffect(() => {
-    setMounted(true)
     loadDashboardData()
   }, [])
-
-  useEffect(() => {
-    if (mounted && auth?.user) {
-      setUser(auth.user)
-    }
-  }, [mounted, auth])
 
   const loadDashboardData = async () => {
     try {
       setLoading(true)
+      const [analyticsData, freelancersData, projectsData, categoriesData] = await Promise.all([
+        analyticsAPI.getDashboardMetrics(),
+        analyticsAPI.getTopFreelancers(5),
+        analyticsAPI.getActiveProjects(5),
+        analyticsAPI.getCategoryStats(),
+      ])
 
-      // Datos simulados para evitar errores de API
-      const mockAnalytics: AnalyticsData = {
-        revenue: { total: 2500000, growth: 15.2 },
-        users: { total: 1250, growth: 8.5, freelancers: 750, clients: 500 },
-        projects: { total: 320, active: 45, success_rate: 92.5 },
-        payments: { platform_fees: 125000, average_project_value: 85000, payment_success_rate: 98.2 },
-      }
-
-      const mockFreelancers = [
-        {
-          id: 1,
-          full_name: "María González",
-          rating: 4.9,
-          total_reviews: 127,
-          freelancer_profiles: [{ title: "Diseñadora UX/UI" }],
-        },
-        {
-          id: 2,
-          full_name: "Carlos Rodríguez",
-          rating: 4.8,
-          total_reviews: 89,
-          freelancer_profiles: [{ title: "Desarrollador Full Stack" }],
-        },
-        {
-          id: 3,
-          full_name: "Ana Martínez",
-          rating: 4.7,
-          total_reviews: 156,
-          freelancer_profiles: [{ title: "Marketing Digital" }],
-        },
-        {
-          id: 4,
-          full_name: "Luis Fernández",
-          rating: 4.9,
-          total_reviews: 203,
-          freelancer_profiles: [{ title: "Fotógrafo Profesional" }],
-        },
-        {
-          id: 5,
-          full_name: "Sofia López",
-          rating: 4.6,
-          total_reviews: 78,
-          freelancer_profiles: [{ title: "Redactora de Contenido" }],
-        },
-      ]
-
-      const mockProjects = [
-        {
-          id: 1,
-          title: "Desarrollo de App Móvil",
-          budget_min: 500000,
-          budget_max: 800000,
-          client: { full_name: "TechStart SpA" },
-        },
-        {
-          id: 2,
-          title: "Diseño de Identidad Corporativa",
-          budget_min: 200000,
-          budget_max: 350000,
-          client: { full_name: "Café Central" },
-        },
-        {
-          id: 3,
-          title: "Campaña de Marketing Digital",
-          budget_min: 300000,
-          budget_max: 500000,
-          client: { full_name: "EcoVerde Ltda" },
-        },
-        {
-          id: 4,
-          title: "Desarrollo Web E-commerce",
-          budget_min: 800000,
-          budget_max: 1200000,
-          client: { full_name: "Moda Urbana" },
-        },
-        {
-          id: 5,
-          title: "Consultoría en Automatización",
-          budget_min: 400000,
-          budget_max: 600000,
-          client: { full_name: "Industrias del Sur" },
-        },
-      ]
-
-      const mockCategories = [
-        { name: "Tecnología", count: 45, percentage: 35.2 },
-        { name: "Diseño", count: 32, percentage: 25.0 },
-        { name: "Marketing", count: 28, percentage: 21.9 },
-        { name: "Consultoría", count: 23, percentage: 18.0 },
-      ]
-
-      // Simular delay de API
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      setAnalytics(mockAnalytics)
-      setTopFreelancers(mockFreelancers)
-      setActiveProjects(mockProjects)
-      setCategoryStats(mockCategories)
+      setAnalytics(analyticsData)
+      setTopFreelancers(freelancersData || [])
+      setActiveProjects(projectsData || [])
+      setCategoryStats(categoriesData || [])
     } catch (error) {
       console.error("Error loading dashboard data:", error)
     } finally {
@@ -241,11 +114,6 @@ export default function AdminDashboard() {
     )
   }
 
-  // No renderizar hasta que el componente esté montado
-  if (!mounted) {
-    return null
-  }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-950 p-6">
@@ -282,7 +150,7 @@ export default function AdminDashboard() {
               <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
               Actualizar
             </Button>
-            <Button className="bg-[#1EE2AA] hover:bg-[#00CC9F] text-black">
+            <Button className="bg-[#00E5B4] hover:bg-[#00CC9F] text-black">
               <Download className="h-4 w-4 mr-2" />
               Exportar Reporte
             </Button>
@@ -297,7 +165,7 @@ export default function AdminDashboard() {
               value={analytics.revenue.total}
               change={analytics.revenue.growth}
               icon={DollarSign}
-              color="[#1EE2AA]"
+              color="[#00E5B4]"
               format="currency"
             />
             <MetricCard
@@ -305,7 +173,7 @@ export default function AdminDashboard() {
               value={analytics.users.total}
               change={analytics.users.growth}
               icon={Users}
-              color="[#2260DD]"
+              color="[#0066FF]"
             />
             <MetricCard
               title="Proyectos Activos"
@@ -328,19 +196,19 @@ export default function AdminDashboard() {
         {/* Contenido principal */}
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList className="bg-gray-900 border-gray-700">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-[#1EE2AA] data-[state=active]:text-black">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-[#00E5B4] data-[state=active]:text-black">
               <BarChart3 className="h-4 w-4 mr-2" />
               Resumen
             </TabsTrigger>
-            <TabsTrigger value="users" className="data-[state=active]:bg-[#1EE2AA] data-[state=active]:text-black">
+            <TabsTrigger value="users" className="data-[state=active]:bg-[#00E5B4] data-[state=active]:text-black">
               <Users className="h-4 w-4 mr-2" />
               Usuarios
             </TabsTrigger>
-            <TabsTrigger value="projects" className="data-[state=active]:bg-[#1EE2AA] data-[state=active]:text-black">
+            <TabsTrigger value="projects" className="data-[state=active]:bg-[#00E5B4] data-[state=active]:text-black">
               <FileText className="h-4 w-4 mr-2" />
               Proyectos
             </TabsTrigger>
-            <TabsTrigger value="finances" className="data-[state=active]:bg-[#1EE2AA] data-[state=active]:text-black">
+            <TabsTrigger value="finances" className="data-[state=active]:bg-[#00E5B4] data-[state=active]:text-black">
               <CreditCard className="h-4 w-4 mr-2" />
               Finanzas
             </TabsTrigger>
@@ -361,7 +229,7 @@ export default function AdminDashboard() {
                   <div className="space-y-4">
                     {topFreelancers.map((freelancer, index) => (
                       <div key={freelancer.id} className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-gradient-to-br from-[#2260DD] to-[#1EE2AA] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        <div className="w-8 h-8 bg-gradient-to-br from-[#0066FF] to-[#00E5B4] rounded-full flex items-center justify-center text-white font-bold text-sm">
                           {index + 1}
                         </div>
                         <div className="flex-1">
@@ -385,7 +253,7 @@ export default function AdminDashboard() {
               <Card className="bg-gray-900 border-gray-700">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
-                    <Activity className="h-5 w-5 text-[#1EE2AA]" />
+                    <Activity className="h-5 w-5 text-[#00E5B4]" />
                     <span>Proyectos Activos</span>
                   </CardTitle>
                 </CardHeader>
@@ -399,7 +267,7 @@ export default function AdminDashboard() {
                         </div>
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-gray-400">Cliente: {project.client?.full_name}</span>
-                          <span className="text-[#1EE2AA] font-semibold">
+                          <span className="text-[#00E5B4] font-semibold">
                             {analyticsUtils.formatCurrency(project.budget_min)} -{" "}
                             {analyticsUtils.formatCurrency(project.budget_max)}
                           </span>
@@ -415,12 +283,12 @@ export default function AdminDashboard() {
             <Card className="bg-gray-900 border-gray-700">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <PieChart className="h-5 w-5 text-[#2260DD]" />
+                  <PieChart className="h-5 w-5 text-[#0066FF]" />
                   <span>Distribución por Categorías</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {categoryStats.map((category, index) => (
                     <div key={category.name} className="text-center">
                       <div
@@ -445,14 +313,14 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="bg-gray-900 border-gray-700">
                 <CardContent className="p-6 text-center">
-                  <Users className="h-12 w-12 text-[#2260DD] mx-auto mb-4" />
+                  <Users className="h-12 w-12 text-[#0066FF] mx-auto mb-4" />
                   <p className="text-2xl font-bold text-white">{analytics?.users.total || 0}</p>
                   <p className="text-gray-400">Usuarios Totales</p>
                 </CardContent>
               </Card>
               <Card className="bg-gray-900 border-gray-700">
                 <CardContent className="p-6 text-center">
-                  <Star className="h-12 w-12 text-[#1EE2AA] mx-auto mb-4" />
+                  <Star className="h-12 w-12 text-[#00E5B4] mx-auto mb-4" />
                   <p className="text-2xl font-bold text-white">{analytics?.users.freelancers || 0}</p>
                   <p className="text-gray-400">Freelancers</p>
                 </CardContent>
@@ -472,14 +340,14 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="bg-gray-900 border-gray-700">
                 <CardContent className="p-6 text-center">
-                  <FileText className="h-12 w-12 text-[#2260DD] mx-auto mb-4" />
+                  <FileText className="h-12 w-12 text-[#0066FF] mx-auto mb-4" />
                   <p className="text-2xl font-bold text-white">{analytics?.projects.total || 0}</p>
                   <p className="text-gray-400">Proyectos Totales</p>
                 </CardContent>
               </Card>
               <Card className="bg-gray-900 border-gray-700">
                 <CardContent className="p-6 text-center">
-                  <Activity className="h-12 w-12 text-[#1EE2AA] mx-auto mb-4" />
+                  <Activity className="h-12 w-12 text-[#00E5B4] mx-auto mb-4" />
                   <p className="text-2xl font-bold text-white">{analytics?.projects.active || 0}</p>
                   <p className="text-gray-400">Activos</p>
                 </CardContent>
@@ -501,7 +369,7 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <Card className="bg-gray-900 border-gray-700">
                 <CardContent className="p-6 text-center">
-                  <DollarSign className="h-12 w-12 text-[#1EE2AA] mx-auto mb-4" />
+                  <DollarSign className="h-12 w-12 text-[#00E5B4] mx-auto mb-4" />
                   <p className="text-2xl font-bold text-white">
                     {analyticsUtils.formatCurrency(analytics?.revenue.total || 0)}
                   </p>
@@ -510,7 +378,7 @@ export default function AdminDashboard() {
               </Card>
               <Card className="bg-gray-900 border-gray-700">
                 <CardContent className="p-6 text-center">
-                  <CreditCard className="h-12 w-12 text-[#2260DD] mx-auto mb-4" />
+                  <CreditCard className="h-12 w-12 text-[#0066FF] mx-auto mb-4" />
                   <p className="text-2xl font-bold text-white">
                     {analyticsUtils.formatCurrency(analytics?.payments.platform_fees || 0)}
                   </p>
